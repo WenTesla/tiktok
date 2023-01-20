@@ -5,14 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c573e332-cd3a-41d6-891d-281450698c04" name="变更" comment="项目初始化">
-      <change afterPath="$PROJECT_DIR$/go/config/readme.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/go/controller/readme.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/go/model/readme.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/go/service/readme.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/initial.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/go/config/dataSource.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/go/controller/userController.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/go/model/user.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/go/service/userService.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/route/load.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/route/load.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,22 +40,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultGoTemplateProperty": "Go File",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.go.formatter.settings.were.checked": "true",
-    "RunOnceActivity.go.migrated.go.modules.settings": "true",
-    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "go.import.settings.migrated": "true",
-    "last_opened_file_path": "H:/tiktok/go/service",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;H:/tiktok/go/service&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="H:\tiktok\go\service" />
@@ -65,7 +66,16 @@
       <recent name="H:\tiktok\go" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Go 构建.go build tiktok/go">
+    <configuration name="go build tiktok/go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="tiktok" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="tiktok/go" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/go/main.go" />
+      <method v="2" />
+    </configuration>
     <configuration name="go build tiktok/main" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="tiktok" />
       <working_directory value="$PROJECT_DIR$" />
@@ -77,6 +87,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Go 构建.go build tiktok/go" />
         <item itemvalue="Go 构建.go build tiktok/main" />
       </list>
     </recent_temporary>
