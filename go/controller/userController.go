@@ -2,8 +2,9 @@ package controller
 
 import (
 	"fmt"
+
 	"github.com/gin-gonic/gin"
-	"log"
+
 	"net/http"
 	"tiktok/go/service"
 )
@@ -23,15 +24,15 @@ type userLoginResponse struct {
 type user struct {
 }
 
-// 用户注册
+// 用户注册 -todo
 func Register(c *gin.Context) {
 	username := c.Query("username")
 	password := c.Query("password")
 	//gin.Logger()
 	fmt.Sprintln(username, password)
 	//先校验参数
-	pass, err := service.RegisterService(username, password)
-	if !pass {
+	Id, err := service.RegisterService(username, password)
+	if err != nil {
 		fmt.Println(err)
 		c.JSON(http.StatusBadRequest, userRegisterResponse{
 			status_code: 1,
@@ -40,14 +41,14 @@ func Register(c *gin.Context) {
 			token:       "",
 		})
 	}
-	log.Println(username, password)
-	response := userRegisterResponse{
-		status_code: 0,
-		status_msg:  "success",
-		user_id:     0,
-		token:       "1111",
-	}
-	c.JSON(http.StatusOK, response)
+
+	// 返回
+	c.JSON(http.StatusOK, userRegisterResponse{
+		status_code: 1,
+		status_msg:  "",
+		user_id:     int64(Id),
+		token:       "",
+	})
 }
 
 // 用户登录

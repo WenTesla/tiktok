@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/gin-gonic/gin"
-	"tiktok/go/config"
+
+	// "tiktok/go/config"
 	"tiktok/go/route"
 )
 
@@ -26,5 +28,5 @@ func main() {
 }
 
 func initProject() {
-	config.Init()
+	// config.Init()
 }
