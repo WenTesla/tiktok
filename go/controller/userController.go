@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	"strconv"
 	"tiktok/go/model"
 
 	"github.com/gin-gonic/gin"
@@ -24,9 +25,9 @@ type userLoginResponse struct {
 	Token      string `json:"token"`
 }
 type douyinUserResponse struct {
-	StatusCode int32  `json:"status_code"`
-	StatusMsg  string `json:"status_msg"`
-	model.UserInfo
+	StatusCode int32           `json:"status_code"`
+	StatusMsg  string          `json:"status_msg"`
+	UserInfo   *model.UserInfo `json:"user"`
 }
 type user struct {
 }
@@ -98,7 +99,7 @@ func Login(c *gin.Context) {
 		token, _ := service.GenerateTokenByName(username)
 		c.JSON(http.StatusOK, userLoginResponse{
 			StatusCode: 0,
-			StatusMsg:  "",
+			StatusMsg:  "成功",
 			UserId:     Id,
 			Token:      token,
 		})
@@ -106,24 +107,39 @@ func Login(c *gin.Context) {
 
 }
 
-// 用户信息 todo
+// 用户信息
 func UserInfo(c *gin.Context) {
-	userId := c.Query("user_id")
-	token := c.Query("token")
-	fmt.Println(userId, token)
-	// 判断token
-	// mock
-	c.JSON(http.StatusOK, douyinUserResponse{
-		StatusCode: 0,
-		StatusMsg:  "成功",
-		UserInfo: model.UserInfo{
-			Id:             0,
-			Name:           "",
-			FollowCount:    1,
-			FollowerCount:  2,
-			IsFollow:       false,
-			TotalFavorited: 3,
-			FavoriteCount:  4,
-		},
-	})
+	user_Id := c.Query("user_id")
+	// 转换Id的类型
+	userId, _ := strconv.ParseInt(user_Id, 10, 64)
+	Id, exists := c.Get("Id")
+	if exists != true {
+		c.JSON(http.StatusNotFound, douyinUserResponse{
+			StatusCode: -1,
+			StatusMsg:  "Id不存在",
+		})
+		return
+	}
+	// 这里要注意转换类型
+	if userId != int64(Id.(float64)) {
+		c.JSON(http.StatusNotFound, douyinUserResponse{
+			StatusCode: -1,
+			StatusMsg:  "获取的Id和token不一致",
+		})
+		return
+	}
+	userInfo, err := service.UserService(userId)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, douyinUserResponse{
+			StatusCode: -1,
+			StatusMsg:  err.Error(),
+		})
+	} else {
+		c.JSON(http.StatusOK, douyinUserResponse{
+			StatusCode: 0,
+			StatusMsg:  "成功",
+			UserInfo:   &userInfo,
+		})
+	}
+
 }

@@ -32,9 +32,8 @@ func VerifyMobileFormat(mobileNum string) bool {
 
 // 根据name生成token
 func GenerateTokenByName(username string) (string, error) {
-
-	token := jwt.SignToken(model.User{Name: username})
-
+	user, _ := model.GetUserByName(username)
+	token := jwt.SignToken(user)
 	return token, nil
 }
 
@@ -45,12 +44,6 @@ func Encryption(password string) string {
 	hash.Write([]byte(password))
 	hash_password := hex.EncodeToString(hash.Sum(nil))
 	return hash_password
-}
-
-// 根据用户名查表
-func findUser(username string) (bool, error) {
-
-	return false, nil
 }
 
 // 注册服务
@@ -85,4 +78,28 @@ func LoginService(username string, password string) (int64, error) {
 	}
 
 	return user.Id, nil
+}
+
+// 用户服务 先封装小的，再封装大的
+func UserService(Id int64) (model.UserInfo, error) {
+	user, err := model.GetUserById(Id)
+	if err != nil {
+		return model.UserInfo{}, err
+	}
+	//user.Password = ""
+	// 查询自己的关注数目
+	followingCount, _ := model.GetFollowingById(Id)
+	log.Printf("关注的数量%d", followingCount)
+	// 查询自己的粉丝
+	fanCount, err := model.GetFansById(Id)
+	log.Printf("粉丝数目%d", fanCount)
+	// todo 查询是否关注
+	userInfo := model.UserInfo{
+		Id:            user.Id,
+		Name:          user.Name,
+		FollowCount:   followingCount,
+		FollowerCount: fanCount,
+		IsFollow:      false,
+	}
+	return userInfo, nil
 }

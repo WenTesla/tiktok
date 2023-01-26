@@ -14,9 +14,9 @@ func LoadRouter(r *gin.Engine) {
 	apiRouter.POST("/user/register/", controller.Register)
 	apiRouter.POST("/user/login/", controller.Login)
 	apiRouter.GET("/user/", jwt.VerifyToken, controller.UserInfo)
-	apiRouter.GET("/feed/", nil)
-	apiRouter.POST("/publish/action/", nil)
-	apiRouter.GET("/publish/list/", nil)
+	apiRouter.GET("/feed/", controller.VideoStream)
+	apiRouter.POST("/publish/action/", controller.VideoPublish)
+	apiRouter.GET("/publish/list/", controller.VideoList)
 
 	// extra apis - I todo
 

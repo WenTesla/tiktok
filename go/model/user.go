@@ -12,7 +12,7 @@ type User struct {
 	Password string //密码
 }
 
-func CreateUser() {
+func CreateUserTable() {
 	user := User{}
 	Db := config.Init()
 	Db.AutoMigrate(&user)
@@ -46,7 +46,7 @@ func InsertUser(name string, password string) (User, error) {
 }
 
 // 根据id(主键）获取用户
-func GetUserById(id int) (User, error) {
+func GetUserById(id int64) (User, error) {
 	user := User{}
 	Db := config.Init()
 

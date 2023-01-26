@@ -36,4 +36,44 @@ CREATE TABLE `videos`
 --   AUTO_INCREMENT = 115
   DEFAULT CHARSET = utf8 COMMENT ='\r\n视频表';
 
+DROP TABLE IF EXISTS `likes`;
+CREATE TABLE `likes`
+(
+    `id`         bigint NOT NULL AUTO_INCREMENT COMMENT '自增主键',
+    `user_id`    int      DEFAULT NULL COMMENT '点赞用户的id',
+    `author_id`  int      DEFAULT NULL COMMENT '视频作者的id',
+    `createTime` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci COMMENT '点赞列表';
+
+
+DROP TABLE IF EXISTS `comments`;
+CREATE TABLE `comments`
+(
+    `id`         bigint NOT NULL AUTO_INCREMENT COMMENT '自增id',
+    `user_id`    int          DEFAULT NULL COMMENT '用户的id',
+    `video_id`   int          DEFAULT NULL COMMENT '视频的id',
+    `text`       varchar(255) DEFAULT NULL COMMENT '评论的内容',
+    `cancel`     int          DEFAULT NULL COMMENT '是否取消评论',
+    `createTime` datetime     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci COMMENT ='评论表-用户评论视频';
+
+DROP TABLE IF EXISTS `follows`;
+CREATE TABLE `follows`
+(
+    `id`          bigint NOT NULL COMMENT '自增id',
+    `user_id`     int      DEFAULT NULL COMMENT '用户的id',
+    `follower_id` int      DEFAULT NULL COMMENT '粉丝id',
+    `cancel`      tinyint  DEFAULT NULL COMMENT '是否关注',
+    `createTime`  datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci COMMENT ='用户关注列表';
+
 

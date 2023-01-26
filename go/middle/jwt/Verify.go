@@ -11,7 +11,7 @@ type BasicResponse struct {
 	StatusMsg  string `json:"status_msg,omitempty"`
 }
 
-// 核实token，用于中间件
+// 核实token，用于中间件的验证
 func VerifyToken(c *gin.Context) {
 	//token := c.Request.PostFormValue("token")
 	token := c.Query("token")
@@ -37,6 +37,8 @@ func VerifyToken(c *gin.Context) {
 		})
 	} else {
 		// 解析正确
+		//str := strconv.FormatFloat(Id, 'E', -1, 64)
+		//strconv.ParseInt(str, 10, 64)
 		c.Set("Id", Id)
 		c.Next()
 	}

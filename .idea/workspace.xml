@@ -4,8 +4,27 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c573e332-cd3a-41d6-891d-281450698c04" name="变更" comment="基本完成注册登录接口">
+    <list default="true" id="c573e332-cd3a-41d6-891d-281450698c04" name="变更" comment="基本完成个人信息接口">
+      <change afterPath="$PROJECT_DIR$/go/config/parameter.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/go/model/base.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/go/model/follow.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/go/model/follow_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/go/model/video_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/go/service/videoService.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/insertData.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/config/Basic.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/controller/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/go/controller/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/controller/userController.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/controller/userController.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/controller/videoController.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/controller/videoController.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/middle/jwt/verify.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/middle/jwt/Verify.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/model/User.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/model/Video.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/video.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/route/load.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/route/load.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/service/userService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/userService.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/initial.sql" beforeDir="false" afterPath="$PROJECT_DIR$/resources/initial.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,7 +82,15 @@
       <recent name="H:\tiktok\go" />
     </key>
   </component>
-  <component name="RunManager" selected="Go 构建.go build tiktok/go">
+  <component name="RunManager" selected="Go 测试.tiktok/go/model 中的 TestGetVideoNextTime">
+    <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
+      <module name="tiktok" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
     <configuration name="go build tiktok/go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="tiktok" />
       <working_directory value="$PROJECT_DIR$" />
@@ -73,22 +100,70 @@
       <filePath value="$PROJECT_DIR$/go/main.go" />
       <method v="2" />
     </configuration>
-    <configuration name="go build tiktok/main" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+    <configuration default="true" type="GoTestRunConfiguration" factoryName="Go Test">
       <module name="tiktok" />
       <working_directory value="$PROJECT_DIR$" />
-      <kind value="PACKAGE" />
-      <package value="tiktok/main" />
+      <kind value="DIRECTORY" />
       <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$/main/main.go" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <method v="2" />
+    </configuration>
+    <configuration name="tiktok/go/model 中的 TestGetFansById" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="tiktok" />
+      <working_directory value="$PROJECT_DIR$/go/model" />
+      <root_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="tiktok/go/model" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <pattern value="^\QTestGetFansById\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="tiktok/go/model 中的 TestGetFollowingById" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="tiktok" />
+      <working_directory value="$PROJECT_DIR$/go/model" />
+      <root_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="tiktok/go/model" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <pattern value="^\QTestGetFollowingById\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="tiktok/go/model 中的 TestGetVideoByLastTime" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="tiktok" />
+      <working_directory value="$PROJECT_DIR$/go/model" />
+      <root_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="tiktok/go/model" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <pattern value="^\QTestGetVideoByLastTime\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="tiktok/go/model 中的 TestGetVideoNextTime" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="tiktok" />
+      <working_directory value="$PROJECT_DIR$/go/model" />
+      <root_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="tiktok/go/model" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <pattern value="^\QTestGetVideoNextTime\E$" />
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Go 构建.go build tiktok/main" />
+        <item itemvalue="Go 测试.tiktok/go/model 中的 TestGetVideoNextTime" />
+        <item itemvalue="Go 测试.tiktok/go/model 中的 TestGetVideoByLastTime" />
         <item itemvalue="Go 构建.go build tiktok/go" />
-        <item itemvalue="Go 构建.go build tiktok/main" />
-        <item itemvalue="Go 构建.go build tiktok/go" />
-        <item itemvalue="Go 构建.go build tiktok/main" />
+        <item itemvalue="Go 测试.tiktok/go/model 中的 TestGetFansById" />
+        <item itemvalue="Go 测试.tiktok/go/model 中的 TestGetFollowingById" />
       </list>
     </recent_temporary>
   </component>
@@ -121,7 +196,9 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="项目初始化" />
-    <option name="LAST_COMMIT_MESSAGE" value="项目初始化" />
+    <MESSAGE value="基本完成注册登录接口" />
+    <MESSAGE value="基本完成个人信息接口" />
+    <option name="LAST_COMMIT_MESSAGE" value="基本完成个人信息接口" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
