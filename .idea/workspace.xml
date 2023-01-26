@@ -4,16 +4,8 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c573e332-cd3a-41d6-891d-281450698c04" name="变更" comment="项目初始化">
-      <change afterPath="$PROJECT_DIR$/go/config/dataSource.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/go/controller/userController.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/go/model/user.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/go/service/userService.go" afterDir="false" />
+    <list default="true" id="c573e332-cd3a-41d6-891d-281450698c04" name="变更" comment="基本完成注册登录接口">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/route/load.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/route/load.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,6 +21,11 @@
   </component>
   <component name="GOROOT" url="file://$USER_HOME$/sdk/go1.19" />
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="bb748aab80b8c60e3f95d20ddbedbf26670c03c7" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -87,6 +84,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Go 构建.go build tiktok/main" />
+        <item itemvalue="Go 构建.go build tiktok/go" />
+        <item itemvalue="Go 构建.go build tiktok/main" />
         <item itemvalue="Go 构建.go build tiktok/go" />
         <item itemvalue="Go 构建.go build tiktok/main" />
       </list>
@@ -101,7 +101,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="master" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
@@ -113,5 +125,8 @@
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/tiktok$tiktok_go_middle_jwt__TestSignToken.out" NAME="tiktok/go/middle/jwt 中的 TestSignToken 覆盖结果" MODIFIED="1674649197833" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>

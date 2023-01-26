@@ -3,6 +3,7 @@ package route
 import (
 	"github.com/gin-gonic/gin"
 	"tiktok/go/controller"
+	"tiktok/go/middle/jwt"
 )
 
 // LoadRouter
@@ -12,12 +13,15 @@ func LoadRouter(r *gin.Engine) {
 	// basic apis
 	apiRouter.POST("/user/register/", controller.Register)
 	apiRouter.POST("/user/login/", controller.Login)
+	apiRouter.GET("/user/", jwt.VerifyToken, controller.UserInfo)
 	apiRouter.GET("/feed/", nil)
-	apiRouter.GET("/user/", nil)
 	apiRouter.POST("/publish/action/", nil)
 	apiRouter.GET("/publish/list/", nil)
 
 	// extra apis - I todo
 
 	// extra apis - II todo
+
+	// test
+	//apiRouter.GET("/test/token",jwt.SignToken)
 }

@@ -24,14 +24,18 @@ require (
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
+
 // 引入数据库连接驱动和
 require (
 	gorm.io/driver/mysql v1.4.5
 	gorm.io/gorm v1.24.3
 )
+
 // 引入
 require (
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 )
+// 引入go的jwt
+require github.com/golang-jwt/jwt/v4 v4.4.3 // indirect

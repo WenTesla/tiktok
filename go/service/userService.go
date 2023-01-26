@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"log"
+	"tiktok/go/middle/jwt"
 
 	// "log"
 	"regexp"
@@ -29,8 +30,16 @@ func VerifyMobileFormat(mobileNum string) bool {
 	return reg.MatchString(mobileNum)
 }
 
+// 根据name生成token
+func GenerateTokenByName(username string) (string, error) {
+
+	token := jwt.SignToken(model.User{Name: username})
+
+	return token, nil
+}
+
 // md5加盐加密
-func encryption(password string) string {
+func Encryption(password string) string {
 	password += SALT
 	hash := md5.New()
 	hash.Write([]byte(password))
@@ -45,31 +54,35 @@ func findUser(username string) (bool, error) {
 }
 
 // 注册服务
-func RegisterService(username string, password string) (int, error) {
+func RegisterService(username string, password string) (int64, error) {
 	log.Println(username, "---", password)
-	// 先校验参数
-	if len(username) > 32 || (len(password) > 32 || len(password) <= 5) {
-		return 0, errors.New("参数错误")
-	}
-	//if !VerifyEmailFormat(username) {
-	//	return false, errors.New("邮箱格式错误")
-	//}
+
 	// 查表，是否存在id
-	// pass, error := model.GetUserByName(username)
-
+	user, err := model.GetUserByName(username)
+	if err != nil {
+		return 0, errors.New("数据库查询错误")
+	}
+	if username == user.Name {
+		return 0, errors.New("用户名已经存在")
+	}
 	// 插入
-	Id, _ := model.InsertUser(username, password)
-
-	return Id, nil
+	user, _ = model.InsertUser(username, password)
+	return user.Id, nil
 }
 
 // 登录服务
-func LoginService(username string, password string) (bool, error) {
-	// 先校验参数
-	if len(username) > 32 || (len(password) > 32 || len(password) <= 5) {
-		return false, errors.New("参数错误")
+func LoginService(username string, password string) (int64, error) {
+
+	user, err := model.GetUserByName(username)
+	if err != nil {
+		return 0, errors.New("数据库查询错误")
+	}
+	if username != user.Name {
+		return 0, errors.New("用户名不存在")
+	}
+	if password != user.Password {
+		return 0, errors.New("用户密码不正确")
 	}
 
-	return true, nil
-
+	return user.Id, nil
 }
