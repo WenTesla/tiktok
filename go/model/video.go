@@ -50,6 +50,14 @@ func GetVideoByLastTime(lastTime time.Time) ([]TableVideo, error) {
 	return tableVideos, nil
 }
 
+// 通过用户id获取视频
+func GetVideoByUserId(userId int) ([]TableVideo, error) {
+	tableVideos := make([]TableVideo, config.VideoMaxCount)
+	db.Debug().Where("author_id = ?", userId).Order("publish_time desc").Limit(config.VideoMaxCount).Find(&tableVideos)
+
+	return tableVideos, nil
+}
+
 // 获取发布最早的视频的时间戳，作为下次请求的时间戳
 func GetVideoNextTime(lastTime time.Time) (time.Time, error) {
 	tableVideo := TableVideo{}

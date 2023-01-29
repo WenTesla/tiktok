@@ -1,3 +1,5 @@
 package config
 
-const VideoCount = 30
+const VideoCount = 5
+
+const VideoMaxCount = 30

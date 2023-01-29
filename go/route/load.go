@@ -19,7 +19,7 @@ func LoadRouter(r *gin.Engine) {
 	apiRouter.GET("/publish/list/", controller.VideoList)
 
 	// extra apis - I todo
-
+	apiRouter.POST("/favorite/action/", controller.LikeVideoByUserID)
 	// extra apis - II todo
 
 	// test
