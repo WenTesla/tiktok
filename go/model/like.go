@@ -1,5 +1,9 @@
 package model
 
+import (
+	"tiktok/go/config"
+)
+
 // Like 表的结构,不需要json化
 type Like struct {
 	Id       int64 //自增主键
@@ -41,4 +45,31 @@ func QueryDuplicateLikeData(userId int64, videoId int64) (bool, error) {
 		return false, nil
 	}
 	return true, nil
+}
+
+// 根据用户id查询视频的信息
+func QueryVideoByUserId(userId int64) ([]TableVideo, error) {
+	tableVideos := make([]TableVideo, config.VideoMaxCount) //
+	// SELECT
+	//	*
+	//FROM
+	//	videos
+	//WHERE
+	//	id IN ( SELECT video_id FROM likes WHERE user_id =?);
+	result := db.Debug().Where("id IN (?)", db.Where("user_id = ?", userId).Select("video_id").Find(&Like{})).Find(&tableVideos)
+	//log.Printf("%v", tableVideos)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return tableVideos, nil
+}
+
+// 根据id获取视频被点赞的总数
+func QueryLikeByVideoId(videoId int64) (int64, error) {
+	var count int64
+	result := db.Debug().Model(&Like{}).Where("video_id = ?", videoId).Count(&count)
+	if result.Error != nil {
+		return -1, result.Error
+	}
+	return count, nil
 }

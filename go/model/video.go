@@ -54,7 +54,6 @@ func GetVideoByLastTime(lastTime time.Time) ([]TableVideo, error) {
 func GetVideoByUserId(userId int) ([]TableVideo, error) {
 	tableVideos := make([]TableVideo, config.VideoMaxCount)
 	db.Debug().Where("author_id = ?", userId).Order("publish_time desc").Limit(config.VideoMaxCount).Find(&tableVideos)
-
 	return tableVideos, nil
 }
 

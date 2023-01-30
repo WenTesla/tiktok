@@ -57,7 +57,7 @@ func VideoStream(c *gin.Context) {
 		})
 		return
 	}
-	// 获取发布最早的时间 作为下一条next参数
+	// 获取发布最早的时间 作为下一条next参数 这里有问题
 	nextTime, err := model.GetVideoNextTime(last_time)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, VideoStreamModel{
@@ -75,9 +75,32 @@ func VideoStream(c *gin.Context) {
 	})
 }
 
-// 视频发布接口
+// 登录用户选择视频上传
 func VideoPublish(c *gin.Context) {
-
+	file, err := c.FormFile("data")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, model.BaseResponse{
+			StatusCode: -1,
+			StatusMsg:  err.Error(),
+		})
+		return
+	}
+	// 获取登录用户的id
+	userId, exists := c.Get("Id")
+	if !exists {
+		c.JSON(http.StatusNotFound, model.BaseResponse{
+			StatusCode: -1,
+			StatusMsg:  "用户名不存在",
+		})
+		return
+	}
+	// 获取标题
+	title := c.PostForm("title")
+	log.Printf("%v %v %v", file, userId, title)
+	c.JSON(http.StatusBadRequest, model.BaseResponse{
+		StatusCode: -1,
+		StatusMsg:  "失败",
+	})
 }
 
 // 发布列表 用户的视频发布列表，直接列出用户所有投稿过的视频

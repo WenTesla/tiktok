@@ -29,6 +29,7 @@ type douyinUserResponse struct {
 	StatusMsg  string          `json:"status_msg"`
 	UserInfo   *model.UserInfo `json:"user"`
 }
+
 type user struct {
 }
 

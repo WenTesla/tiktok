@@ -17,3 +17,10 @@ func TestQueryDuplicateLikeData(t *testing.T) {
 	data, err := QueryDuplicateLikeData(1, 10)
 	fmt.Printf("%v %v", data, err)
 }
+func TestQueryVideoByUserId(t *testing.T) {
+	QueryVideoByUserId(2)
+}
+func TestQueryLikeByVideoId(t *testing.T) {
+	count, _ := QueryLikeByVideoId(3)
+	fmt.Print(count)
+}

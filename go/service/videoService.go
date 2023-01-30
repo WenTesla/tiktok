@@ -74,7 +74,11 @@ func packageVideo(tableVideo *model.TableVideo) (model.Video, error) {
 	video.CoverURL = tableVideo.CoverUrl
 	video.Title = tableVideo.Title
 	// 获取 favorite_count
-	video.FavoriteCount = 10
+	count, err := model.QueryLikeByVideoId(tableVideo.Id)
+	if err != nil {
+		return video, err
+	}
+	video.FavoriteCount = count
 	// 获取"comment_count"
 	video.CommentCount = 10
 	return video, nil
