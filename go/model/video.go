@@ -57,10 +57,21 @@ func GetVideoByUserId(userId int) ([]TableVideo, error) {
 	return tableVideos, nil
 }
 
-// 获取发布最早的视频的时间戳，作为下次请求的时间戳
+// 获取发布最早的视频的时间戳，作为下次请求的时间戳 废弃
 func GetVideoNextTime(lastTime time.Time) (time.Time, error) {
 	tableVideo := TableVideo{}
 	result := db.Debug().Where("publish_time <= ?", lastTime).Order("publish_time asc").Limit(1).Select("publish_time").Find(&tableVideo)
+
+	if result.Error != nil {
+		return time.Time{}, result.Error
+	}
+	return tableVideo.PublishTime, nil
+}
+
+// 获取
+func QueryNextTimeByVideoId(videoId int64) (time.Time, error) {
+	tableVideo := TableVideo{}
+	result := db.Debug().Where("id = ? ", videoId).Limit(1).Select("publish_time").Find(&tableVideo)
 	if result.Error != nil {
 		return time.Time{}, result.Error
 	}

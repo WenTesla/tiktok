@@ -18,7 +18,7 @@ func CreateUserTable() {
 	Db.AutoMigrate(&user)
 }
 
-// User 最详细的信息
+// UserInfo  最详细的信息
 type UserInfo struct {
 	Id             int64  `json:"id,omitempty"`   //主键
 	Name           string `json:"name,omitempty"` //昵称
@@ -31,8 +31,7 @@ type UserInfo struct {
 
 var db = config.Init()
 
-// 插入用户
-
+// InsertUser 插入用户
 func InsertUser(name string, password string) (User, error) {
 	Db := config.Init()
 	//CreateUser()
@@ -45,7 +44,7 @@ func InsertUser(name string, password string) (User, error) {
 	// return true, nil
 }
 
-// 根据id(主键）获取用户
+// GetUserById 根据id(主键）获取用户
 func GetUserById(id int64) (User, error) {
 	user := User{}
 	Db := config.Init()
@@ -58,7 +57,7 @@ func GetUserById(id int64) (User, error) {
 	return user, nil
 }
 
-// 根据用户名(唯一）查询用户
+// GetUserByName 根据用户名(唯一）查询用户
 func GetUserByName(name string) (User, error) {
 	user := User{}
 	//Db := config.Init()
@@ -68,4 +67,41 @@ func GetUserByName(name string) (User, error) {
 		return user, err
 	}
 	return user, nil
+}
+
+// PackageUserToUserInfo
+//
+//	 	FollowCount
+//		FollowerCount
+//		IsFollow
+func PackageUserToUserInfo(user User) (UserInfo, error) {
+	userInfo := UserInfo{}
+	//var err error
+	// 查询关注总数
+	followingsCount, err := GetFollowingById(user.Id)
+	if err != nil {
+		return userInfo, err
+	}
+	// 查询粉丝总数
+	fansCount, err := GetFansById(user.Id)
+	if err != nil {
+		return userInfo, err
+	}
+	// to-do 查询是否关注
+
+	// 合并
+	userInfo.Id = user.Id
+	userInfo.Name = user.Name
+	userInfo.FollowCount = followingsCount
+	userInfo.FollowerCount = fansCount
+	userInfo.IsFollow = false
+
+	return userInfo, nil
+}
+
+// PackageUserToUserInfoByUserId 根据id将user包装成userInfo
+func PackageUserToUserInfoByUserId(id int64) (UserInfo, error) {
+	userInfo := UserInfo{}
+
+	return userInfo, nil
 }

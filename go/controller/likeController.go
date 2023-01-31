@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+	"tiktok/go/config"
 	"tiktok/go/model"
 	"tiktok/go/service"
 )
@@ -36,8 +37,16 @@ func LikeVideoByUserID(c *gin.Context) {
 		})
 		return
 	}
-	// 提取用户Id -- todo 根据中间件提取
-	var userId int64 = 1
+	// 提取用户Id
+	user_id, exists := c.Get("Id")
+	if !exists {
+		c.JSON(http.StatusNotFound, model.BaseResponse{
+			StatusCode: -1,
+			StatusMsg:  config.TokenIsNotExist,
+		})
+		return
+	}
+	userId := int64(user_id.(float64))
 	flag, err := service.LikeVideoByUserIDService(userId, id, Type)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, model.BaseResponse{

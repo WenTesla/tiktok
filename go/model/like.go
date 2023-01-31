@@ -47,7 +47,7 @@ func QueryDuplicateLikeData(userId int64, videoId int64) (bool, error) {
 	return true, nil
 }
 
-// 根据用户id查询视频的信息
+// QueryVideoByUserId 根据用户id查询视频的信息
 func QueryVideoByUserId(userId int64) ([]TableVideo, error) {
 	tableVideos := make([]TableVideo, config.VideoMaxCount) //
 	// SELECT
@@ -64,7 +64,7 @@ func QueryVideoByUserId(userId int64) ([]TableVideo, error) {
 	return tableVideos, nil
 }
 
-// 根据id获取视频被点赞的总数
+// QueryLikeByVideoId 根据id获取视频被点赞的总数
 func QueryLikeByVideoId(videoId int64) (int64, error) {
 	var count int64
 	result := db.Debug().Model(&Like{}).Where("video_id = ?", videoId).Count(&count)

@@ -2,7 +2,7 @@ package service
 
 import "tiktok/go/model"
 
-// 用户点赞服务
+// LikeVideoByUserIDService 用户点赞服务
 func LikeVideoByUserIDService(userId int64, videoId int64, actionType int64) (bool, error) {
 	// 点赞 -- 没有数据的话创建数据，存在数据的话插入数据
 	// 检查是否存在当前的重复值
@@ -28,7 +28,7 @@ func LikeVideoByUserIDService(userId int64, videoId int64, actionType int64) (bo
 	return true, err
 }
 
-// 用户喜欢列表服务
+// UserFavoriteListService 用户喜欢列表服务
 func UserFavoriteListService(userId int64) ([]model.Video, error) {
 	// 根据用户查询点赞的视频
 	tableVideos, err := model.QueryVideoByUserId(userId)

@@ -10,3 +10,8 @@ func TestQueryCommentByUserId(t *testing.T) {
 	fmt.Printf("%v", comments)
 	fmt.Printf("%v", err)
 }
+func TestQueryCommentByVideoId(t *testing.T) {
+	comments, err := QueryCommentByVideoId(2)
+	fmt.Printf("%v", comments)
+	fmt.Printf("%v", err)
+}

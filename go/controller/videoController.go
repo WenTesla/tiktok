@@ -58,7 +58,7 @@ func VideoStream(c *gin.Context) {
 		return
 	}
 	// 获取发布最早的时间 作为下一条next参数 这里有问题
-	nextTime, err := model.GetVideoNextTime(last_time)
+	nextTime, err := model.QueryNextTimeByVideoId(videos[len(videos)-1].ID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, VideoStreamModel{
 			StatusCode: -1,

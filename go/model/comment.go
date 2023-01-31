@@ -1,13 +1,17 @@
 package model
 
-import "tiktok/go/config"
+import (
+	"errors"
+	"time"
+)
 
 type Comment struct {
-	ID       int64  // 评论id
-	UserId   int64  // 用户Id
-	VideoId  int64  //视频Id
-	Text     string // 评论内容
-	IsCancel int64  // 是否取消
+	ID         int64     // 评论id
+	UserId     int64     // 用户Id
+	VideoId    int64     //视频Id
+	Text       string    // 评论内容
+	IsCancel   int64     // 是否取消
+	CreateTime time.Time `gorm:"column:createTime"` // 创建时间
 }
 
 // CommentInfo
@@ -15,17 +19,56 @@ type CommentInfo struct {
 	Content    string   `json:"content"`     // 评论内容
 	CreateDate string   `json:"create_date"` // 评论发布日期，格式 mm-dd
 	ID         int64    `json:"id"`          // 评论id
-	User       UserInfo `json:"user"`        // 评论用户信息
+	UserInfo   UserInfo `json:"user"`        // 评论用户的具体信息
 }
 
 // type
 // 根据用户id获取评论
 func QueryCommentByUserId(userId int64) ([]Comment, error) {
-	comments := make([]Comment, config.CommentCount)
+	var comments []Comment
 	// 获取
 	result := db.Debug().Where("user_id = ?", userId).Order("createTime desc").Find(&comments)
 	if result.Error != nil {
 		return nil, result.Error
 	}
 	return comments, nil
+}
+
+// 根据视频id获取评论
+func QueryCommentByVideoId(videoId int64) ([]Comment, error) {
+	var comments []Comment
+	// 获取
+	result := db.Debug().Where("video_id = ?", videoId).Order("createTime desc").Find(&comments)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return comments, nil
+
+}
+
+// 插入评论 这有问题 传入的参数
+func InsertComment(userId int64, videoId int64, content string) (Comment, error) {
+	comment := Comment{
+		UserId:     userId,
+		VideoId:    videoId,
+		Text:       content,
+		CreateTime: time.Now(),
+	}
+	result := db.Debug().Select("user_id", "video_id", "text").Create(&comment)
+	if result.Error != nil {
+		return comment, result.Error
+	}
+	return comment, nil
+}
+
+// DeleteComment 删除评论
+func DeleteComment(id int64) (bool, error) {
+	result := db.Debug().Delete(&Comment{}, id)
+	if result.Error != nil {
+		return false, result.Error
+	}
+	if result.RowsAffected == 0 {
+		return false, errors.New("该评论不存在")
+	}
+	return true, nil
 }

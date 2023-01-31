@@ -26,12 +26,12 @@ func LoadRouter(r *gin.Engine) {
 
 	// extra apis - I todo
 	// 用户点赞接口
-	apiRouter.POST("/favorite/action/", controller.LikeVideoByUserID)
+	apiRouter.POST("/favorite/action/", jwt.VerifyToken, controller.LikeVideoByUserID)
 	// 喜欢列表接口
 	apiRouter.GET("/favorite/list/", controller.UserFavoriteList)
 	// 用户评论接口
 	apiRouter.POST("/comment/action/", jwt.VerifyToken, controller.CommentVideo)
-	// 评论接口
+	// 评论列表接口
 	apiRouter.GET("/comment/list/", jwt.VerifyToken, controller.CommentList)
 	// extra apis - II todo
 
