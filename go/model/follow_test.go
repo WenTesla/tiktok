@@ -16,3 +16,6 @@ func TestGetFansById(t *testing.T) {
 	log.Println(id)
 	log.Println(err)
 }
+func TestInsertFollow(t *testing.T) {
+	InsertFollow(4, 2)
+}

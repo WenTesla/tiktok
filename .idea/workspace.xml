@@ -4,16 +4,19 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c573e332-cd3a-41d6-891d-281450698c04" name="变更" comment="基本完成评论列表接口和评论操作接口">
-      <change afterPath="$PROJECT_DIR$/go/config/qiniuyun_oss.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/go/model/InitDb.go" afterDir="false" />
+    <list default="true" id="c573e332-cd3a-41d6-891d-281450698c04" name="变更" comment="完善文档">
+      <change afterPath="$PROJECT_DIR$/go/config/tencent_cos.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/go/controller/followController.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/go/service/followService.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/config/parameter.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/config/parameter.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/controller/videoController.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/controller/videoController.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/model/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/model/video.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/video.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/config/qiniuyun_oss.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/model/comment.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/comment.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/model/follow.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/follow.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/model/follow_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/follow_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/route/load.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/route/load.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/service/commentService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/commentService.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/service/videoService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/videoService.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
     </list>
@@ -33,7 +36,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="bb748aab80b8c60e3f95d20ddbedbf26670c03c7" />
+        <entry key="$PROJECT_DIR$" value="3225a444773f2f7f40f0a8f6dc61cc2f6c37c5ad" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -81,7 +84,7 @@
       <recent name="H:\tiktok\go" />
     </key>
   </component>
-  <component name="RunManager" selected="Go 构建.go build tiktok/go">
+  <component name="RunManager" selected="Go 测试.tiktok/go/model 中的 TestInsertFollow">
     <configuration name="go build tiktok/go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="tiktok" />
       <working_directory value="$PROJECT_DIR$" />
@@ -91,7 +94,7 @@
       <filePath value="$PROJECT_DIR$/go/main.go" />
       <method v="2" />
     </configuration>
-    <configuration name="tiktok/go/model 中的 TestGetVideoNextTime" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="tiktok/go/model 中的 TestInsertFollow" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="tiktok" />
       <working_directory value="$PROJECT_DIR$/go/model" />
       <root_directory value="$PROJECT_DIR$" />
@@ -100,7 +103,7 @@
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
       <framework value="gotest" />
-      <pattern value="^\QTestGetVideoNextTime\E$" />
+      <pattern value="^\QTestInsertFollow\E$" />
       <method v="2" />
     </configuration>
     <configuration name="tiktok/go/model 中的 TestQueryCommentByUserId" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
@@ -141,18 +144,18 @@
     </configuration>
     <list>
       <item itemvalue="Go 构建.go build tiktok/go" />
-      <item itemvalue="Go 测试.tiktok/go/model 中的 TestGetVideoNextTime" />
+      <item itemvalue="Go 测试.tiktok/go/model 中的 TestInsertFollow" />
       <item itemvalue="Go 测试.tiktok/go/model 中的 TestQueryCommentByVideoId" />
       <item itemvalue="Go 测试.tiktok/go/model 中的 TestQueryCommentByUserId" />
       <item itemvalue="Go 测试.tiktok/go/model 中的 TestQueryLikeByVideoId" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Go 测试.tiktok/go/model 中的 TestInsertFollow" />
         <item itemvalue="Go 构建.go build tiktok/go" />
-        <item itemvalue="Go 测试.tiktok/go/model 中的 TestQueryCommentByVideoId" />
-        <item itemvalue="Go 测试.tiktok/go/model 中的 TestGetVideoNextTime" />
-        <item itemvalue="Go 测试.tiktok/go/model 中的 TestQueryCommentByUserId" />
         <item itemvalue="Go 测试.tiktok/go/model 中的 TestQueryLikeByVideoId" />
+        <item itemvalue="Go 测试.tiktok/go/model 中的 TestQueryCommentByUserId" />
+        <item itemvalue="Go 测试.tiktok/go/model 中的 TestQueryCommentByVideoId" />
       </list>
     </recent_temporary>
   </component>
@@ -192,7 +195,8 @@
     <MESSAGE value="基本完成视频流和点赞接口" />
     <MESSAGE value="基本完成点赞列表" />
     <MESSAGE value="基本完成评论列表接口和评论操作接口" />
-    <option name="LAST_COMMIT_MESSAGE" value="基本完成评论列表接口和评论操作接口" />
+    <MESSAGE value="完善文档" />
+    <option name="LAST_COMMIT_MESSAGE" value="完善文档" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
@@ -207,7 +211,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/go/model/comment.go</url>
-          <line>57</line>
+          <line>67</line>
           <option name="timeStamp" value="45" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
@@ -217,23 +221,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/go/service/commentService.go</url>
-          <line>58</line>
+          <line>60</line>
           <option name="timeStamp" value="48" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/go/middle/jwt/Verify.go</url>
           <line>42</line>
           <option name="timeStamp" value="50" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/go/service/videoService.go</url>
-          <line>118</line>
-          <option name="timeStamp" value="51" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/go/service/videoService.go</url>
-          <line>109</line>
-          <option name="timeStamp" value="52" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

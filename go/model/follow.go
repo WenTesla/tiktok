@@ -10,7 +10,7 @@ type Follow struct {
 	UserId     int64
 	FollowerId int64
 	Cancel     int8
-	CreatedAt  time.Time
+	CreatedAt  time.Time `gorm:"-"`
 }
 
 // 通过id获取自己关注的数目
@@ -39,5 +39,18 @@ func GetFansById(id int64) (int64, error) {
 func IsFollowingById(id int64) (bool, error) {
 	//var count int64
 
+	return true, nil
+}
+
+// InsertFollow 插入关注
+func InsertFollow(userId int64, toUserID int64) (bool, error) {
+	follow := Follow{
+		UserId:     userId,
+		FollowerId: toUserID,
+	}
+	result := db.Debug().Create(&follow)
+	if result.Error != nil {
+		return false, result.Error
+	}
 	return true, nil
 }

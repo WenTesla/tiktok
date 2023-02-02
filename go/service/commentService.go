@@ -53,6 +53,8 @@ func PackageComment(comment model.Comment) (model.CommentInfo, error) {
 
 // CreateCommentService 创建评论
 func CreateCommentService(userId int64, videoId int64, content string) (model.CommentInfo, error) {
+	// 检验敏感词
+
 	commentInfo := model.CommentInfo{}
 	// 插入评论
 	comment, err := model.InsertComment(userId, videoId, content)
@@ -73,4 +75,10 @@ func DeleteCommentService(id int64) (bool, error) {
 		return false, err
 	}
 	return isDelete, nil
+}
+
+// checkSensitive 检验敏感词
+func checkSensitive(context string) bool {
+
+	return false
 }

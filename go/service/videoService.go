@@ -1,12 +1,15 @@
 package service
 
 import (
-	"fmt"
-	"github.com/qiniu/go-sdk/v7/auth/qbox"
-	"github.com/qiniu/go-sdk/v7/storage"
+	"errors"
+	"github.com/tencentyun/cos-go-sdk-v5"
 	"golang.org/x/net/context"
 	"log"
 	"mime/multipart"
+	"net/http"
+	"net/url"
+	"os"
+	"strings"
 	"tiktok/go/config"
 	"tiktok/go/model"
 	"time"
@@ -84,8 +87,12 @@ func packageVideo(tableVideo *model.TableVideo) (model.Video, error) {
 		return video, err
 	}
 	video.FavoriteCount = count
-	// 获取"comment_count"
-	video.CommentCount = 10
+	// 获取"commentCount"
+	commentCount, err := model.QueryCommentCountByVideoId(tableVideo.Id)
+	if err != nil {
+		return video, err
+	}
+	video.CommentCount = commentCount
 	return video, nil
 }
 
@@ -96,29 +103,56 @@ func PublishVideoService(file *multipart.FileHeader, userId int64, title string)
 		return err
 	}
 	defer src.Close()
-	//配置参数
-	putPolicy := storage.PutPolicy{
-		Scope: config.Bucket,
-	}
-	mac := qbox.NewMac(config.AccessKey, config.SecretKey)
-	// 获取上传凭证 默认为
-	upToken := putPolicy.UploadToken(mac)
-	//
-	cfg := storage.Config{}
-	formUploader := storage.NewFormUploader(&cfg)
-	ret := storage.PutRet{}        // 上传后返回的结果
-	putExtra := storage.PutExtra{} // 额外参数
-	err = formUploader.Put(context.Background(), &ret, upToken, file.Filename, src, file.Size, &putExtra)
+	// 获取视频文件名称
+	// 上传到cos
+	err = publishVideoByTencentCos(src, file.Filename)
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
-
-	fmt.Println(ret.Key, ret.Hash)
-	// 添加数据库 -todo cover选择
-	err = model.InsertVideo(userId, config.ImgUrl+ret.Key, "https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/12640/image-20230129170217818.png", title)
+	// 提取封面url
+	play_cover, err := parseFileName(file.Filename)
+	if err != nil {
+		return err
+	}
+	// 添加数据库
+	err = model.InsertVideo(userId, config.CosUrl+"/"+file.Filename, config.CosUrl+"/"+play_cover, title)
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+// publishVideoByTencentCos
+func publishVideoByTencentCos(file multipart.File, fileName string) error {
+	// 将 examplebucket-1250000000 和 COS_REGION 修改为真实的信息
+	// 存储桶名称，由 bucketname-appid 组成，appid 必须填入，可以在 COS 控制台查看存储桶名称。https://console.cloud.tencent.com/cos5/bucket
+	// COS_REGION 可以在控制台查看，https://console.cloud.tencent.com/cos5/bucket, 关于地域的详情见 https://cloud.tencent.com/document/product/436/6224
+	u, _ := url.Parse(config.CosUrl)
+	b := &cos.BaseURL{BucketURL: u}
+	c := cos.NewClient(b, &http.Client{
+		Transport: &cos.AuthorizationTransport{
+			SecretID:  os.Getenv(config.SecretId),  // 用户的 SecretId，建议使用子账号密钥，授权遵循最小权限指引，降低使用风险。子账号密钥获取可参考 https://cloud.tencent.com/document/product/598/37140
+			SecretKey: os.Getenv(config.SecretKey), // 用户的 SecretKey，建议使用子账号密钥，授权遵循最小权限指引，降低使用风险。子账号密钥获取可参考 https://cloud.tencent.com/document/product/598/37140
+		},
+	})
+	// 对象键（Key）是对象在存储桶中的唯一标识。
+	// 例如，在对象的访问域名 `examplebucket-1250000000.cos.COS_REGION.myqcloud.com/test/objectPut.go` 中，对象键为 test/objectPut.go
+	_, err := c.Object.Put(context.Background(), fileName, file, nil)
+	if err != nil {
+		return err
+	}
+
+	//os.Open()
+	return nil
+}
+
+// parseFileName 解析文件名称，去除加上文件格式jpg
+func parseFileName(fileName string) (string, error) {
+	//
+	lastIndex := strings.LastIndex(fileName, ".")
+	if lastIndex == -1 {
+		return "", errors.New("解析错误")
+	}
+	replaced := fileName[lastIndex:]
+	return strings.Replace(fileName, replaced, config.Replace, 1), nil
 }

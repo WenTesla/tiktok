@@ -46,6 +46,16 @@ func QueryCommentByVideoId(videoId int64) ([]Comment, error) {
 
 }
 
+// QueryCommentCountByVideoId 根据视频的id获取视频的评论数
+func QueryCommentCountByVideoId(videoId int64) (int64, error) {
+	var count int64
+	result := db.Debug().Model(&Comment{}).Where("video_id = ?", videoId).Count(&count)
+	if result.Error != nil {
+		return -1, result.Error
+	}
+	return count, nil
+}
+
 // 插入评论 这有问题 传入的参数
 func InsertComment(userId int64, videoId int64, content string) (Comment, error) {
 	comment := Comment{

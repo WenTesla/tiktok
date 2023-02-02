@@ -41,8 +41,10 @@ require (
 // 引入go的jwt
 require github.com/golang-jwt/jwt/v4 v4.4.3
 
-// 引入七牛云的oss储存
-require github.com/qiniu/go-sdk/v7 v7.14.0
-// 引入七牛云的依赖的依赖
-require golang.org/x/sync v0.1.0 // indirect
-
+require (
+	github.com/clbanning/mxj v1.8.4 // indirect
+	github.com/google/go-querystring v1.1.0 // indirect
+	github.com/mitchellh/mapstructure v1.5.0 // indirect
+	github.com/mozillazg/go-httpheader v0.3.1 // indirect
+	github.com/tencentyun/cos-go-sdk-v5 v0.7.41 // indirect
+)

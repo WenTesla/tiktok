@@ -24,7 +24,7 @@ func LoadRouter(r *gin.Engine) {
 	// 发布列表接口
 	apiRouter.GET("/publish/list/", controller.VideoList)
 
-	// extra apis - I todo
+	// extra apis - I
 	// 用户点赞接口
 	apiRouter.POST("/favorite/action/", jwt.VerifyToken, controller.LikeVideoByUserID)
 	// 喜欢列表接口
@@ -34,7 +34,8 @@ func LoadRouter(r *gin.Engine) {
 	// 评论列表接口
 	apiRouter.GET("/comment/list/", jwt.VerifyToken, controller.CommentList)
 	// extra apis - II todo
-
+	// 关注操作
+	apiRouter.GET("relation/action/", jwt.VerifyToken, controller.FollowUser)
 	// test
 	//apiRouter.GET("/test/token",jwt.SignToken)
 }
