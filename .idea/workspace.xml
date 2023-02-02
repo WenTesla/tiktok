@@ -4,18 +4,18 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c573e332-cd3a-41d6-891d-281450698c04" name="变更" comment="基本完成点赞列表">
+    <list default="true" id="c573e332-cd3a-41d6-891d-281450698c04" name="变更" comment="基本完成评论列表接口和评论操作接口">
+      <change afterPath="$PROJECT_DIR$/go/config/qiniuyun_oss.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/go/model/InitDb.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/config/parameter.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/config/parameter.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/controller/commentController.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/controller/commentController.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/controller/likeController.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/controller/likeController.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/controller/videoController.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/controller/videoController.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/model/comment.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/comment.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/model/comment_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/comment_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/model/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/user.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/model/video.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/video.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/route/load.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/route/load.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/service/commentService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/commentService.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/service/videoService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/videoService.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,12 +56,14 @@
     &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;configurable..is.expanded&quot;: &quot;false&quot;,
+    &quot;configurable.GoLibrariesConfigurable.is.expanded&quot;: &quot;true&quot;,
     &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;H:/tiktok/go/service&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.CommitDialog&quot;
+    &quot;settings.editor.selected.configurable&quot;: &quot;go.autoimport&quot;
   },
   &quot;keyToStringList&quot;: {
     &quot;com.intellij.ide.scratch.ScratchImplUtil$2/新建临时文件&quot;: [
@@ -189,7 +191,8 @@
     <MESSAGE value="基本完成个人信息接口" />
     <MESSAGE value="基本完成视频流和点赞接口" />
     <MESSAGE value="基本完成点赞列表" />
-    <option name="LAST_COMMIT_MESSAGE" value="基本完成点赞列表" />
+    <MESSAGE value="基本完成评论列表接口和评论操作接口" />
+    <option name="LAST_COMMIT_MESSAGE" value="基本完成评论列表接口和评论操作接口" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
@@ -199,7 +202,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/go/model/video.go</url>
-          <line>64</line>
+          <line>63</line>
           <option name="timeStamp" value="26" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
@@ -216,6 +219,21 @@
           <url>file://$PROJECT_DIR$/go/service/commentService.go</url>
           <line>58</line>
           <option name="timeStamp" value="48" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/go/middle/jwt/Verify.go</url>
+          <line>42</line>
+          <option name="timeStamp" value="50" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/go/service/videoService.go</url>
+          <line>118</line>
+          <option name="timeStamp" value="51" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/go/service/videoService.go</url>
+          <line>109</line>
+          <option name="timeStamp" value="52" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

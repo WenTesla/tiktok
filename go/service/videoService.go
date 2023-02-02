@@ -1,7 +1,12 @@
 package service
 
 import (
+	"fmt"
+	"github.com/qiniu/go-sdk/v7/auth/qbox"
+	"github.com/qiniu/go-sdk/v7/storage"
+	"golang.org/x/net/context"
 	"log"
+	"mime/multipart"
 	"tiktok/go/config"
 	"tiktok/go/model"
 	"time"
@@ -82,4 +87,38 @@ func packageVideo(tableVideo *model.TableVideo) (model.Video, error) {
 	// 获取"comment_count"
 	video.CommentCount = 10
 	return video, nil
+}
+
+// PublishVideo
+func PublishVideoService(file *multipart.FileHeader, userId int64, title string) error {
+	src, err := file.Open()
+	if err != nil {
+		return err
+	}
+	defer src.Close()
+	//配置参数
+	putPolicy := storage.PutPolicy{
+		Scope: config.Bucket,
+	}
+	mac := qbox.NewMac(config.AccessKey, config.SecretKey)
+	// 获取上传凭证 默认为
+	upToken := putPolicy.UploadToken(mac)
+	//
+	cfg := storage.Config{}
+	formUploader := storage.NewFormUploader(&cfg)
+	ret := storage.PutRet{}        // 上传后返回的结果
+	putExtra := storage.PutExtra{} // 额外参数
+	err = formUploader.Put(context.Background(), &ret, upToken, file.Filename, src, file.Size, &putExtra)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	fmt.Println(ret.Key, ret.Hash)
+	// 添加数据库 -todo cover选择
+	err = model.InsertVideo(userId, config.ImgUrl+ret.Key, "https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/12640/image-20230129170217818.png", title)
+	if err != nil {
+		return err
+	}
+	return nil
 }

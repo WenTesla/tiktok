@@ -53,7 +53,7 @@ func GetUserById(id int64) (User, error) {
 		log.Println(err.Error())
 		return user, err
 	}
-
+	//Db.Close()
 	return user, nil
 }
 

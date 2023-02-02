@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"tiktok/go/config"
 	"tiktok/go/model"
 	"tiktok/go/service"
 	"time"
@@ -86,7 +87,7 @@ func VideoPublish(c *gin.Context) {
 		return
 	}
 	// 获取登录用户的id
-	userId, exists := c.Get("Id")
+	user_id, exists := c.Get("Id")
 	if !exists {
 		c.JSON(http.StatusNotFound, model.BaseResponse{
 			StatusCode: -1,
@@ -94,13 +95,26 @@ func VideoPublish(c *gin.Context) {
 		})
 		return
 	}
+	// 转换
+	//user_id.(float64)
 	// 获取标题
 	title := c.PostForm("title")
-	log.Printf("%v %v %v", file, userId, title)
-	c.JSON(http.StatusBadRequest, model.BaseResponse{
-		StatusCode: -1,
-		StatusMsg:  "失败",
-	})
+	// 上传视频
+	err = service.PublishVideoService(file, int64(user_id.(float64)), title)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, model.BaseResponse{
+			StatusCode: -1,
+			StatusMsg:  err.Error(),
+		})
+	} else {
+		// 添加数据库
+
+		c.JSON(http.StatusOK, model.BaseResponse{
+			StatusCode: 0,
+			StatusMsg:  config.Success,
+		})
+	}
+
 }
 
 // 发布列表 用户的视频发布列表，直接列出用户所有投稿过的视频

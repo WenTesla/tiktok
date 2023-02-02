@@ -61,7 +61,6 @@ func GetVideoByUserId(userId int) ([]TableVideo, error) {
 func GetVideoNextTime(lastTime time.Time) (time.Time, error) {
 	tableVideo := TableVideo{}
 	result := db.Debug().Where("publish_time <= ?", lastTime).Order("publish_time asc").Limit(1).Select("publish_time").Find(&tableVideo)
-
 	if result.Error != nil {
 		return time.Time{}, result.Error
 	}
@@ -76,4 +75,20 @@ func QueryNextTimeByVideoId(videoId int64) (time.Time, error) {
 		return time.Time{}, result.Error
 	}
 	return tableVideo.PublishTime, nil
+}
+
+// 插入数据库
+func InsertVideo(userId int64, play_url string, cover_url string, title string) error {
+	tableVideo := TableVideo{
+		AuthorId:    userId,
+		PlayUrl:     play_url,
+		CoverUrl:    cover_url,
+		Title:       title,
+		PublishTime: time.Now(),
+	}
+	result := db.Debug().Create(&tableVideo)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
 }
