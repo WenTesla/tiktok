@@ -25,7 +25,7 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
 
-// 引入数据库连接驱动和
+// 引入数据库连接驱动和gorm
 require (
 	gorm.io/driver/mysql v1.4.5
 	gorm.io/gorm v1.24.3
@@ -40,7 +40,7 @@ require (
 
 // 引入go的jwt
 require github.com/golang-jwt/jwt/v4 v4.4.3
-
+// 引入腾讯云的依赖
 require (
 	github.com/clbanning/mxj v1.8.4 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect

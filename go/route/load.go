@@ -20,7 +20,7 @@ func LoadRouter(r *gin.Engine) {
 	// 视频流接口
 	apiRouter.GET("/feed/", controller.VideoStream)
 	// 发布接口（视频上传）
-	apiRouter.POST("/publish/action/", jwt.VerifyToken, controller.VideoPublish)
+	apiRouter.POST("/publish/action/", jwt.VerifyTokenByPost, controller.VideoPublish)
 	// 发布列表接口
 	apiRouter.GET("/publish/list/", controller.VideoList)
 
@@ -35,7 +35,9 @@ func LoadRouter(r *gin.Engine) {
 	apiRouter.GET("/comment/list/", jwt.VerifyToken, controller.CommentList)
 	// extra apis - II todo
 	// 关注操作
-	apiRouter.GET("relation/action/", jwt.VerifyToken, controller.FollowUser)
+	apiRouter.POST("/relation/action/", jwt.VerifyToken, controller.FollowUser)
+	// 关注列表
+	apiRouter.GET("/relation/follow/list/", jwt.VerifyToken, nil)
 	// test
 	//apiRouter.GET("/test/token",jwt.SignToken)
 }

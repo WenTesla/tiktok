@@ -27,18 +27,18 @@ type CommentInfo struct {
 func QueryCommentByUserId(userId int64) ([]Comment, error) {
 	var comments []Comment
 	// 获取
-	result := db.Debug().Where("user_id = ?", userId).Order("createTime desc").Find(&comments)
+	result := db.Debug().Where("user_id = ? AND is_cancel = ?", userId, 0).Order("createTime desc").Find(&comments)
 	if result.Error != nil {
 		return nil, result.Error
 	}
 	return comments, nil
 }
 
-// 根据视频id获取评论
+// QueryCommentByVideoId 根据视频id获取评论
 func QueryCommentByVideoId(videoId int64) ([]Comment, error) {
 	var comments []Comment
 	// 获取
-	result := db.Debug().Where("video_id = ?", videoId).Order("createTime desc").Find(&comments)
+	result := db.Debug().Where("video_id = ? AND is_cancel = ?", videoId, 0).Order("createTime desc").Find(&comments)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -49,14 +49,14 @@ func QueryCommentByVideoId(videoId int64) ([]Comment, error) {
 // QueryCommentCountByVideoId 根据视频的id获取视频的评论数
 func QueryCommentCountByVideoId(videoId int64) (int64, error) {
 	var count int64
-	result := db.Debug().Model(&Comment{}).Where("video_id = ?", videoId).Count(&count)
+	result := db.Debug().Model(&Comment{}).Where("video_id = ? AND is_cancel = ?", videoId, 0).Count(&count)
 	if result.Error != nil {
 		return -1, result.Error
 	}
 	return count, nil
 }
 
-// 插入评论 这有问题 传入的参数
+// InsertComment 插入评论 这有问题 传入的参数
 func InsertComment(userId int64, videoId int64, content string) (Comment, error) {
 	comment := Comment{
 		UserId:     userId,
@@ -74,6 +74,21 @@ func InsertComment(userId int64, videoId int64, content string) (Comment, error)
 // DeleteComment 删除评论
 func DeleteComment(id int64) (bool, error) {
 	result := db.Debug().Delete(&Comment{}, id)
+	if result.Error != nil {
+		return false, result.Error
+	}
+	if result.RowsAffected == 0 {
+		return false, errors.New("该评论不存在")
+	}
+	return true, nil
+}
+
+// CancelComment 取消评论 gorm有bug还是设计问题，不能通过主键直接更新,必须先查询数据
+func CancelComment(id int64) (bool, error) {
+	comment := Comment{}
+	db.First(&comment, id)
+	comment.IsCancel = 1
+	result := db.Debug().Save(&comment)
 	if result.Error != nil {
 		return false, result.Error
 	}

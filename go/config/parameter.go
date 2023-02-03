@@ -15,3 +15,5 @@ const TokenIsNotMatchUserId = "Token与用户不匹配"
 const Success = "成功!"
 
 const Fail = "失败"
+
+const RequestFail = "请求参数错误"

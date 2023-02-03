@@ -70,11 +70,17 @@ func CreateCommentService(userId int64, videoId int64, content string) (model.Co
 
 // DeleteCommentService 删除评论
 func DeleteCommentService(id int64) (bool, error) {
-	isDelete, err := model.DeleteComment(id)
+	isDelete, err := model.CancelComment(id)
 	if err != nil {
 		return false, err
 	}
 	return isDelete, nil
+}
+
+// CancelCommentService 根据主键取消评论
+func CancelCommentService(id int64) (bool, error) {
+
+	return true, nil
 }
 
 // checkSensitive 检验敏感词

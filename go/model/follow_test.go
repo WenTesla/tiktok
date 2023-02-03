@@ -6,16 +6,19 @@ import (
 )
 
 func TestGetFollowingById(t *testing.T) {
-	id, err := GetFollowingById(20053)
+	id, err := GetFollowingById(2)
 	log.Println(err)
 	log.Println(id)
 }
 
 func TestGetFansById(t *testing.T) {
-	id, err := GetFansById(20053)
+	id, err := GetFansById(2)
 	log.Println(id)
 	log.Println(err)
 }
 func TestInsertFollow(t *testing.T) {
 	InsertFollow(4, 2)
+}
+func TestCancelFollow(t *testing.T) {
+	CancelFollow(1, 2)
 }
