@@ -33,13 +33,12 @@ var db = config.Init()
 
 // InsertUser 插入用户
 func InsertUser(name string, password string) (User, error) {
-	Db := config.Init()
 	//CreateUser()
 	user := User{
 		Name:     name,
 		Password: password,
 	}
-	result := Db.Create(&user)
+	result := db.Create(&user)
 	return user, result.Error
 	// return true, nil
 }
@@ -47,9 +46,8 @@ func InsertUser(name string, password string) (User, error) {
 // GetUserById 根据id(主键）获取用户
 func GetUserById(id int64) (User, error) {
 	user := User{}
-	Db := config.Init()
 
-	if err := Db.Debug().Where("Id = ?", id).First(&user).Error; err != nil {
+	if err := db.Debug().Where("Id = ?", id).First(&user).Error; err != nil {
 		log.Println(err.Error())
 		return user, err
 	}

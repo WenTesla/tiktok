@@ -4,21 +4,18 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c573e332-cd3a-41d6-891d-281450698c04" name="变更" comment="完成视频发布接口-改用腾讯云的oss储存">
+    <list default="true" id="c573e332-cd3a-41d6-891d-281450698c04" name="变更" comment="完成评论接口">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/config/parameter.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/config/parameter.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/controller/followController.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/controller/followController.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/middle/jwt/Verify.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/middle/jwt/Verify.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/model/comment.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/comment.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/model/comment_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/comment_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/model/base.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/base.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/model/follow.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/follow.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/model/follow_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/follow_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/model/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/model/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/user.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/route/load.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/route/load.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/service/commentService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/commentService.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/service/followService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/followService.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/initial.sql" beforeDir="false" afterPath="$PROJECT_DIR$/resources/initial.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/insertData.sql" beforeDir="false" afterPath="$PROJECT_DIR$/resources/insertData.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/service/userService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/userService.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,36 +47,36 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultGoTemplateProperty": "Go File",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.go.formatter.settings.were.checked": "true",
-    "RunOnceActivity.go.migrated.go.modules.settings": "true",
-    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "configurable..is.expanded": "false",
-    "configurable.GoLibrariesConfigurable.is.expanded": "true",
-    "go.import.settings.migrated": "true",
-    "last_opened_file_path": "H:/tiktok/go/service",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "go.autoimport"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;configurable..is.expanded&quot;: &quot;false&quot;,
+    &quot;configurable.GoLibrariesConfigurable.is.expanded&quot;: &quot;true&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;H:/tiktok/go/service&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;go.autoimport&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "mysql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
     ],
-    "RunConfigurationTargetLRU": [
-      "f8ed14ed-78ef-4118-87b7-1ecf6c80c7b5"
+    &quot;RunConfigurationTargetLRU&quot;: [
+      &quot;f8ed14ed-78ef-4118-87b7-1ecf6c80c7b5&quot;
     ],
-    "com.intellij.ide.scratch.ScratchImplUtil$2/新建临时文件": [
-      "go"
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/新建临时文件&quot;: [
+      &quot;go&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="H:\tiktok\go\service" />
@@ -112,18 +109,6 @@
       <pattern value="^\QTestCancelComment\E$" />
       <method v="2" />
     </configuration>
-    <configuration name="tiktok/go/model 中的 TestCancelFollow" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
-      <module name="tiktok" />
-      <working_directory value="$PROJECT_DIR$/go/model" />
-      <root_directory value="$PROJECT_DIR$" />
-      <kind value="PACKAGE" />
-      <package value="tiktok/go/model" />
-      <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$" />
-      <framework value="gotest" />
-      <pattern value="^\QTestCancelFollow\E$" />
-      <method v="2" />
-    </configuration>
     <configuration name="tiktok/go/model 中的 TestGetFansById" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="tiktok" />
       <working_directory value="$PROJECT_DIR$/go/model" />
@@ -148,20 +133,32 @@
       <pattern value="^\QTestGetFollowingById\E$" />
       <method v="2" />
     </configuration>
+    <configuration name="tiktok/go/model 中的 TestQueryFollowUsersByUserId" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="tiktok" />
+      <working_directory value="$PROJECT_DIR$/go/model" />
+      <root_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="tiktok/go/model" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <pattern value="^\QTestQueryFollowUsersByUserId\E$" />
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="Go 构建.go build tiktok/go" />
+      <item itemvalue="Go 测试.tiktok/go/model 中的 TestQueryFollowUsersByUserId" />
       <item itemvalue="Go 测试.tiktok/go/model 中的 TestCancelComment" />
-      <item itemvalue="Go 测试.tiktok/go/model 中的 TestCancelFollow" />
       <item itemvalue="Go 测试.tiktok/go/model 中的 TestGetFansById" />
       <item itemvalue="Go 测试.tiktok/go/model 中的 TestGetFollowingById" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Go 构建.go build tiktok/go" />
+        <item itemvalue="Go 测试.tiktok/go/model 中的 TestQueryFollowUsersByUserId" />
         <item itemvalue="Go 测试.tiktok/go/model 中的 TestCancelComment" />
         <item itemvalue="Go 测试.tiktok/go/model 中的 TestGetFansById" />
         <item itemvalue="Go 测试.tiktok/go/model 中的 TestGetFollowingById" />
-        <item itemvalue="Go 测试.tiktok/go/model 中的 TestCancelFollow" />
       </list>
     </recent_temporary>
   </component>
@@ -203,7 +200,8 @@
     <MESSAGE value="基本完成评论列表接口和评论操作接口" />
     <MESSAGE value="完善文档" />
     <MESSAGE value="完成视频发布接口-改用腾讯云的oss储存" />
-    <option name="LAST_COMMIT_MESSAGE" value="完成视频发布接口-改用腾讯云的oss储存" />
+    <MESSAGE value="完成评论接口" />
+    <option name="LAST_COMMIT_MESSAGE" value="完成评论接口" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

@@ -41,3 +41,45 @@ func FollowUserService(userId int64, toUserId int64, actionType bool) (bool, err
 	}
 	return false, nil
 }
+
+// FollowListService 关注列表服务
+func FollowListService(userId int64) ([]model.UserInfo, error) {
+	// 先根据用户Id取用户关注
+	users, err := model.QueryFollowUsersByUserId(userId)
+	if err != nil {
+		return nil, err
+	}
+	// 定义userInfos 切片
+	var userInfos []model.UserInfo
+	// 循环
+	for _, user := range users {
+		userInfo, err := model.PackageUserToUserInfo(user)
+		if err != nil {
+			return nil, err
+		}
+		userInfos = append(userInfos, userInfo)
+	}
+
+	return userInfos, nil
+}
+
+// FollowerListService 粉丝列表服务
+func FollowerListService(userId int64) ([]model.UserInfo, error) {
+	// 先根据用户Id取用户关注
+	users, err := model.QueryFansUsersByUserId(userId)
+	if err != nil {
+		return nil, err
+	}
+	// 定义userInfos 切片
+	var userInfos []model.UserInfo
+	// 循环
+	for _, user := range users {
+		userInfo, err := model.PackageUserToUserInfo(user)
+		if err != nil {
+			return nil, err
+		}
+		userInfos = append(userInfos, userInfo)
+	}
+
+	return userInfos, nil
+}

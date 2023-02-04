@@ -80,7 +80,7 @@ func LoginService(username string, password string) (int64, error) {
 	return user.Id, nil
 }
 
-// 用户服务 先封装小的，再封装大的
+// UserService 用户服务 先封装小的，再封装大的
 func UserService(Id int64) (model.UserInfo, error) {
 	user, err := model.GetUserById(Id)
 	if err != nil {

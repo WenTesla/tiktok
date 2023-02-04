@@ -22,3 +22,10 @@ func TestInsertFollow(t *testing.T) {
 func TestCancelFollow(t *testing.T) {
 	CancelFollow(1, 2)
 }
+func TestQueryFollowUsersByUserId(t *testing.T) {
+	users, err := QueryFollowUsersByUserId(1)
+	if err != nil {
+		log.Println(err)
+	}
+	log.Println(users)
+}

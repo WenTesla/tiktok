@@ -9,6 +9,16 @@ import (
 	"tiktok/go/service"
 )
 
+type FollowListResponse struct {
+	model.BaseResponse
+	UserList []model.UserInfo `json:"user_list"` // 用户信息列表
+}
+
+type FollowerListResponse struct {
+	model.BaseResponse
+	UserList []model.UserInfo `json:"user_list"` // 用户信息列表
+}
+
 // FollowUser 关注操作
 func FollowUser(c *gin.Context) {
 	// 对方用户的id
@@ -70,7 +80,56 @@ func FollowUser(c *gin.Context) {
 	}
 }
 
-// FollowList 关注列表 -todo
+// FollowList 关注列表
 func FollowList(c *gin.Context) {
+	//// 取token
+	//user_id, exists := c.Get("Id")
+	//if !exists {
+	//	c.JSON(http.StatusBadRequest, model.BaseResponse.Fail)
+	//	return
+	//}
+	//_ = int64(user_id.(float64))
+	user_id := c.Query("user_id")
+	userId, _ := strconv.ParseInt(user_id, 10, 64)
+	userInfos, err := service.FollowListService(userId)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, FollowListResponse{
+			BaseResponse: model.BaseResponse{
+				StatusCode: -1,
+				StatusMsg:  config.Fail,
+			},
+			UserList: nil,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, FollowListResponse{
+		BaseResponse: model.BaseResponse{
+			StatusCode: 0,
+			StatusMsg:  config.Success,
+		},
+		UserList: userInfos,
+	})
+	return
+}
 
+// FollowerList 粉丝列表
+func FollowerList(c *gin.Context) {
+	user_id := c.Query("user_id")
+	userId, _ := strconv.ParseInt(user_id, 10, 64)
+	userInfos, err := service.FollowerListService(userId)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, model.BaseResponse{
+			StatusCode: -1,
+			StatusMsg:  config.Fail,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, FollowerListResponse{
+		BaseResponse: model.BaseResponse{
+			StatusCode: 0,
+			StatusMsg:  config.Success,
+		},
+		UserList: userInfos,
+	})
+	return
 }

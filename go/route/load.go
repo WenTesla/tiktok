@@ -37,7 +37,9 @@ func LoadRouter(r *gin.Engine) {
 	// 关注操作
 	apiRouter.POST("/relation/action/", jwt.VerifyToken, controller.FollowUser)
 	// 关注列表
-	apiRouter.GET("/relation/follow/list/", jwt.VerifyToken, nil)
+	apiRouter.GET("/relation/follow/list/", jwt.VerifyToken, controller.FollowList)
+	// 粉丝列表
+	apiRouter.GET("/relation/follower/list/", jwt.VerifyToken, controller.FollowerList)
 	// test
 	//apiRouter.GET("/test/token",jwt.SignToken)
 }

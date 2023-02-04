@@ -86,3 +86,25 @@ func RefocusUser(userId int64, toUserID int64) error {
 	}
 	return nil
 }
+
+// QueryFollowUsersByUserId 根据用户id查询用户关注的用户id切片 比较绕
+func QueryFollowUsersByUserId(userId int64) ([]User, error) {
+	var users []User
+	//SELECT * FROM `users` WHERE id IN (SELECT `follower_id` FROM `follows` WHERE user_id = 1)
+	result := db.Debug().Where("id IN (?)", db.Where("user_id = ?", userId).Select("follower_id").Find(&Follow{})).Find(&users)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return users, nil
+}
+
+// QueryFansUsersByUserId 根据用户id查询当前用户的粉丝id切片 比较绕
+func QueryFansUsersByUserId(userId int64) ([]User, error) {
+	var users []User
+	//SELECT * FROM `users` WHERE id IN (SELECT `follower_id` FROM `follows` WHERE user_id = 1)
+	result := db.Debug().Where("id IN (?)", db.Where("follower_id = ?", userId).Select("follower_id").Find(&Follow{})).Find(&users)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return users, nil
+}
