@@ -21,13 +21,13 @@ var nowTime string
 var newFileName string
 
 // 通过传入时间戳，当前用户的id，返回对应的视频数组，以及视频数组中最早的发布时间
-func VideoStreamService(lastTime time.Time) ([]model.Video, error) {
+func VideoStreamService(lastTime time.Time, userId int64) ([]model.Video, error) {
 	tableVideos, err := model.GetVideoByLastTime(lastTime)
 	if err != nil {
 		log.Printf("失败 %v", err)
 	}
 	log.Printf("获取成功")
-	videos, err := packageVideos(tableVideos)
+	videos, err := packageVideos(tableVideos, userId)
 	if err != nil {
 		return nil, err
 	}
@@ -39,7 +39,7 @@ func VideoInfoByUserId(id int) ([]model.Video, error) {
 	if err != nil {
 		log.Printf("失败%v", err)
 	}
-	videos, err := packageVideos(tableVideos)
+	videos, err := packageVideos(tableVideos, -1)
 	if err != nil {
 		return nil, err
 	}
@@ -54,22 +54,33 @@ func VideoInfoByUserId(id int) ([]model.Video, error) {
 //	 "is_favorite": true,
 //
 // user
-func packageVideos(tableVideos []model.TableVideo) ([]model.Video, error) {
+func packageVideos(tableVideos []model.TableVideo, userId int64) ([]model.Video, error) {
 	// 创建video模型
 	videos := make([]model.Video, 0, config.VideoCount)
-	// 填入author
-	for _, tableVideo := range tableVideos {
-		video, err := packageVideo(&tableVideo)
-		if err != nil {
-			return nil, err
+	if userId == -1 {
+		// 填入author
+		for _, tableVideo := range tableVideos {
+			video, err := packageVideo(&tableVideo)
+			if err != nil {
+				return nil, err
+			}
+			videos = append(videos, video)
 		}
-		videos = append(videos, video)
+	} else {
+		// 填入author
+		for _, tableVideo := range tableVideos {
+			video, err := packageVideoWithUserId(&tableVideo, userId)
+			if err != nil {
+				return nil, err
+			}
+			videos = append(videos, video)
+		}
 	}
 
 	return videos, nil
 }
 
-// 包装单个视频
+// packageVideo 包装单个视频，不返回是否关注的信息
 func packageVideo(tableVideo *model.TableVideo) (model.Video, error) {
 	// 创建video单例
 	video := model.Video{}
@@ -98,6 +109,44 @@ func packageVideo(tableVideo *model.TableVideo) (model.Video, error) {
 		return video, err
 	}
 	video.CommentCount = commentCount
+	return video, nil
+}
+
+// packageVideoWithUserId 包装单个视频,返回是否关注的信息
+func packageVideoWithUserId(tableVideo *model.TableVideo, id int64) (model.Video, error) {
+	// 创建video单例
+	video := model.Video{}
+	// 获取作者信息
+	userInfo, err := UserInfoService(tableVideo.AuthorId, id)
+	if err != nil {
+		return model.Video{}, err
+	}
+	log.Printf("%v", userInfo)
+	//video.Author=user
+	video.Author = userInfo
+	// 填充Videos的
+	video.ID = tableVideo.Id
+	video.PlayURL = tableVideo.PlayUrl
+	video.CoverURL = tableVideo.CoverUrl
+	video.Title = tableVideo.Title
+	// 获取 favorite_count
+	count, err := model.QueryLikeByVideoId(tableVideo.Id)
+	if err != nil {
+		return video, err
+	}
+	video.FavoriteCount = count
+	// 获取"commentCount"
+	commentCount, err := model.QueryCommentCountByVideoId(tableVideo.Id)
+	if err != nil {
+		return video, err
+	}
+	video.CommentCount = commentCount
+	// 获取是否点赞
+	is_favorite, err := model.QueryIsLike(id, tableVideo.Id)
+	if err != nil {
+		return video, err
+	}
+	video.IsFavorite = is_favorite
 	return video, nil
 }
 

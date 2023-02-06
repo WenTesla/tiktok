@@ -4,17 +4,20 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c573e332-cd3a-41d6-891d-281450698c04" name="变更" comment="完成关注列表和粉丝列表接口">
-      <change afterPath="$PROJECT_DIR$/go/controller/messageController.go" afterDir="false" />
+    <list default="true" id="c573e332-cd3a-41d6-891d-281450698c04" name="变更" comment="优化文件上传接口">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/config/tencent_cos.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/config/tencent_cos.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/controller/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/go/controller/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/controller/commentController.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/controller/commentController.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/controller/messageController.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/controller/messageController.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/controller/videoController.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/controller/videoController.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/middle/jwt/token.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/middle/jwt/token.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/model/follow.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/follow.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/model/follow_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/follow_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/model/like.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/like.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/model/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/user.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/route/load.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/route/load.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/service/commentService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/commentService.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/service/likeService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/likeService.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/service/userService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/userService.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/service/videoService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/videoService.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -218,7 +221,8 @@
     <MESSAGE value="完成视频发布接口-改用腾讯云的oss储存" />
     <MESSAGE value="完成评论接口" />
     <MESSAGE value="完成关注列表和粉丝列表接口" />
-    <option name="LAST_COMMIT_MESSAGE" value="完成关注列表和粉丝列表接口" />
+    <MESSAGE value="优化文件上传接口" />
+    <option name="LAST_COMMIT_MESSAGE" value="优化文件上传接口" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
@@ -226,20 +230,10 @@
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/go/model/video.go</url>
-          <line>63</line>
-          <option name="timeStamp" value="26" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+        <line-breakpoint type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/go/controller/videoController.go</url>
-          <line>79</line>
-          <option name="timeStamp" value="54" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/go/service/videoService.go</url>
-          <line>115</line>
-          <option name="timeStamp" value="57" />
+          <line>59</line>
+          <option name="timeStamp" value="71" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

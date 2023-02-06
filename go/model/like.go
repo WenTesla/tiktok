@@ -15,6 +15,7 @@ type Like struct {
 // 更新点赞数据
 func UpdateLikeVideoByUserId(userId int64, videoId int64, action int64) error {
 	//更新当前用户观看视频的点赞状态“cancel”，返回错误结果
+	// UPDATE `likes` SET `is_cancel`=0 WHERE `user_id` = 9 AND `video_id` = 39
 	result := db.Debug().Model(Like{}).Where(map[string]interface{}{"user_id": userId, "video_id": videoId}).
 		Update("is_cancel", action)
 	return result.Error
@@ -36,6 +37,7 @@ func InsertLikeData(userId int64, videoId int64) (bool, error) {
 // QueryDuplicateLikeData 查询是否有重复数据
 func QueryDuplicateLikeData(userId int64, videoId int64) (bool, error) {
 	like := Like{}
+	// SELECT * FROM `likes` WHERE `user_id` = 9 AND `video_id` = 39
 	result := db.Debug().Where(map[string]interface{}{"user_id": userId, "video_id": videoId}).Find(&like)
 	if result.Error != nil {
 		// 查询错误
@@ -67,9 +69,25 @@ func QueryVideoByUserId(userId int64) ([]TableVideo, error) {
 // QueryLikeByVideoId 根据id获取视频被点赞的总数
 func QueryLikeByVideoId(videoId int64) (int64, error) {
 	var count int64
+	// SELECT count(*) FROM `likes` WHERE video_id = ?
 	result := db.Debug().Model(&Like{}).Where("video_id = ?", videoId).Count(&count)
 	if result.Error != nil {
 		return -1, result.Error
 	}
 	return count, nil
+}
+
+// QueryIsLike 查询是否有点赞
+func QueryIsLike(userId int64, videoId int64) (bool, error) {
+	like := Like{}
+	// SELECT * FROM `likes` WHERE `user_id` = 9 AND `video_id` = 39 AND is_cancel = 0
+	result := db.Debug().Where(map[string]interface{}{"user_id": userId, "video_id": videoId, "is_cancel": 0}).Find(&like)
+	if result.Error != nil {
+		// 查询错误
+		return false, result.Error
+	}
+	if like.Id == 0 {
+		return false, nil
+	}
+	return true, nil
 }

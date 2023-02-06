@@ -110,7 +110,7 @@ func TestParseToken(tokenString string) (interface{}, error) {
 	return true, err
 }
 
-// 解析token 返回Id
+// ParseToken 解析token 返回Id
 func ParseToken(tokenString string) (interface{}, error) {
 
 	// sample token string taken from the New example

@@ -90,16 +90,16 @@ func CommentVideo(c *gin.Context) {
 
 // CommentList 评论列表
 func CommentList(c *gin.Context) {
-	// 获取登录用户
-	user_id, exists := c.Get("Id")
-	if !exists {
-		c.JSON(http.StatusBadRequest, model.BaseResponse{
-			StatusCode: -1,
-			StatusMsg:  "失败",
-		})
-		return
-	}
-	userId := int64(user_id.(float64)) //userId, err := strconv.ParseInt(user_id, 10, 64)
+	//// 获取登录用户
+	//user_id, exists := c.Get("Id")
+	//if !exists {
+	//	c.JSON(http.StatusBadRequest, model.BaseResponse{
+	//		StatusCode: -1,
+	//		StatusMsg:  "失败",
+	//	})
+	//	return
+	//}
+	//userId := int64(user_id.(float64)) //userId, err := strconv.ParseInt(user_id, 10, 64)
 	// 获取视频的id
 	video_id := c.Query("video_id")
 	// 转换
@@ -111,9 +111,8 @@ func CommentList(c *gin.Context) {
 		})
 		return
 	}
-	log.Println(userId, videoId)
 	// 调用服务
-	commentInfos, err := service.CommentListService(userId, videoId)
+	commentInfos, err := service.CommentListService(videoId)
 	if err != nil {
 		return
 	}

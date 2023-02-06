@@ -25,7 +25,7 @@ type UserInfo struct {
 	FollowCount    int64  `json:"follow_count"`      //关注总数
 	FollowerCount  int64  `json:"follower_count"`    //粉丝总数
 	IsFollow       bool   `json:"is_follow"`         //是否关注
-	AvatorUrl      string `json:"avator,omitempty""` //用户的url
+	AvatarUrl      string `json:"avatar,omitempty""` //用户的url
 	TotalFavorited int64  `json:"total_favorited,omitempty"`
 	FavoriteCount  int64  `json:"favorite_count,omitempty"`
 }

@@ -39,7 +39,7 @@ func FriendList(c *gin.Context) {
 			FollowCount:   1,
 			FollowerCount: 2,
 			IsFollow:      true,
-			AvatorUrl:     "https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/12640/20230206171653.png",
+			AvatarUrl:     "https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/12640/20230206171653.png",
 		},
 		Message: "testmessage",
 		MsgType: 0,

@@ -12,7 +12,7 @@ import (
 	"tiktok/go/model"
 )
 
-// 盐值
+// SALT 盐值
 const SALT = "TikTok"
 
 // email verify
@@ -30,14 +30,14 @@ func VerifyMobileFormat(mobileNum string) bool {
 	return reg.MatchString(mobileNum)
 }
 
-// 根据name生成token
+// GenerateTokenByName 根据name生成token
 func GenerateTokenByName(username string) (string, error) {
 	user, _ := model.GetUserByName(username)
 	token := jwt.SignToken(user)
 	return token, nil
 }
 
-// md5加盐加密
+// Encryption md5加盐加密
 func Encryption(password string) string {
 	password += SALT
 	hash := md5.New()
@@ -46,7 +46,7 @@ func Encryption(password string) string {
 	return hash_password
 }
 
-// 注册服务
+// RegisterService 注册服务
 func RegisterService(username string, password string) (int64, error) {
 	log.Println(username, "---", password)
 
@@ -63,7 +63,7 @@ func RegisterService(username string, password string) (int64, error) {
 	return user.Id, nil
 }
 
-// 登录服务
+// LoginService 登录服务
 func LoginService(username string, password string) (int64, error) {
 
 	user, err := model.GetUserByName(username)
@@ -93,13 +93,44 @@ func UserService(Id int64) (model.UserInfo, error) {
 	// 查询自己的粉丝
 	fanCount, err := model.GetFansById(Id)
 	log.Printf("粉丝数目%d", fanCount)
-	// todo 查询是否关注
+	// 关注一定为true
 	userInfo := model.UserInfo{
 		Id:            user.Id,
 		Name:          user.Name,
 		FollowCount:   followingCount,
 		FollowerCount: fanCount,
 		IsFollow:      false,
+	}
+	return userInfo, nil
+}
+
+// UserInfoService 用户服务 先封装小的，再封装大的
+func UserInfoService(Id int64, userId int64) (model.UserInfo, error) {
+	user, err := model.GetUserById(Id)
+	if err != nil {
+		return model.UserInfo{}, err
+	}
+	//user.Password = ""
+	// 查询自己的关注数目
+	followingCount, _ := model.GetFollowingById(Id)
+	log.Printf("关注的数量%d", followingCount)
+	// 查询自己的粉丝
+	fanCount, err := model.GetFansById(Id)
+	if err != nil {
+		return model.UserInfo{}, err
+	}
+	log.Printf("粉丝数目%d", fanCount)
+	// 查询是否关注
+	isFollow, err := model.QueryIsFollow(userId, Id)
+	if err != nil {
+		return model.UserInfo{}, err
+	}
+	userInfo := model.UserInfo{
+		Id:            user.Id,
+		Name:          user.Name,
+		FollowCount:   followingCount,
+		FollowerCount: fanCount,
+		IsFollow:      isFollow,
 	}
 	return userInfo, nil
 }

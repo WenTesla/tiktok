@@ -90,8 +90,8 @@ func RefocusUser(userId int64, toUserID int64) error {
 // QueryFollowUsersByUserId 根据用户id查询用户关注的用户id切片 比较绕
 func QueryFollowUsersByUserId(userId int64) ([]User, error) {
 	var users []User
-	//SELECT * FROM `users` WHERE id IN (SELECT `follower_id` FROM `follows` WHERE user_id = 1)
-	result := db.Debug().Where("id IN (?)", db.Where("user_id = ?", userId).Select("follower_id").Find(&Follow{})).Find(&users)
+	//SELECT * FROM `users` WHERE id IN (SELECT `follower_id` FROM `follows` WHERE user_id = 1 AND cancel = 0)
+	result := db.Debug().Where("id IN (?)", db.Where("user_id = ? AND cancel = ?", userId, 0).Select("follower_id").Find(&Follow{})).Find(&users)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -101,18 +101,23 @@ func QueryFollowUsersByUserId(userId int64) ([]User, error) {
 // QueryFansUsersByUserId 根据用户id查询当前用户的粉丝id切片 比较绕
 func QueryFansUsersByUserId(userId int64) ([]User, error) {
 	var users []User
-	//SELECT * FROM `users` WHERE id IN (SELECT `follower_id` FROM `follows` WHERE user_id = 1)
-	result := db.Debug().Where("id IN (?)", db.Where("follower_id = ?", userId).Select("follower_id").Find(&Follow{})).Find(&users)
+	//SELECT * FROM `users` WHERE id IN (SELECT `follower_id` FROM `follows` WHERE user_id = 1 AND cancel = 0)
+	result := db.Debug().Where("id IN (?)", db.Where("follower_id = ? AND cancel = ?", userId, 0).Select("follower_id").Find(&Follow{})).Find(&users)
 	if result.Error != nil {
 		return nil, result.Error
 	}
 	return users, nil
 }
 
-// QueryIsFollow 查询是否关注
+// QueryIsFollow 查询是否关注 第一个参数为当前用户的id，第二个参数为要关注的用户Id
 func QueryIsFollow(userId int64, toUserId int64) (bool, error) {
+	// 自己不能关注自己
+	if userId == toUserId {
+		return true, nil
+	}
 	var count int64
-	result := db.Debug().Model(&Follow{}).Where("user_id = ? AND follower_id = ?", userId, toUserId).Count(&count)
+	//SELECT count(*) FROM `follows` WHERE user_id = ? AND follower_id = ? AND cancel = 0
+	result := db.Debug().Model(&Follow{}).Where("user_id = ? AND follower_id = ? AND cancel = ?", userId, toUserId, 0).Count(&count)
 	if result.Error != nil {
 		return false, result.Error
 	}

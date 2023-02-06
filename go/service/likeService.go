@@ -35,7 +35,7 @@ func UserFavoriteListService(userId int64) ([]model.Video, error) {
 	if err != nil {
 		return nil, err
 	}
-	videos, err := packageVideos(tableVideos)
+	videos, err := packageVideos(tableVideos, -1)
 	if err != nil {
 		return nil, err
 	}

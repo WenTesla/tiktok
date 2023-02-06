@@ -4,7 +4,7 @@ import (
 	"tiktok/go/model"
 )
 
-func CommentListService(userId int64, videoId int64) ([]model.CommentInfo, error) {
+func CommentListService(videoId int64) ([]model.CommentInfo, error) {
 	comments, err := model.QueryCommentByVideoId(videoId)
 	if err != nil {
 		return nil, err
