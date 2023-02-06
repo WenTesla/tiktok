@@ -18,15 +18,22 @@ func CreateUserTable() {
 	Db.AutoMigrate(&user)
 }
 
-// UserInfo  最详细的信息
+// UserInfo  最详细的信息 不与数据库模型对应
 type UserInfo struct {
-	Id             int64  `json:"id,omitempty"`   //主键
-	Name           string `json:"name,omitempty"` //昵称
-	FollowCount    int64  `json:"follow_count"`   //关注总数
-	FollowerCount  int64  `json:"follower_count"` //粉丝总数
-	IsFollow       bool   `json:"is_follow"`      //是否关注
+	Id             int64  `json:"id,omitempty"`      //主键
+	Name           string `json:"name,omitempty"`    //昵称
+	FollowCount    int64  `json:"follow_count"`      //关注总数
+	FollowerCount  int64  `json:"follower_count"`    //粉丝总数
+	IsFollow       bool   `json:"is_follow"`         //是否关注
+	AvatorUrl      string `json:"avator,omitempty""` //用户的url
 	TotalFavorited int64  `json:"total_favorited,omitempty"`
 	FavoriteCount  int64  `json:"favorite_count,omitempty"`
+}
+
+type FriendUser struct {
+	UserInfo
+	Message string `json:"message"` //聊天信息
+	MsgType int64  `json:"msgType"` //message信息的类型，0=>请求用户接受信息，1=>当前请求用户发送的信息
 }
 
 var db = config.Init()

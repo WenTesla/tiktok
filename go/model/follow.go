@@ -108,3 +108,16 @@ func QueryFansUsersByUserId(userId int64) ([]User, error) {
 	}
 	return users, nil
 }
+
+// QueryIsFollow 查询是否关注
+func QueryIsFollow(userId int64, toUserId int64) (bool, error) {
+	var count int64
+	result := db.Debug().Model(&Follow{}).Where("user_id = ? AND follower_id = ?", userId, toUserId).Count(&count)
+	if result.Error != nil {
+		return false, result.Error
+	}
+	if count != 0 {
+		return true, nil
+	}
+	return false, nil
+}

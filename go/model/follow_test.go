@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"log"
 	"testing"
 )
@@ -28,4 +29,8 @@ func TestQueryFollowUsersByUserId(t *testing.T) {
 		log.Println(err)
 	}
 	log.Println(users)
+}
+func TestQueryIsFollow(t *testing.T) {
+	isFollow, _ := QueryIsFollow(1, 50)
+	fmt.Println(isFollow)
 }

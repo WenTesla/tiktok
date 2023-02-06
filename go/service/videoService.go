@@ -9,11 +9,16 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strconv"
 	"strings"
 	"tiktok/go/config"
 	"tiktok/go/model"
 	"time"
 )
+
+var nowTime string
+
+var newFileName string
 
 // 通过传入时间戳，当前用户的id，返回对应的视频数组，以及视频数组中最早的发布时间
 func VideoStreamService(lastTime time.Time) ([]model.Video, error) {
@@ -96,7 +101,7 @@ func packageVideo(tableVideo *model.TableVideo) (model.Video, error) {
 	return video, nil
 }
 
-// PublishVideo
+// PublishVideoService PublishVideo 可以优化
 func PublishVideoService(file *multipart.FileHeader, userId int64, title string) error {
 	src, err := file.Open()
 	if err != nil {
@@ -104,18 +109,21 @@ func PublishVideoService(file *multipart.FileHeader, userId int64, title string)
 	}
 	defer src.Close()
 	// 获取视频文件名称
+	nowTime = strconv.FormatInt(time.Now().Unix(), 10)
+	// 转换视频名称
+	newFileName, err = fileNameToTimeCurrentFileName(file.Filename, nowTime)
 	// 上传到cos
-	err = publishVideoByTencentCos(src, file.Filename)
+	err = publishVideoByTencentCos(src, newFileName)
 	if err != nil {
 		return err
 	}
 	// 提取封面url
-	play_cover, err := parseFileName(file.Filename)
+	play_cover, err := parseFileName(newFileName)
 	if err != nil {
 		return err
 	}
 	// 添加数据库
-	err = model.InsertVideo(userId, config.CosUrl+"/"+file.Filename, config.CosUrl+"/"+play_cover, title)
+	err = model.InsertVideo(userId, config.CosUrl+"/"+newFileName, config.CosUrl+"/"+play_cover, title)
 	if err != nil {
 		return err
 	}
@@ -154,5 +162,16 @@ func parseFileName(fileName string) (string, error) {
 		return "", errors.New("解析错误")
 	}
 	replaced := fileName[lastIndex:]
-	return strings.Replace(fileName, replaced, config.Replace, 1), nil
+	return strings.Replace(fileName, replaced, config.ReplaceSuffix, 1), nil
+}
+
+// 将文件名称转化为时间戳并返回
+func fileNameToTimeCurrentFileName(oldFileName string, newFileName string) (string, error) {
+	// 提取文件后缀
+	lastIndex := strings.LastIndex(oldFileName, ".")
+	if lastIndex == -1 {
+		return "", errors.New("文件名称转换错误")
+	}
+	replaced := oldFileName[:lastIndex]
+	return strings.Replace(oldFileName, replaced, newFileName, 1), nil
 }
