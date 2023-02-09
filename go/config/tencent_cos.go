@@ -7,3 +7,5 @@ const SecretKey = "Umwtc8QUO8j7ZqvocJ2f7Phq00lZLvIR"
 const CosUrl = "https://tiktok-video-1313520634.cos.ap-beijing.myqcloud.com"
 
 const ReplaceSuffix = ".jpg"
+
+const CosUrlAnd = "https://tiktok-video-1313520634.cos.ap-beijing.myqcloud.com/"

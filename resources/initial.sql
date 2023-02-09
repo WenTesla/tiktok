@@ -2,7 +2,7 @@
 -- database tiktok;
 
 use
-tiktok;
+    tiktok;
 -- ----------------------------
 -- Table structure for users
 -- ----------------------------
@@ -13,7 +13,8 @@ CREATE TABLE `users`
     `name`     varchar(255) NOT NULL COMMENT '用户名',
     `password` varchar(255) NOT NULL COMMENT '用户密码',
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb3 COMMENT='用户表';
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb3 COMMENT ='用户表';
 
 -- ----------------------------
 -- Table structure for videos
@@ -28,7 +29,8 @@ CREATE TABLE `videos`
     `title`        varchar(255)          DEFAULT NULL COMMENT '视频名称',
     `publish_time` datetime     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '发布时间戳',
     PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb3 COMMENT='\r\n视频表';
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb3 COMMENT ='\r\n视频表';
 
 DROP TABLE IF EXISTS `likes`;
 CREATE TABLE `likes`
@@ -40,7 +42,9 @@ CREATE TABLE `likes`
     `createTime` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `updateTime` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='点赞列表';
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci COMMENT ='点赞列表';
 
 
 DROP TABLE IF EXISTS `comments`;
@@ -53,7 +57,10 @@ CREATE TABLE `comments`
     `is_cancel`  int          DEFAULT '0' COMMENT '是否取消评论',
     `createTime` datetime     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='评论表-用户评论视频';
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 26
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci COMMENT ='评论表-用户评论视频';
 
 DROP TABLE IF EXISTS `follows`;
 CREATE TABLE `follows`
@@ -64,6 +71,18 @@ CREATE TABLE `follows`
     `cancel`      tinyint  DEFAULT '0' COMMENT '是否关注',
     `createTime`  datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户关注列表';
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 8
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci COMMENT ='用户关注列表';
 
-
+DROP TABLE IF EXISTS `messages`;
+CREATE TABLE `messages`
+(
+    `id`         bigint       NOT NULL AUTO_INCREMENT COMMENT '自增id',
+    `user_id`    bigint       not null COMMENT '用户的Id',
+    `to_user_id` bigint       not null COMMENT '接受消息的用户Id',
+    `content`    varchar(256) not null COMMENT '消息内容',
+    `createTime` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    PRIMARY KEY (`id`)
+) COLLATE = utf8mb4_0900_ai_ci COMMENT ='消息表';

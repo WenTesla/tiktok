@@ -134,3 +134,21 @@ func UserInfoService(Id int64, userId int64) (model.UserInfo, error) {
 	}
 	return userInfo, nil
 }
+
+// SimpleUserService 脱密后的信息
+func SimpleUserService(Id int64) (model.UserInfo, error) {
+	user, err := model.GetUserById(Id)
+	if err != nil {
+		return model.UserInfo{}, err
+	}
+	user.Password = ""
+	// 关注一定为true
+	userInfo := model.UserInfo{
+		Id:            user.Id,
+		Name:          user.Name,
+		FollowCount:   0,
+		FollowerCount: 0,
+		IsFollow:      false,
+	}
+	return userInfo, nil
+}

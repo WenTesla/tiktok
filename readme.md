@@ -5,8 +5,12 @@
 ## 项目启动
 直接启动
 ```shell
-go run main.go
+cd go 
 ```
+
+```shell
+go run main.go 
+```  
 
 ## 表数据(todo)
 ## 使用mvc分层结构
@@ -45,8 +49,9 @@ Error 1040: Too many connections (datasource)数据库连接过多
 * 数据库访问过多，造成数据库压力大,后续使用**redis**优化  
 * 上传文件相同文件名称的处理(目前将文件名改为时间戳后处理)
 * 未设置读写分离
-
+* Token未设置时限
+* 一些地方可以用到指针(javer 的问题)
 ### 作者:  
 bowen https://www.github.com/WenTesla
 ### 最后修改时间
-2023/2/4
+2023/2/8

@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"tiktok/go/config"
+	"tiktok/go/util"
 
 	"github.com/gin-gonic/gin"
 
@@ -29,4 +31,9 @@ func main() {
 
 func initProject() {
 	// config.Init()
+	config.Init()
+	// 过滤器
+	util.InitSensitiveFilter()
+	// redis
+
 }

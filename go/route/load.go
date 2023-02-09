@@ -42,6 +42,10 @@ func LoadRouter(r *gin.Engine) {
 	apiRouter.GET("/relation/follower/list/", jwt.VerifyToken, controller.FollowerList)
 	// 用户好友列表
 	apiRouter.GET("/relation/friend/list/", jwt.VerifyToken, controller.FriendList)
+	// 聊天记录
+	apiRouter.GET("/message/chat/", jwt.VerifyToken, controller.MessageChat)
+	// 发送消息
+	apiRouter.POST("/message/action/", jwt.VerifyToken, controller.MessageAction)
 	// test
 	//apiRouter.GET("/test/token",jwt.SignToken)
 }

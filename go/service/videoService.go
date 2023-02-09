@@ -224,3 +224,8 @@ func fileNameToTimeCurrentFileName(oldFileName string, newFileName string) (stri
 	replaced := oldFileName[:lastIndex]
 	return strings.Replace(oldFileName, replaced, newFileName, 1), nil
 }
+
+// CheckFile -todo 检查文件合法性
+func CheckFile() {
+
+}

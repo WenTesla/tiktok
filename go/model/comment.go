@@ -14,7 +14,7 @@ type Comment struct {
 	CreateTime time.Time `gorm:"column:createTime"` // 创建时间
 }
 
-// CommentInfo
+// CommentInfo 评论详细信息
 type CommentInfo struct {
 	Content    string   `json:"content"`     // 评论内容
 	CreateDate string   `json:"create_date"` // 评论发布日期，格式 mm-dd
@@ -22,8 +22,7 @@ type CommentInfo struct {
 	UserInfo   UserInfo `json:"user"`        // 评论用户的具体信息
 }
 
-// type
-// 根据用户id获取评论
+// QueryCommentByUserId 根据用户id获取评论
 func QueryCommentByUserId(userId int64) ([]Comment, error) {
 	var comments []Comment
 	// 获取

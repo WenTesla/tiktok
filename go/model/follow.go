@@ -16,7 +16,7 @@ type Follow struct {
 // GetFollowingById 通过id获取自己关注的数目 同时筛选出cancel
 func GetFollowingById(id int64) (int64, error) {
 	var count int64
-	result := db.Debug().Model(&Follow{}).Where("user_id = ? AND cancel = ?", id, 0).Count(&count)
+	result := db.Model(&Follow{}).Where("user_id = ? AND cancel = ?", id, 0).Count(&count)
 	// SELECT count(1) FROM users WHERE name = 'jinzhu'; (count)
 	if result.Error != nil {
 		return 0, result.Error
@@ -27,7 +27,7 @@ func GetFollowingById(id int64) (int64, error) {
 // GetFansById 通过id获取自己的粉丝数 同时筛选出cancel
 func GetFansById(id int64) (int64, error) {
 	var count int64
-	result := db.Debug().Model(&Follow{}).Where("follower_id = ? AND cancel = ?", id, 0).Count(&count)
+	result := db.Model(&Follow{}).Where("follower_id = ? AND cancel = ?", id, 0).Count(&count)
 	// SELECT count(1) FROM users WHERE name = 'jinzhu'; (count)
 	if result.Error != nil {
 		return 0, result.Error
@@ -91,7 +91,7 @@ func RefocusUser(userId int64, toUserID int64) error {
 func QueryFollowUsersByUserId(userId int64) ([]User, error) {
 	var users []User
 	//SELECT * FROM `users` WHERE id IN (SELECT `follower_id` FROM `follows` WHERE user_id = 1 AND cancel = 0)
-	result := db.Debug().Where("id IN (?)", db.Where("user_id = ? AND cancel = ?", userId, 0).Select("follower_id").Find(&Follow{})).Find(&users)
+	result := db.Where("id IN (?)", db.Where("user_id = ? AND cancel = ?", userId, 0).Select("follower_id").Find(&Follow{})).Find(&users)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -101,8 +101,8 @@ func QueryFollowUsersByUserId(userId int64) ([]User, error) {
 // QueryFansUsersByUserId 根据用户id查询当前用户的粉丝id切片 比较绕
 func QueryFansUsersByUserId(userId int64) ([]User, error) {
 	var users []User
-	//SELECT * FROM `users` WHERE id IN (SELECT `follower_id` FROM `follows` WHERE user_id = 1 AND cancel = 0)
-	result := db.Debug().Where("id IN (?)", db.Where("follower_id = ? AND cancel = ?", userId, 0).Select("follower_id").Find(&Follow{})).Find(&users)
+	//SELECT * FROM `users` WHERE id IN (SELECT `user_id` FROM `follows` WHERE follower_id = 1 AND cancel = 0)
+	result := db.Debug().Where("id IN (?)", db.Where("follower_id = ? AND cancel = ?", userId, 0).Select("user_id").Find(&Follow{})).Find(&users)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -117,7 +117,7 @@ func QueryIsFollow(userId int64, toUserId int64) (bool, error) {
 	}
 	var count int64
 	//SELECT count(*) FROM `follows` WHERE user_id = ? AND follower_id = ? AND cancel = 0
-	result := db.Debug().Model(&Follow{}).Where("user_id = ? AND follower_id = ? AND cancel = ?", userId, toUserId, 0).Count(&count)
+	result := db.Model(&Follow{}).Where("user_id = ? AND follower_id = ? AND cancel = ?", userId, toUserId, 0).Count(&count)
 	if result.Error != nil {
 		return false, result.Error
 	}
@@ -125,4 +125,10 @@ func QueryIsFollow(userId int64, toUserId int64) (bool, error) {
 		return true, nil
 	}
 	return false, nil
+}
+
+// QueryFansId 查询粉丝的Id
+func QueryFansId(userId int64) ([]int64, error) {
+
+	return nil, nil
 }

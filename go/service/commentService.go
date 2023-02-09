@@ -2,6 +2,7 @@ package service
 
 import (
 	"tiktok/go/model"
+	"tiktok/go/util"
 )
 
 func CommentListService(videoId int64) ([]model.CommentInfo, error) {
@@ -53,8 +54,8 @@ func PackageComment(comment model.Comment) (model.CommentInfo, error) {
 
 // CreateCommentService 创建评论
 func CreateCommentService(userId int64, videoId int64, content string) (model.CommentInfo, error) {
-	// 检验敏感词
-
+	// 敏感词处理
+	content, err := replaceSensitive(content)
 	commentInfo := model.CommentInfo{}
 	// 插入评论
 	comment, err := model.InsertComment(userId, videoId, content)
@@ -84,7 +85,13 @@ func CancelCommentService(id int64) (bool, error) {
 }
 
 // checkSensitive 检验敏感词
-func checkSensitive(context string) bool {
+func checkSensitive(content string) bool {
 
 	return false
+}
+
+// replaceSensitive 替换敏感词 优化-》传递指针
+func replaceSensitive(content string) (string, error) {
+	content, err := util.SensitiveWordsFilter(content)
+	return content, err
 }
