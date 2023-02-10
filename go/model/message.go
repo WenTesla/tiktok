@@ -6,12 +6,12 @@ import (
 )
 
 type Message struct {
-	ID         int64     `json:"id"`
-	UserId     int64     `json:"from_user_id"`
-	ToUserId   int64     `json:"to_user_id"`
-	Content    string    `json:"content"`
-	IsWithdraw int8      `json:"is_withdraw,omitempty"`
-	CreateTime time.Time `json:"create_time" gorm:"column:createTime"` // 创建时间
+	ID         int64  `json:"id"`
+	UserId     int64  `json:"from_user_id"`
+	ToUserId   int64  `json:"to_user_id"`
+	Content    string `json:"content"`
+	IsWithdraw int8   `json:"is_withdraw,omitempty"`
+	CreateTime int64  `json:"create_time" gorm:"column:createTime"` // 创建时间
 }
 
 // InsertMessage 插入数据
@@ -20,14 +20,14 @@ func InsertMessage(userId int64, toUserId int64, content string) (bool, error) {
 		UserId:     userId,
 		ToUserId:   toUserId,
 		Content:    content,
-		CreateTime: time.Now(),
+		CreateTime: time.Now().Unix(),
 	}
 	// INSERT INTO `messages` (`user_id`,`to_user_id`,`content`,`is_withdraw`,`createTime`) VALUES (5,1,'111',0,'2023-02-08 19:21:15.017')
 	result := db.Debug().Create(&messageInfo)
 	if result.Error != nil {
 		return false, result.Error
 	}
-	return false, nil
+	return true, nil
 }
 
 // QueryMessageByUserId 根据用户Id查询聊天记录
@@ -80,7 +80,7 @@ func QueryMessageByUserIdAndToUserId(userId int64, toUserId int64) ([]Message, e
 		return messages, result.Error
 	}
 	//for _, message := range messages {
-	//	message.CreateTime = message.CreateTime.Format("2006-01-02 15:04:05")
+	//	message.CreateTime = message.CreateTime.Unix()
 	//}
 	return messages, nil
 }

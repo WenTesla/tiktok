@@ -90,5 +90,34 @@ func MessageChat(c *gin.Context) {
 
 // MessageAction 发送消息
 func MessageAction(c *gin.Context) {
+	// 提取用户Id
+	userid, exists := c.Get("Id")
+	if !exists {
+		c.JSON(http.StatusNotFound, model.BaseResponseInstance.FailMsg(config.TokenIsNotExist))
+		return
+	}
+	userId := int64(userid.(float64))
+	// 获取toUser
+	to_user_id := c.Query("to_user_id")
+	toUserId, err := strconv.ParseInt(to_user_id, 10, 64)
+	content := c.Query("content")
+	actionType := c.Query("action_type")
+	// 参数错误
+	if actionType != "1" {
+		c.JSON(http.StatusBadRequest, model.BaseResponseInstance.FailMsg(config.RequestFail))
+		return
+	}
+	pass, err := service.MessageActionService(userId, toUserId, content)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, model.BaseResponseInstance.FailMsg(err.Error()))
+		return
+	}
+	if !pass {
+		c.JSON(http.StatusBadRequest, model.BaseResponseInstance.Fail())
+		return
+	} else {
+		c.JSON(http.StatusOK, model.BaseResponseInstance.Success())
+		return
+	}
 
 }

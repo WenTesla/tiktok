@@ -7,30 +7,27 @@ type BaseResponse struct {
 	StatusMsg  string `json:"status_msg"`
 }
 
-// 响应状态
-func (BaseResponse) Success() BaseResponse {
-	return BaseResponse{
-		StatusCode: 0,
-		StatusMsg:  config.Success,
-	}
+var BaseResponseInstance = BaseResponse{}
+
+func (baseResponse *BaseResponse) Success() BaseResponse {
+	baseResponse.StatusCode = 0
+	baseResponse.StatusMsg = config.Success
+	return BaseResponseInstance
 }
 
 func (baseResponse *BaseResponse) Fail() BaseResponse {
-	return BaseResponse{
-		StatusCode: -1,
-		StatusMsg:  config.Fail,
-	}
+	baseResponse.StatusCode = -1
+	baseResponse.StatusMsg = config.Fail
+	return BaseResponseInstance
 }
 
-func (BaseResponse) SuccessMsg(msg string) BaseResponse {
-	return BaseResponse{
-		StatusCode: 0,
-		StatusMsg:  msg,
-	}
+func (baseResponse *BaseResponse) SuccessMsg(msg string) BaseResponse {
+	baseResponse.StatusCode = 0
+	baseResponse.StatusMsg = msg
+	return BaseResponseInstance
 }
-func (BaseResponse) FailMsg(msg string) BaseResponse {
-	return BaseResponse{
-		StatusCode: -1,
-		StatusMsg:  msg,
-	}
+func (baseResponse *BaseResponse) FailMsg(msg string) BaseResponse {
+	baseResponse.StatusCode = -1
+	baseResponse.StatusMsg = msg
+	return BaseResponseInstance
 }

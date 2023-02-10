@@ -1,6 +1,9 @@
 package service
 
-import "tiktok/go/model"
+import (
+	"errors"
+	"tiktok/go/model"
+)
 
 func FriendListService(userId int64) ([]model.FriendUser, error) {
 	var FriendUsers []model.FriendUser
@@ -58,4 +61,15 @@ func MessageChatService(userId int64, toUserId int64) ([]model.Message, error) {
 	}
 
 	return messages, nil
+}
+
+func MessageActionService(userId int64, toUserId int64, content string) (bool, error) {
+	pass, err := model.InsertMessage(userId, toUserId, content)
+	if err != nil {
+		return false, err
+	}
+	if !pass {
+		return false, errors.New("发送消息错误")
+	}
+	return true, nil
 }

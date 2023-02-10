@@ -2,7 +2,7 @@
 -- database tiktok;
 
 use
-    tiktok;
+tiktok;
 -- ----------------------------
 -- Table structure for users
 -- ----------------------------
@@ -79,10 +79,13 @@ CREATE TABLE `follows`
 DROP TABLE IF EXISTS `messages`;
 CREATE TABLE `messages`
 (
-    `id`         bigint       NOT NULL AUTO_INCREMENT COMMENT '自增id',
-    `user_id`    bigint       not null COMMENT '用户的Id',
-    `to_user_id` bigint       not null COMMENT '接受消息的用户Id',
-    `content`    varchar(256) not null COMMENT '消息内容',
-    `createTime` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    PRIMARY KEY (`id`)
-) COLLATE = utf8mb4_0900_ai_ci COMMENT ='消息表';
+    `id`          bigint       NOT NULL AUTO_INCREMENT COMMENT '自增id',
+    `user_id`     bigint       NOT NULL COMMENT '用户的Id',
+    `to_user_id`  bigint       NOT NULL COMMENT '接受消息的用户Id',
+    `content`     varchar(256) NOT NULL COMMENT '消息内容',
+    `is_withdraw` tinyint DEFAULT '0' COMMENT '是否撤回  0-不撤回，1-撤回',
+    `createTime`  bigint  DEFAULT NULL COMMENT '时间戳',
+    PRIMARY KEY (`id`),
+    KEY           `用户索引` (`user_id`) USING BTREE COMMENT '发送信息的用户Id索引',
+    KEY           `接受信息的用户索引` (`to_user_id`) USING BTREE COMMENT '接受用户的用户Id索引'
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='消息表';

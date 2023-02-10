@@ -227,5 +227,6 @@ func fileNameToTimeCurrentFileName(oldFileName string, newFileName string) (stri
 
 // CheckFile -todo 检查文件合法性
 func CheckFile() {
+	// 检查文件后缀
 
 }

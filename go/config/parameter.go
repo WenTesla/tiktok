@@ -25,3 +25,5 @@ const DatabaseError = "数据库错误"
 const SuccessWithEnglish = "Success"
 
 const FailWithEnglish = "Fail"
+
+const RequestError = "请求错误"

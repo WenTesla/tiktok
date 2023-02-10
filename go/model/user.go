@@ -104,6 +104,25 @@ func PackageUserToUserInfo(user User) (UserInfo, error) {
 	return userInfo, nil
 }
 
+// PackageUserToSimpleUserInfo
+//
+//	IsFollow
+func PackageUserToSimpleUserInfo(user User, userId int64) (UserInfo, error) {
+	userInfo := UserInfo{}
+	//  查询是否关注
+	isFollow, err := QueryIsFollow(userId, user.Id)
+	if err != nil {
+		return userInfo, err
+	}
+	// 合并
+	userInfo.Id = user.Id
+	userInfo.Name = user.Name
+	userInfo.FollowCount = 0
+	userInfo.FollowerCount = 0
+	userInfo.IsFollow = isFollow
+	return userInfo, nil
+}
+
 // PackageUserToUserInfoByUserId 根据id将user包装成userInfo
 func PackageUserToUserInfoByUserId(id int64) (UserInfo, error) {
 	userInfo := UserInfo{}

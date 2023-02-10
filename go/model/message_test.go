@@ -6,7 +6,7 @@ import (
 )
 
 func TestInsertMessage(t *testing.T) {
-	InsertMessage(5, 1, "111")
+	InsertMessage(3, 2, "1311")
 }
 
 func TestQueryMessageByUserId(t *testing.T) {

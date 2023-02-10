@@ -136,7 +136,7 @@ func UserInfoService(Id int64, userId int64) (model.UserInfo, error) {
 }
 
 // SimpleUserService 脱密后的信息
-func SimpleUserService(Id int64) (model.UserInfo, error) {
+func SimpleUserService(Id int64, userId int64) (model.UserInfo, error) {
 	user, err := model.GetUserById(Id)
 	if err != nil {
 		return model.UserInfo{}, err
