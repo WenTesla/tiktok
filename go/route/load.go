@@ -33,7 +33,7 @@ func LoadRouter(r *gin.Engine) {
 	apiRouter.POST("/comment/action/", jwt.VerifyToken, controller.CommentVideo)
 	// 评论列表接口
 	apiRouter.GET("/comment/list/", controller.CommentList)
-	// extra apis - II todo
+	// extra apis - II 待优化
 	// 关注操作
 	apiRouter.POST("/relation/action/", jwt.VerifyToken, controller.FollowUser)
 	// 关注列表

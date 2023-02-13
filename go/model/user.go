@@ -14,7 +14,7 @@ type User struct {
 
 func CreateUserTable() {
 	user := User{}
-	Db := config.Init()
+	Db := config.InitDataSource()
 	Db.AutoMigrate(&user)
 }
 
@@ -36,7 +36,7 @@ type FriendUser struct {
 	MsgType int8   `json:"msgType"` //message信息的类型，0=>请求用户接受信息，1=>当前请求用户发送的信息
 }
 
-var db = config.Init()
+var db = config.InitDataSource()
 
 // InsertUser 插入用户
 func InsertUser(name string, password string) (User, error) {
@@ -53,8 +53,8 @@ func InsertUser(name string, password string) (User, error) {
 // GetUserById 根据id(主键）获取用户
 func GetUserById(id int64) (User, error) {
 	user := User{}
-
-	if err := db.Debug().Where("Id = ?", id).First(&user).Error; err != nil {
+	// SELECT * FROM `users` WHERE Id = 9 ORDER BY `users`.`id` LIMIT 1
+	if err := db.Where("Id = ?", id).First(&user).Error; err != nil {
 		log.Println(err.Error())
 		return user, err
 	}
@@ -65,7 +65,7 @@ func GetUserById(id int64) (User, error) {
 // GetUserByName 根据用户名(唯一）查询用户
 func GetUserByName(name string) (User, error) {
 	user := User{}
-	//Db := config.Init()
+	//Db := config.InitDataSource()
 	// 查数据表
 	if err := db.Debug().Where("name = ?", name).Limit(1).Find(&user).Error; err != nil {
 		//log.Println(err.Error())

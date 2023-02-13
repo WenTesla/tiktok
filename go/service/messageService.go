@@ -5,6 +5,12 @@ import (
 	"tiktok/go/model"
 )
 
+// 定义键值对维护消息记录 用户的Id->用户目前的消息记录索引
+var userCommentIndex = make(map[int64]int64)
+
+// 定义键值对维护消息记录 用户的Id->用户目前的消息记录最大值
+var userMessageMaxIndex = make(map[int64]int64)
+
 func FriendListService(userId int64) ([]model.FriendUser, error) {
 	var FriendUsers []model.FriendUser
 	var err error
@@ -47,7 +53,6 @@ func PackageFriendLists(userId int64) ([]model.FriendUser, error) {
 
 // PackageFriendList 包装单个请求
 func PackageFriendList(userInfo model.FriendUser) (model.UserInfo, error) {
-
 	// test
 	userInfo.AvatarUrl = "https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/12640/20230206171653.png"
 	return model.UserInfo{}, nil
@@ -59,7 +64,6 @@ func MessageChatService(userId int64, toUserId int64) ([]model.Message, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	return messages, nil
 }
 

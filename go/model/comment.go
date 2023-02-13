@@ -48,7 +48,8 @@ func QueryCommentByVideoId(videoId int64) ([]Comment, error) {
 // QueryCommentCountByVideoId 根据视频的id获取视频的评论数
 func QueryCommentCountByVideoId(videoId int64) (int64, error) {
 	var count int64
-	result := db.Debug().Model(&Comment{}).Where("video_id = ? AND is_cancel = ?", videoId, 0).Count(&count)
+	//  SELECT count(*) FROM `comments` WHERE video_id = 43 AND is_cancel = 0
+	result := db.Model(&Comment{}).Where("video_id = ? AND is_cancel = ?", videoId, 0).Count(&count)
 	if result.Error != nil {
 		return -1, result.Error
 	}

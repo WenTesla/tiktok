@@ -38,12 +38,13 @@ func (TableVideo) TableName() string {
 	return "videos"
 }
 
-//var db = config.Init()
+//var db = config.InitDataSource()
 
 // 获取时间戳之前的视频
 func GetVideoByLastTime(lastTime time.Time) ([]TableVideo, error) {
 	tableVideos := make([]TableVideo, config.VideoCount)
-	result := db.Debug().Where("publish_time <= ?", lastTime).Order("publish_time desc").Limit(config.VideoCount).Find(&tableVideos)
+	// SELECT * FROM `videos` WHERE publish_time <= '2023-02-11 18:37:18.326' ORDER BY publish_time desc LIMIT 10
+	result := db.Where("publish_time <= ?", lastTime).Order("publish_time desc").Limit(config.VideoCount).Find(&tableVideos)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -53,7 +54,8 @@ func GetVideoByLastTime(lastTime time.Time) ([]TableVideo, error) {
 // 通过用户id获取视频
 func GetVideoByUserId(userId int) ([]TableVideo, error) {
 	tableVideos := make([]TableVideo, config.VideoMaxCount)
-	db.Debug().Where("author_id = ?", userId).Order("publish_time desc").Limit(config.VideoMaxCount).Find(&tableVideos)
+	// SELECT * FROM `videos` WHERE author_id = 13 ORDER BY publish_time desc LIMIT 30
+	db.Where("author_id = ?", userId).Order("publish_time desc").Limit(config.VideoMaxCount).Find(&tableVideos)
 	return tableVideos, nil
 }
 

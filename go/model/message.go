@@ -2,6 +2,7 @@ package model
 
 import (
 	"tiktok/go/config"
+	"tiktok/go/util"
 	"time"
 )
 
@@ -83,4 +84,16 @@ func QueryMessageByUserIdAndToUserId(userId int64, toUserId int64) ([]Message, e
 	//	message.CreateTime = message.CreateTime.Unix()
 	//}
 	return messages, nil
+}
+
+// QueryMessageMaxCount 查询消息记录的最大值
+func QueryMessageMaxCount(userId int64, toUserId int64) (int64, error) {
+	var count int64
+	// SELECT count(*) FROM `messages` WHERE (user_id = 1 AND to_user_id = 2 ) OR (user_id = 2 AND to_user_id = 1 )
+	result := db.Model(&Message{}).Where("user_id = ? AND to_user_id = ? ", userId, toUserId).Or("user_id = ? AND to_user_id = ? ", toUserId, userId).Count(&count)
+	if result.Error != nil {
+		util.LogError(result.Error.Error())
+		return -1, result.Error
+	}
+	return count, nil
 }

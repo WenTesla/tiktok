@@ -203,7 +203,7 @@ func publishVideoByTencentCos(file multipart.File, fileName string) error {
 	return nil
 }
 
-// parseFileName 解析文件名称，去除加上文件格式jpg
+// parseFileName parseFileName 解析文件名称，去除文件后缀并加上文件格式jpg
 func parseFileName(fileName string) (string, error) {
 	//
 	lastIndex := strings.LastIndex(fileName, ".")
@@ -211,10 +211,14 @@ func parseFileName(fileName string) (string, error) {
 		return "", errors.New("解析错误")
 	}
 	replaced := fileName[lastIndex:]
+	// 判断文件后缀是否为要求的后缀
+	if replaced != ".mp4" {
+		return "", errors.New("文件格式不符合要求")
+	}
 	return strings.Replace(fileName, replaced, config.ReplaceSuffix, 1), nil
 }
 
-// 将文件名称转化为时间戳并返回
+// fileNameToTimeCurrentFileName 将文件名称转化为时间戳并返回
 func fileNameToTimeCurrentFileName(oldFileName string, newFileName string) (string, error) {
 	// 提取文件后缀
 	lastIndex := strings.LastIndex(oldFileName, ".")
@@ -225,8 +229,8 @@ func fileNameToTimeCurrentFileName(oldFileName string, newFileName string) (stri
 	return strings.Replace(oldFileName, replaced, newFileName, 1), nil
 }
 
-// CheckFile -todo 检查文件合法性
+// CheckFile -todo 检查文件内容的合法性
 func CheckFile() {
 	// 检查文件后缀
-
+	//path.Ext()
 }

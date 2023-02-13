@@ -20,7 +20,7 @@ const Fail = "失败"
 
 const RequestFail = "请求参数错误"
 
-const DatabaseError = "数据库错误"
+const DatabaseError = "内部数据库错误"
 
 const SuccessWithEnglish = "Success"
 

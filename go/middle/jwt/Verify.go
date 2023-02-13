@@ -17,13 +17,15 @@ func VerifyToken(c *gin.Context) {
 	token := c.Query("token")
 	fmt.Printf("%v \t \n", token)
 	if len(token) == 0 {
-		//错误 直接
-		c.Abort()
-		//返回json
-		c.JSON(http.StatusBadRequest, BasicResponse{
-			StatusCode: -1,
-			StatusMsg:  "未携带token",
-		})
+		////错误 直接
+		//c.Abort()
+		////返回json
+		//c.JSON(http.StatusBadRequest, BasicResponse{
+		//	StatusCode: -1,
+		//	StatusMsg:  "未携带token",
+		//})
+		// test
+		c.Next()
 		return
 	}
 	Id, err := ParseToken(token)

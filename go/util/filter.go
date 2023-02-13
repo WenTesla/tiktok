@@ -15,7 +15,7 @@ var sensitiveWords []string
 
 var wordReg *regexp.Regexp
 
-func InitSensitiveFilter() error {
+func InitSensitiveFilter() {
 	//sensitiveWords := []string{
 	//	"傻逼",
 	//	"傻叉",
@@ -36,11 +36,11 @@ func InitSensitiveFilter() error {
 	//func ReadFile(name string) ([]byte, error) {}
 	content, err := os.ReadFile(SensitiveWordFilePath)
 	if err != nil {
+		LogError(err.Error())
 		panic(err)
 	}
 	s := string(content)
 	wordReg = regexp.MustCompile(s)
-	return err
 }
 
 func SensitiveWordsFilter(context string) (string, error) {

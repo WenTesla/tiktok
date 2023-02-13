@@ -22,3 +22,8 @@ func TestQueryNewestMessageByUserIdAndToUserID(t *testing.T) {
 func TestQueryMessageByUserIdAndToUserId(t *testing.T) {
 	QueryMessageByUserIdAndToUserId(1, 2)
 }
+
+func TestQueryMessageMaxCount(t *testing.T) {
+	count, _ := QueryMessageMaxCount(1, 2)
+	fmt.Println(count)
+}

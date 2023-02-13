@@ -1,7 +1,9 @@
 package main
 
 import (
-	"fmt"
+	"errors"
+	"io"
+	"os"
 	"tiktok/go/config"
 	"tiktok/go/util"
 
@@ -25,15 +27,23 @@ func main() {
 	// Run("里面不指定端口号默认为8080")
 	err := r.Run(":8000")
 	if err != nil {
-		fmt.Print("项目启动失败")
+		panic(errors.New("项目启动失败"))
 	}
 }
 
 func initProject() {
-	// config.Init()
-	config.Init()
+	// config.InitDataSource()
+	config.InitDataSource()
 	// 过滤器
 	util.InitSensitiveFilter()
 	// redis
 
+	// 设置日志
+	f, _ := os.Create("resources/gin.log") // // 如果文件已存在，会将文件清空。
+	//gin.DefaultWriter = io.MultiWriter(f)
+	//gin.DebugPrintRouteFunc()
+
+	// 如果需要同时将日志写入文件和控制台，请使用以下代码。
+	gin.DefaultWriter = io.MultiWriter(f, os.Stdout)
+	util.Log("服务器开启成功!")
 }

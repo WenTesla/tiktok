@@ -4,24 +4,28 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c573e332-cd3a-41d6-891d-281450698c04" name="变更" comment="完成消息记录接口">
-      <change afterPath="$PROJECT_DIR$/go/util/checkFile.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/go/util/checkFile_test.go" afterDir="false" />
+    <list default="true" id="c573e332-cd3a-41d6-891d-281450698c04" name="变更" comment="基本完成所有接口-消息记录接口未完善">
+      <change afterPath="$PROJECT_DIR$/go/config/redis.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/go/util/log.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/go/util/log_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/config/DataSource.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/config/DataSource.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/config/parameter.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/config/parameter.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/controller/followController.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/controller/followController.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/controller/messageController.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/controller/messageController.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/model/base.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/base.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/model/follow.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/follow.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/middle/jwt/Verify.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/middle/jwt/Verify.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/model/comment.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/comment.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/model/like.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/like.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/model/message.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/message.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/model/message_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/message_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/model/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/service/followService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/followService.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/model/video.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/video.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/route/load.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/route/load.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/service/messageService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/messageService.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/service/userService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/userService.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/service/videoService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/videoService.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/util/checkFile.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/util/checkFile.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/util/filter.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/util/filter.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/initial.sql" beforeDir="false" afterPath="$PROJECT_DIR$/resources/initial.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/log.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,15 +102,7 @@
       <recent name="H:\tiktok\go" />
     </key>
   </component>
-  <component name="RunManager" selected="Go 测试.tiktok/go/util 中的 TestGetFileType">
-    <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
-      <module name="tiktok" />
-      <working_directory value="$PROJECT_DIR$" />
-      <kind value="FILE" />
-      <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$" />
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="Go 测试.tiktok/go/model 中的 TestQueryMessageMaxCount">
     <configuration name="go build scratch.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="tiktok" />
       <working_directory value="$PROJECT_DIR$" />
@@ -127,16 +123,7 @@
       <filePath value="$PROJECT_DIR$/go/main.go" />
       <method v="2" />
     </configuration>
-    <configuration default="true" type="GoTestRunConfiguration" factoryName="Go Test">
-      <module name="tiktok" />
-      <working_directory value="$PROJECT_DIR$" />
-      <kind value="DIRECTORY" />
-      <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$" />
-      <framework value="gotest" />
-      <method v="2" />
-    </configuration>
-    <configuration name="tiktok/go/model 中的 TestQert" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="tiktok/go/model 中的 TestQueryMessageMaxCount" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="tiktok" />
       <working_directory value="$PROJECT_DIR$/go/model" />
       <root_directory value="$PROJECT_DIR$" />
@@ -145,19 +132,7 @@
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
       <framework value="gotest" />
-      <pattern value="^\QTestQert\E$" />
-      <method v="2" />
-    </configuration>
-    <configuration name="tiktok/go/model 中的 TestQueryNewestMessageByUserIdAndToUserID" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
-      <module name="tiktok" />
-      <working_directory value="$PROJECT_DIR$/go/model" />
-      <root_directory value="$PROJECT_DIR$" />
-      <kind value="PACKAGE" />
-      <package value="tiktok/go/model" />
-      <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$" />
-      <framework value="gotest" />
-      <pattern value="^\QTestQueryNewestMessageByUserIdAndToUserID\E$" />
+      <pattern value="^\QTestQueryMessageMaxCount\E$" />
       <method v="2" />
     </configuration>
     <configuration name="tiktok/go/util 中的 TestGetFileType" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
@@ -172,20 +147,32 @@
       <pattern value="^\QTestGetFileType\E$" />
       <method v="2" />
     </configuration>
+    <configuration name="tiktok/go/util 中的 TestLog" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="tiktok" />
+      <working_directory value="$PROJECT_DIR$/go/util" />
+      <root_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="tiktok/go/util" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <pattern value="^\QTestLog\E$" />
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="Go 构建.go build scratch.go" />
       <item itemvalue="Go 构建.go build tiktok/go" />
-      <item itemvalue="Go 测试.tiktok/go/model 中的 TestQert" />
+      <item itemvalue="Go 测试.tiktok/go/model 中的 TestQueryMessageMaxCount" />
+      <item itemvalue="Go 测试.tiktok/go/util 中的 TestLog" />
       <item itemvalue="Go 测试.tiktok/go/util 中的 TestGetFileType" />
-      <item itemvalue="Go 测试.tiktok/go/model 中的 TestQueryNewestMessageByUserIdAndToUserID" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Go 测试.tiktok/go/util 中的 TestGetFileType" />
+        <item itemvalue="Go 测试.tiktok/go/model 中的 TestQueryMessageMaxCount" />
+        <item itemvalue="Go 测试.tiktok/go/util 中的 TestLog" />
         <item itemvalue="Go 构建.go build tiktok/go" />
+        <item itemvalue="Go 测试.tiktok/go/util 中的 TestGetFileType" />
         <item itemvalue="Go 构建.go build scratch.go" />
-        <item itemvalue="Go 测试.tiktok/go/model 中的 TestQueryNewestMessageByUserIdAndToUserID" />
-        <item itemvalue="Go 测试.tiktok/go/model 中的 TestQert" />
       </list>
     </recent_temporary>
   </component>
@@ -232,7 +219,8 @@
     <MESSAGE value="优化文件上传接口" />
     <MESSAGE value="优化点赞和未登录状态的视频流" />
     <MESSAGE value="完成消息记录接口" />
-    <option name="LAST_COMMIT_MESSAGE" value="完成消息记录接口" />
+    <MESSAGE value="基本完成所有接口-消息记录接口未完善" />
+    <option name="LAST_COMMIT_MESSAGE" value="基本完成所有接口-消息记录接口未完善" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
@@ -275,10 +263,26 @@
           <line>16</line>
           <option name="timeStamp" value="108" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/go/util/checkFile.go</url>
+          <line>95</line>
+          <option name="timeStamp" value="109" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/go/controller/followController.go</url>
+          <line>90</line>
+          <option name="timeStamp" value="113" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/go/middle/jwt/Verify.go</url>
+          <line>18</line>
+          <option name="timeStamp" value="114" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/tiktok$tiktok_go_util__TestGetFileType.out" NAME="tiktok/go/util 中的 TestGetFileType 覆盖结果" MODIFIED="1676090499489" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/tiktok$tiktok_go_model__TestUnLikeVideoByUserId.out" NAME="tiktok/go/model 中的 TestUnLikeVideoByUserId 覆盖结果" MODIFIED="1674995520288" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/tiktok$tiktok_go_middle_jwt__TestSignToken.out" NAME="tiktok/go/middle/jwt 中的 TestSignToken 覆盖结果" MODIFIED="1674649197833" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
