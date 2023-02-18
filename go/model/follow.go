@@ -112,6 +112,27 @@ func QueryFansUsersByUserId(userId int64) ([]User, error) {
 	return users, nil
 }
 
+/*
+查询互相关注的用户列表
+*/
+
+func QueryMutualFollowListByUserId(userId int64) ([]User, error) {
+
+	// inner join
+	//db.InnerJoins("Company").Find(&users)
+	// SELECT `users`.`id`,`users`.`name`,`users`.`age`,`Company`.`id` AS `Company__id`,`Company`.`name` AS `Company__name` FROM `users` INNER JOIN `companies` AS `Company` ON `users`.`company_id` = `Company`.`id`
+
+	var MutualFollowList []User
+	// SELECT a.follower_id FROM follows a join follows b on a.user_id=b.follower_id AND a.follower_id = b.user_id WHERE a.cancel = 0 AND b.cancel = 0 AND a.user_id = ? AND b.follower_id = ?
+	//result := db.Debug().Table("follows a").Select("a.follower_id").Joins("join follows b on a.user_id=b.follower_id AND a.follower_id = b.user_id").Where("a.cancel = ? AND b.cancel = ? AND a.user_id = ? AND b.follower_id = ?", 0, 0, userId, userId).Find(&MutualFollowList)
+	// SELECT `id` `name` FROM `users` WHERE id in (SELECT a.follower_id FROM follows a join follows b on a.user_id=b.follower_id AND a.follower_id = b.user_id WHERE a.cancel = 0 AND b.cancel = 0 AND a.user_id = 1 AND b.follower_id = 1)
+	result := db.Where("id in (?)", db.Table("follows a").Select("a.follower_id").Joins("join follows b on a.user_id=b.follower_id AND a.follower_id = b.user_id").Where("a.cancel = ? AND b.cancel = ? AND a.user_id = ? AND b.follower_id = ?", 0, 0, userId, userId).Find(&Follow{})).Select("id", "name").Find(&MutualFollowList)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return MutualFollowList, nil
+}
+
 // QueryIsFollow 查询是否关注 第一个参数为当前用户的id，第二个参数为要关注的用户Id
 func QueryIsFollow(userId int64, toUserId int64) (bool, error) {
 	// 自己不能关注自己

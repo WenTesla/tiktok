@@ -34,3 +34,7 @@ func TestQueryIsFollow(t *testing.T) {
 	isFollow, _ := QueryIsFollow(1, 50)
 	fmt.Println(isFollow)
 }
+
+func TestQueryMutualFollowListByUserId(t *testing.T) {
+	QueryMutualFollowListByUserId(1)
+}

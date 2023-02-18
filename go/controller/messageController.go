@@ -28,10 +28,7 @@ func FriendList(c *gin.Context) {
 	// 提取用户Id
 	userid, exists := c.Get("Id")
 	if !exists {
-		c.JSON(http.StatusNotFound, model.BaseResponse{
-			StatusCode: -1,
-			StatusMsg:  config.TokenIsNotExist,
-		})
+		c.JSON(http.StatusNotFound, model.BaseResponseInstance.FailMsg(config.TokenIsNotExist))
 		return
 	}
 	userId := int64(userid.(float64))
@@ -39,18 +36,12 @@ func FriendList(c *gin.Context) {
 	log.Printf("%v", userId)
 	friendUsers, err := service.FriendListService(userId)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, model.BaseResponse{
-			StatusCode: -1,
-			StatusMsg:  err.Error(),
-		})
+		c.JSON(http.StatusBadRequest, model.BaseResponseInstance.FailMsg(err.Error()))
 		return
 	}
 	c.JSON(http.StatusOK, FriendListResponse{
-		BaseResponse: model.BaseResponse{
-			StatusCode: 0,
-			StatusMsg:  config.Success,
-		},
-		UserList: friendUsers,
+		BaseResponse: model.BaseResponseInstance.Success(),
+		UserList:     friendUsers,
 	})
 	return
 }
@@ -63,19 +54,21 @@ func MessageChat(c *gin.Context) {
 	// 提取用户Id
 	userid, exists := c.Get("Id")
 	if !exists {
-		c.JSON(http.StatusNotFound, model.BaseResponse{
-			StatusCode: -1,
-			StatusMsg:  config.TokenIsNotExist,
-		})
+		c.JSON(http.StatusNotFound, model.BaseResponseInstance.FailMsg(config.TokenIsNotExist))
 		return
 	}
 	userId := int64(userid.(float64))
-	messages, err := service.MessageChatService(userId, toUserId)
+	// 提取上次最新消息的时间
+	pre_msg_time := c.Query("pre_msg_time")
+	preMsgTime, err := strconv.ParseInt(pre_msg_time, 10, 64)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, model.BaseResponse{
-			StatusCode: -1,
-			StatusMsg:  err.Error(),
-		})
+		c.JSON(http.StatusBadRequest, model.BaseResponseInstance.FailMsg(err.Error()))
+		return
+	}
+
+	messages, err := service.MessageChatService(userId, toUserId, preMsgTime)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, model.BaseResponseInstance.FailMsg(err.Error()))
 		return
 	}
 	c.JSON(http.StatusOK, MessageListResponse{

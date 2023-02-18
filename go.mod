@@ -40,6 +40,7 @@ require (
 
 // 引入go的jwt
 require github.com/golang-jwt/jwt/v4 v4.4.3
+
 // 引入腾讯云的依赖
 require (
 	github.com/clbanning/mxj v1.8.4 // indirect
@@ -48,3 +49,5 @@ require (
 	github.com/mozillazg/go-httpheader v0.3.1 // indirect
 	github.com/tencentyun/cos-go-sdk-v5 v0.7.41 // indirect
 )
+// 引入redis
+require github.com/go-redis/redis v6.15.9+incompatible // indirect

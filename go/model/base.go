@@ -2,6 +2,9 @@ package model
 
 import "tiktok/go/config"
 
+// 数据库连接池
+var db = config.InitDataSource()
+
 type BaseResponse struct {
 	StatusCode int32  `json:"status_code"`
 	StatusMsg  string `json:"status_msg"`

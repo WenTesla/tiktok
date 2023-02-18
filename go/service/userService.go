@@ -93,6 +93,17 @@ func UserService(Id int64) (model.UserInfo, error) {
 	// 查询自己的粉丝
 	fanCount, err := model.GetFansById(Id)
 	log.Printf("粉丝数目%d", fanCount)
+	// 查询作品数量
+	favoriteCount, err := model.QueryFavoriteCountByUserId(Id)
+	if err != nil {
+		return model.UserInfo{}, err
+	}
+	// 查询点赞数量
+	workCount, err := model.QueryWorkCountByUserId(Id)
+	if err != nil {
+		return model.UserInfo{}, err
+	}
+
 	// 关注一定为true
 	userInfo := model.UserInfo{
 		Id:            user.Id,
@@ -100,11 +111,14 @@ func UserService(Id int64) (model.UserInfo, error) {
 		FollowCount:   followingCount,
 		FollowerCount: fanCount,
 		IsFollow:      false,
+		WorkCount:     workCount,
+		FavoriteCount: favoriteCount,
 	}
 	return userInfo, nil
 }
 
-// UserInfoService 用户服务 先封装小的，再封装大的
+//  用户服务 先封装小的，再封装大的
+
 func UserInfoService(Id int64, userId int64) (model.UserInfo, error) {
 	user, err := model.GetUserById(Id)
 	if err != nil {
@@ -125,12 +139,24 @@ func UserInfoService(Id int64, userId int64) (model.UserInfo, error) {
 	if err != nil {
 		return model.UserInfo{}, err
 	}
+	// 查询作品数量
+	favoriteCount, err := model.QueryFavoriteCountByUserId(Id)
+	if err != nil {
+		return model.UserInfo{}, err
+	}
+	// 查询点赞数量
+	workCount, err := model.QueryWorkCountByUserId(Id)
+	if err != nil {
+		return model.UserInfo{}, err
+	}
 	userInfo := model.UserInfo{
 		Id:            user.Id,
 		Name:          user.Name,
 		FollowCount:   followingCount,
 		FollowerCount: fanCount,
 		IsFollow:      isFollow,
+		WorkCount:     workCount,
+		FavoriteCount: favoriteCount,
 	}
 	return userInfo, nil
 }

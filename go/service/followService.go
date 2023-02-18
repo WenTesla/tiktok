@@ -5,7 +5,8 @@ import (
 	"tiktok/go/model"
 )
 
-// FollowUserService 关注用户服务
+//  关注用户服务
+
 func FollowUserService(userId int64, toUserId int64, actionType bool) (bool, error) {
 	if actionType {
 		// 先查询数据
@@ -42,7 +43,8 @@ func FollowUserService(userId int64, toUserId int64, actionType bool) (bool, err
 	return false, nil
 }
 
-// FollowListService 未登录状态下的关注列表服务
+//  未登录状态下的关注列表服务
+
 func FollowListService(userId int64) ([]model.UserInfo, error) {
 	// 先根据用户Id取用户关注
 	users, err := model.QueryFollowUsersByUserId(userId)
@@ -63,7 +65,8 @@ func FollowListService(userId int64) ([]model.UserInfo, error) {
 	return userInfos, nil
 }
 
-// FollowerListService 未登录状态下的粉丝列表服务
+//  未登录状态下的粉丝列表服务
+
 func FollowerListService(userId int64) ([]model.UserInfo, error) {
 	// 先根据用户Id取用户关注
 	users, err := model.QueryFansUsersByUserId(userId)
@@ -85,7 +88,8 @@ func FollowerListService(userId int64) ([]model.UserInfo, error) {
 	return userInfos, nil
 }
 
-// FollowListServiceWithUserId 登录状态下的关注列表 第一个参数为  第二个参数为登录用户的Id
+//  登录状态下的关注列表 第一个参数为  第二个参数为登录用户的Id
+
 func FollowListServiceWithUserId(userId int64, loginUserId int64) ([]model.UserInfo, error) {
 	// 先根据用户Id取用户关注
 	users, err := model.QueryFollowUsersByUserId(userId)
@@ -96,6 +100,8 @@ func FollowListServiceWithUserId(userId int64, loginUserId int64) ([]model.UserI
 	var userInfos []model.UserInfo
 	// 循环
 	for _, user := range users {
+		// 判断对方是否关注
+
 		userInfo, err := model.PackageUserToSimpleUserInfo(user, loginUserId)
 		if err != nil {
 			return nil, err
@@ -106,7 +112,8 @@ func FollowListServiceWithUserId(userId int64, loginUserId int64) ([]model.UserI
 	return userInfos, nil
 }
 
-// FollowerListServiceWithUserId 登录状态下的粉丝列表
+//  登录状态下的粉丝列表
+
 func FollowerListServiceWithUserId(userId int64, loginUserId int64) ([]model.UserInfo, error) {
 	// 先根据用户Id取用户关注
 	users, err := model.QueryFansUsersByUserId(userId)
@@ -124,5 +131,23 @@ func FollowerListServiceWithUserId(userId int64, loginUserId int64) ([]model.Use
 		userInfos = append(userInfos, userInfo)
 	}
 
+	return userInfos, nil
+}
+
+// 互相关注的好友列表
+
+func MutualFollowListService(userId int64) ([]model.UserInfo, error) {
+	// 先根据用户Id取用户关注
+	users, err := model.QueryMutualFollowListByUserId(userId)
+	if err != nil {
+		return nil, err
+	}
+	// 定义userInfos 切片
+	var userInfos []model.UserInfo
+	// 循环
+	for _, user := range users {
+		userInfo, _ := model.PackageUserToDirectUserInfo(user)
+		userInfos = append(userInfos, userInfo)
+	}
 	return userInfos, nil
 }

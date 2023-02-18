@@ -2,8 +2,6 @@ package main
 
 import (
 	"errors"
-	"io"
-	"os"
 	"tiktok/go/config"
 	"tiktok/go/util"
 
@@ -32,18 +30,19 @@ func main() {
 }
 
 func initProject() {
-	// config.InitDataSource()
+	// mysql 初始化
 	config.InitDataSource()
+	// redis 初始化
+	config.InitRedisClient()
 	// 过滤器
 	util.InitSensitiveFilter()
-	// redis
 
 	// 设置日志
-	f, _ := os.Create("resources/gin.log") // // 如果文件已存在，会将文件清空。
+	//f, _ := os.Create("resources/gin.log") // // 如果文件已存在，会将文件清空。
 	//gin.DefaultWriter = io.MultiWriter(f)
 	//gin.DebugPrintRouteFunc()
 
 	// 如果需要同时将日志写入文件和控制台，请使用以下代码。
-	gin.DefaultWriter = io.MultiWriter(f, os.Stdout)
+	//gin.DefaultWriter = io.MultiWriter(f, os.Stdout)
 	util.Log("服务器开启成功!")
 }

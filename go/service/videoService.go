@@ -80,7 +80,8 @@ func packageVideos(tableVideos []model.TableVideo, userId int64) ([]model.Video,
 	return videos, nil
 }
 
-// packageVideo 包装单个视频，不返回是否关注的信息
+//  包装单个视频，不返回是否关注的信息
+
 func packageVideo(tableVideo *model.TableVideo) (model.Video, error) {
 	// 创建video单例
 	video := model.Video{}

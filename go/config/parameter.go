@@ -1,5 +1,9 @@
 package config
 
+// 假数据
+
+const MockAvatarUrl = "https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/12640/20230206133334.png"
+
 const VideoMinCount = 5
 
 const VideoCount = 10
@@ -13,6 +17,8 @@ const MessageCount = 10
 const TokenIsNotExist = "Token不存在"
 
 const TokenIsNotMatchUserId = "Token与用户不匹配"
+
+const TokenIsExpire = "Token过期"
 
 const Success = "成功!"
 

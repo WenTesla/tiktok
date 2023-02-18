@@ -38,7 +38,7 @@ func InsertLikeData(userId int64, videoId int64) (bool, error) {
 func QueryDuplicateLikeData(userId int64, videoId int64) (bool, error) {
 	like := Like{}
 	// SELECT * FROM `likes` WHERE `user_id` = 9 AND `video_id` = 39
-	result := db.Debug().Where(map[string]interface{}{"user_id": userId, "video_id": videoId}).Find(&like)
+	result := db.Where(map[string]interface{}{"user_id": userId, "video_id": videoId}).Find(&like)
 	if result.Error != nil {
 		// 查询错误
 		return false, result.Error
@@ -90,4 +90,16 @@ func QueryIsLike(userId int64, videoId int64) (bool, error) {
 		return false, nil
 	}
 	return true, nil
+}
+
+// 查询点赞数量
+
+func QueryFavoriteCountByUserId(userId int64) (int64, error) {
+	var count int64
+	// SELECT count(*) FROM `likes` WHERE user_id = 1 AND is_cancel = 0
+	result := db.Model(&Like{}).Where("user_id = ? AND is_cancel = ?", userId, 0).Count(&count)
+	if result.Error != nil {
+		return -1, result.Error
+	}
+	return count, nil
 }

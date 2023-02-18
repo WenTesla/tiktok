@@ -94,3 +94,16 @@ func InsertVideo(userId int64, play_url string, cover_url string, title string) 
 	}
 	return nil
 }
+
+// 查询作品的数量
+
+func QueryWorkCountByUserId(userId int64) (int64, error) {
+	var count int64
+	// SELECT count(*) FROM `videos` WHERE author_id = 1
+	//result := db.Debug().Table("videos").Where("author_id = ?", userId).Count(&count)
+	result := db.Model(&TableVideo{}).Where("author_id = ?", userId).Count(&count)
+	if result.Error != nil {
+		return -1, result.Error
+	}
+	return count, nil
+}

@@ -20,14 +20,15 @@ func CreateUserTable() {
 
 // UserInfo  最详细的信息 不与数据库模型对应
 type UserInfo struct {
-	Id             int64  `json:"id,omitempty"`     //主键
-	Name           string `json:"name,omitempty"`   //昵称
-	FollowCount    int64  `json:"follow_count"`     //关注总数
-	FollowerCount  int64  `json:"follower_count"`   //粉丝总数
-	IsFollow       bool   `json:"is_follow"`        //是否关注
-	AvatarUrl      string `json:"avatar,omitempty"` //用户的url
-	TotalFavorited int64  `json:"total_favorited,omitempty"`
-	FavoriteCount  int64  `json:"favorite_count,omitempty"`
+	Id             int64  `json:"id,omitempty"`              //主键
+	Name           string `json:"name,omitempty"`            //昵称
+	FollowCount    int64  `json:"follow_count"`              //关注总数
+	FollowerCount  int64  `json:"follower_count"`            //粉丝总数
+	IsFollow       bool   `json:"is_follow"`                 //是否关注
+	AvatarUrl      string `json:"avatar,omitempty"`          //用户的url
+	TotalFavorited int64  `json:"total_favorited,omitempty"` //获赞数量
+	WorkCount      int64  `json:"work_count,omitempty"`      //作品数量
+	FavoriteCount  int64  `json:"favorite_count,omitempty"`  //点赞数量
 }
 
 type FriendUser struct {
@@ -35,8 +36,6 @@ type FriendUser struct {
 	Message string `json:"message"` //聊天信息
 	MsgType int8   `json:"msgType"` //message信息的类型，0=>请求用户接受信息，1=>当前请求用户发送的信息
 }
-
-var db = config.InitDataSource()
 
 // InsertUser 插入用户
 func InsertUser(name string, password string) (User, error) {
@@ -104,9 +103,10 @@ func PackageUserToUserInfo(user User) (UserInfo, error) {
 	return userInfo, nil
 }
 
-// PackageUserToSimpleUserInfo
 //
-//	IsFollow
+//
+//	IsFollow -todo 点赞和作品总数
+
 func PackageUserToSimpleUserInfo(user User, userId int64) (UserInfo, error) {
 	userInfo := UserInfo{}
 	//  查询是否关注
@@ -127,5 +127,15 @@ func PackageUserToSimpleUserInfo(user User, userId int64) (UserInfo, error) {
 func PackageUserToUserInfoByUserId(id int64) (UserInfo, error) {
 	userInfo := UserInfo{}
 
+	return userInfo, nil
+}
+
+// 直接将user转换为userInfo,不查询数据库，只是包装
+
+func PackageUserToDirectUserInfo(user User) (UserInfo, error) {
+	userInfo := UserInfo{}
+	userInfo.Id = user.Id
+	userInfo.Name = user.Name
+	userInfo.IsFollow = true
 	return userInfo, nil
 }
