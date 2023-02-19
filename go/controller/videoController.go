@@ -19,17 +19,10 @@ type VideoStreamModel struct {
 	VideoList  []model.Video `json:"video_list"`          // 视频列表
 }
 
-// // 视频作者信息
-// //
-// // User
-//
-//	type User struct {
-//		FollowCount   int64  `json:"follow_count"`  // 关注总数
-//		FollowerCount int64  `json:"follower_count"`// 粉丝总数
-//		ID            int64  `json:"id"`            // 用户id
-//		IsFollow      bool   `json:"is_follow"`     // true-已关注，false-未关注
-//		Name          string `json:"name"`          // 用户名称
-//	}
+type VideoPublishListResponse struct {
+	model.BaseResponse
+	VideoList []model.Video `json:"video_list"` // 用户发布的视频列表
+}
 
 type Stream struct {
 	model.BaseResponse
@@ -66,7 +59,6 @@ func VideoStream(c *gin.Context) {
 				StatusCode: -1,
 				StatusMsg:  err.Error(),
 			})
-
 		}
 		// 获取发布最早的时间 作为下一条next参数 这里有问题
 		nextTime, err := model.QueryNextTimeByVideoId(videos[len(videos)-1].ID)
@@ -89,8 +81,6 @@ func VideoStream(c *gin.Context) {
 	// 解析token
 	parseToken, _ := jwt.ParseToken(token)
 	userId := int64(parseToken.(float64))
-	//log.Printf("%T", parseToken)
-
 	videos, err = service.VideoStreamService(last_time, userId)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, VideoStreamModel{
@@ -108,7 +98,6 @@ func VideoStream(c *gin.Context) {
 		})
 		return
 	}
-	log.Printf("%v", videos)
 	c.JSON(http.StatusOK, VideoStreamModel{
 		NextTime:   nextTime.UnixNano() / 1e6,
 		StatusCode: 0,
@@ -120,20 +109,19 @@ func VideoStream(c *gin.Context) {
 // VideoPublish 登录用户选择视频上传
 func VideoPublish(c *gin.Context) {
 	file, err := c.FormFile("data")
+	// 参数判断空
+	if file.Size == 0 {
+		c.JSON(http.StatusBadRequest, model.BaseResponseInstance.FailMsg(config.RequestFail))
+		return
+	}
 	if err != nil {
-		c.JSON(http.StatusBadRequest, model.BaseResponse{
-			StatusCode: -1,
-			StatusMsg:  err.Error(),
-		})
+		c.JSON(http.StatusBadRequest, model.BaseResponseInstance.FailMsg(err.Error()))
 		return
 	}
 	// 获取登录用户的id
 	user_id, exists := c.Get("Id")
 	if !exists {
-		c.JSON(http.StatusNotFound, model.BaseResponse{
-			StatusCode: -1,
-			StatusMsg:  "用户名不存在",
-		})
+		c.JSON(http.StatusNotFound, model.BaseResponseInstance.FailMsg(config.RequestFail))
 		return
 	}
 	// 转换
@@ -147,40 +135,36 @@ func VideoPublish(c *gin.Context) {
 			StatusCode: -1,
 			StatusMsg:  err.Error(),
 		})
+		return
 	} else {
-		// 添加数据库
-
-		c.JSON(http.StatusOK, model.BaseResponse{
-			StatusCode: 0,
-			StatusMsg:  config.Success,
-		})
+		c.JSON(http.StatusOK, model.BaseResponseInstance.Success())
+		return
 	}
 
 }
 
-// VideoList 发布列表 用户的视频发布列表，直接列出用户所有投稿过的视频
+//  发布列表 用户的视频发布列表，直接列出用户所有投稿过的视频
+
 func VideoList(c *gin.Context) {
 	user_id := c.Query("user_id")
-	log.Printf("%v", user_id)
 	Id, err := strconv.ParseInt(user_id, 10, 64)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, model.BaseResponse{
-			StatusCode: -1,
-			StatusMsg:  "请求错误",
+		c.JSON(http.StatusBadRequest, VideoPublishListResponse{
+			BaseResponse: model.BaseResponseInstance.FailMsg(config.RequestFail),
+			VideoList:    nil,
 		})
 		return
 	}
 	videos, err := service.VideoInfoByUserId(int(Id))
 	if err != nil {
-		c.JSON(http.StatusNotFound, model.BaseResponse{
-			StatusCode: -1,
-			StatusMsg:  "资源不存在",
+		c.JSON(http.StatusNotFound, VideoPublishListResponse{
+			BaseResponse: model.BaseResponseInstance.FailMsg(config.DatabaseError),
+			VideoList:    nil,
 		})
 		return
 	}
-	c.JSON(http.StatusOK, VideoStreamModel{
-		StatusCode: 0,
-		StatusMsg:  "成功",
-		VideoList:  videos,
+	c.JSON(http.StatusOK, VideoPublishListResponse{
+		BaseResponse: model.BaseResponseInstance.Success(),
+		VideoList:    videos,
 	})
 }

@@ -2,8 +2,10 @@ package route
 
 import (
 	"github.com/gin-gonic/gin"
+	"net/http"
 	"tiktok/go/controller"
 	"tiktok/go/middle/jwt"
+	"tiktok/go/model"
 )
 
 // LoadRouter
@@ -48,4 +50,9 @@ func LoadRouter(r *gin.Engine) {
 	apiRouter.POST("/message/action/", jwt.VerifyToken, controller.MessageAction)
 	// test
 	//apiRouter.GET("/test/token",jwt.SignToken)
+
+	// other
+	r.NoRoute(func(context *gin.Context) {
+		context.JSON(http.StatusNotFound, model.BaseResponseInstance.FailMsg("页面不存在"))
+	})
 }

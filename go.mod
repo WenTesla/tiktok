@@ -49,5 +49,8 @@ require (
 	github.com/mozillazg/go-httpheader v0.3.1 // indirect
 	github.com/tencentyun/cos-go-sdk-v5 v0.7.41 // indirect
 )
+
 // 引入redis
 require github.com/go-redis/redis v6.15.9+incompatible // indirect
+
+require golang.org/x/time v0.3.0 // indirect

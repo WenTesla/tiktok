@@ -37,7 +37,8 @@ func QueryCommentByUserId(userId int64) ([]Comment, error) {
 func QueryCommentByVideoId(videoId int64) ([]Comment, error) {
 	var comments []Comment
 	// 获取
-	result := db.Debug().Where("video_id = ? AND is_cancel = ?", videoId, 0).Order("createTime desc").Find(&comments)
+	// SELECT * FROM `comments` WHERE video_id = 43 AND is_cancel = 0 ORDER BY createTime desc
+	result := db.Where("video_id = ? AND is_cancel = ?", videoId, 0).Order("createTime desc").Find(&comments)
 	if result.Error != nil {
 		return nil, result.Error
 	}

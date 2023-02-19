@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"log"
+	"tiktok/go/config"
 	"tiktok/go/middle/jwt"
 
 	// "log"
@@ -14,6 +15,8 @@ import (
 
 // SALT 盐值
 const SALT = "TikTok"
+
+var dataSourceErr = errors.New(config.DatabaseError)
 
 // email verify
 func VerifyEmailFormat(email string) bool {
@@ -68,72 +71,78 @@ func LoginService(username string, password string) (int64, error) {
 
 	user, err := model.GetUserByName(username)
 	if err != nil {
-		return 0, errors.New("数据库查询错误")
+		return 0, errors.New(config.DatabaseError)
 	}
 	if username != user.Name {
 		return 0, errors.New("用户名不存在")
 	}
 	if password != user.Password {
-		return 0, errors.New("用户密码不正确")
+		return 0, errors.New("用户或密码不正确")
 	}
 
 	return user.Id, nil
 }
 
-// UserService 用户服务 先封装小的，再封装大的
+//  用户服务 先封装小的，再封装大的 根据用户Id查询用户的具体信息
+
 func UserService(Id int64) (model.UserInfo, error) {
 	user, err := model.GetUserById(Id)
 	if err != nil {
 		return model.UserInfo{}, err
 	}
-	//user.Password = ""
+	// 脱密
+	user.Password = ""
 	// 查询自己的关注数目
 	followingCount, _ := model.GetFollowingById(Id)
-	log.Printf("关注的数量%d", followingCount)
 	// 查询自己的粉丝
 	fanCount, err := model.GetFansById(Id)
-	log.Printf("粉丝数目%d", fanCount)
-	// 查询作品数量
+	// 查询点赞数量
 	favoriteCount, err := model.QueryFavoriteCountByUserId(Id)
 	if err != nil {
 		return model.UserInfo{}, err
 	}
-	// 查询点赞数量
+	// 查询作品的数量
 	workCount, err := model.QueryWorkCountByUserId(Id)
 	if err != nil {
 		return model.UserInfo{}, err
 	}
+	// 查询获赞数量
+	totalFavorited, err := model.QueryTotalFavorited(Id)
+	if err != nil {
+		return model.UserInfo{}, err
+	}
+	// 以下为假数据 -avator
 
-	// 关注一定为true
+	// 关注一定为false
 	userInfo := model.UserInfo{
-		Id:            user.Id,
-		Name:          user.Name,
-		FollowCount:   followingCount,
-		FollowerCount: fanCount,
-		IsFollow:      false,
-		WorkCount:     workCount,
-		FavoriteCount: favoriteCount,
+		Id:             user.Id,
+		Name:           user.Name,
+		FollowCount:    followingCount,
+		FollowerCount:  fanCount,
+		IsFollow:       false,
+		AvatarUrl:      config.MockAvatarUrl,
+		TotalFavorited: totalFavorited,
+		WorkCount:      workCount,
+		FavoriteCount:  favoriteCount,
 	}
 	return userInfo, nil
 }
 
-//  用户服务 先封装小的，再封装大的
+//  用户服务 先封装小的，再封装大的 此时为登录状态，需要查询是否登录
 
 func UserInfoService(Id int64, userId int64) (model.UserInfo, error) {
 	user, err := model.GetUserById(Id)
 	if err != nil {
 		return model.UserInfo{}, err
 	}
-	//user.Password = ""
-	// 查询自己的关注数目
+	user.Password = ""
+	// 查询关注数目
 	followingCount, _ := model.GetFollowingById(Id)
-	log.Printf("关注的数量%d", followingCount)
-	// 查询自己的粉丝
+	// 查询粉丝
 	fanCount, err := model.GetFansById(Id)
 	if err != nil {
 		return model.UserInfo{}, err
 	}
-	log.Printf("粉丝数目%d", fanCount)
 	// 查询是否关注
 	isFollow, err := model.QueryIsFollow(userId, Id)
 	if err != nil {
@@ -149,19 +158,27 @@ func UserInfoService(Id int64, userId int64) (model.UserInfo, error) {
 	if err != nil {
 		return model.UserInfo{}, err
 	}
+	// 查询获赞数量
+	totalFavorited, err := model.QueryTotalFavorited(Id)
+	if err != nil {
+		return model.UserInfo{}, err
+	}
 	userInfo := model.UserInfo{
-		Id:            user.Id,
-		Name:          user.Name,
-		FollowCount:   followingCount,
-		FollowerCount: fanCount,
-		IsFollow:      isFollow,
-		WorkCount:     workCount,
-		FavoriteCount: favoriteCount,
+		Id:             user.Id,
+		Name:           user.Name,
+		FollowCount:    followingCount,
+		FollowerCount:  fanCount,
+		IsFollow:       isFollow,
+		AvatarUrl:      config.CosUrl,
+		TotalFavorited: totalFavorited,
+		WorkCount:      workCount,
+		FavoriteCount:  favoriteCount,
 	}
 	return userInfo, nil
 }
 
-// SimpleUserService 脱密后的信息
+//  脱密后的信息
+
 func SimpleUserService(Id int64, userId int64) (model.UserInfo, error) {
 	user, err := model.GetUserById(Id)
 	if err != nil {

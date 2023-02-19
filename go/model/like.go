@@ -2,6 +2,7 @@ package model
 
 import (
 	"tiktok/go/config"
+	"tiktok/go/util"
 )
 
 // Like 表的结构,不需要json化
@@ -16,9 +17,13 @@ type Like struct {
 func UpdateLikeVideoByUserId(userId int64, videoId int64, action int64) error {
 	//更新当前用户观看视频的点赞状态“cancel”，返回错误结果
 	// UPDATE `likes` SET `is_cancel`=0 WHERE `user_id` = 9 AND `video_id` = 39
-	result := db.Debug().Model(Like{}).Where(map[string]interface{}{"user_id": userId, "video_id": videoId}).
+	result := db.Model(Like{}).Where(map[string]interface{}{"user_id": userId, "video_id": videoId}).
 		Update("is_cancel", action)
-	return result.Error
+	if result.Error != nil {
+		util.LogError(result.Error.Error())
+		return result.Error
+	}
+	return nil
 }
 
 // 插入数据
@@ -27,8 +32,9 @@ func InsertLikeData(userId int64, videoId int64) (bool, error) {
 		UserId:  userId,
 		VideoId: videoId,
 	}
-	result := db.Debug().Create(&like)
+	result := db.Create(&like)
 	if result.Error != nil {
+		util.LogError(result.Error.Error())
 		return false, result.Error
 	}
 	return true, nil
@@ -101,5 +107,14 @@ func QueryFavoriteCountByUserId(userId int64) (int64, error) {
 	if result.Error != nil {
 		return -1, result.Error
 	}
+	return count, nil
+}
+
+// 获取获赞数量
+
+func QueryTotalFavorited(userId int64) (int64, error) {
+	var count int64
+	// SELECT count(*) FROM `likes` WHERE video_id in (SELECT `id` FROM `videos` WHERE author_id = 1) AND is_cancel = 0
+	db.Model(&Like{}).Where("video_id in (?) AND is_cancel = ?", db.Model(&TableVideo{}).Where("author_id = ?", userId).Select("id"), 0).Count(&count)
 	return count, nil
 }

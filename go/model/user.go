@@ -66,7 +66,8 @@ func GetUserByName(name string) (User, error) {
 	user := User{}
 	//Db := config.InitDataSource()
 	// 查数据表
-	if err := db.Debug().Where("name = ?", name).Limit(1).Find(&user).Error; err != nil {
+	//  SELECT * FROM `users` WHERE name = '周子豪' LIMIT 1
+	if err := db.Where("name = ?", name).Limit(1).Find(&user).Error; err != nil {
 		//log.Println(err.Error())
 		return user, err
 	}

@@ -80,7 +80,35 @@ func packageVideos(tableVideos []model.TableVideo, userId int64) ([]model.Video,
 	return videos, nil
 }
 
-//  包装单个视频，不返回是否关注的信息
+// 包装简单的视频列表
+
+func packageSimpleVideos(tableVideos []model.TableVideo, userId int64) ([]model.Video, error) {
+	// 创建video模型
+	videos := make([]model.Video, 0, config.VideoCount)
+	if userId == -1 {
+		// 填入author
+		for _, tableVideo := range tableVideos {
+			video, err := PackSimpleVideoService(&tableVideo)
+			if err != nil {
+				return nil, err
+			}
+			videos = append(videos, video)
+		}
+	} else {
+		// 填入author
+		for _, tableVideo := range tableVideos {
+			video, err := packageVideoWithUserId(&tableVideo, userId)
+			if err != nil {
+				return nil, err
+			}
+			videos = append(videos, video)
+		}
+	}
+
+	return videos, nil
+}
+
+//  包装单个视频，不返回是否关注的信息-即未登录状态的信息
 
 func packageVideo(tableVideo *model.TableVideo) (model.Video, error) {
 	// 创建video单例
@@ -110,10 +138,12 @@ func packageVideo(tableVideo *model.TableVideo) (model.Video, error) {
 		return video, err
 	}
 	video.CommentCount = commentCount
+	video.IsFavorite = false
 	return video, nil
 }
 
-// packageVideoWithUserId 包装单个视频,返回是否关注的信息
+//  包装单个视频,返回是否关注的信息
+
 func packageVideoWithUserId(tableVideo *model.TableVideo, id int64) (model.Video, error) {
 	// 创建video单例
 	video := model.Video{}
@@ -151,7 +181,30 @@ func packageVideoWithUserId(tableVideo *model.TableVideo, id int64) (model.Video
 	return video, nil
 }
 
-// PublishVideoService PublishVideo 可以优化
+// 包装最简单的视频信息 作者只包含
+
+func PackSimpleVideoService(tableVideo *model.TableVideo) (model.Video, error) {
+	// 创建video单例
+	video := model.Video{}
+	// 获取作者信息
+	userInfo, err := SimpleUserService(tableVideo.AuthorId, -1)
+	if err != nil {
+		return model.Video{}, err
+	}
+	log.Printf("%v", userInfo)
+	//video.Author=user
+	video.Author = userInfo
+	// 填充Videos的
+	video.ID = tableVideo.Id
+	video.PlayURL = tableVideo.PlayUrl
+	video.CoverURL = tableVideo.CoverUrl
+	video.Title = tableVideo.Title
+	video.IsFavorite = false
+	return video, nil
+}
+
+//  PublishVideo 可以优化
+
 func PublishVideoService(file *multipart.FileHeader, userId int64, title string) error {
 	src, err := file.Open()
 	if err != nil {

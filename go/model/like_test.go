@@ -24,3 +24,6 @@ func TestQueryLikeByVideoId(t *testing.T) {
 	count, _ := QueryLikeByVideoId(3)
 	fmt.Print(count)
 }
+func TestQueryTotalFavorited(t *testing.T) {
+	QueryTotalFavorited(1)
+}

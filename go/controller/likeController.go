@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -11,9 +10,8 @@ import (
 )
 
 type userFavoriteListResponse struct {
-	StatusCode int32         `json:"status_code"`
-	StatusMsg  string        `json:"status_msg"`
-	VideoList  []model.Video `json:"video_list"`
+	model.BaseResponse
+	VideoList []model.Video `json:"video_list"`
 }
 
 // 点赞行为:  1-点赞，2-取消点赞
@@ -31,63 +29,52 @@ func LikeVideoByUserID(c *gin.Context) {
 	case 2:
 		Type = 1
 	default:
-		c.JSON(http.StatusBadRequest, model.BaseResponse{
-			StatusCode: -1,
-			StatusMsg:  "非法参数",
-		})
+		c.JSON(http.StatusBadRequest, model.BaseResponseInstance.FailMsg(config.RequestFail))
 		return
 	}
 	// 提取用户Id
 	user_id, exists := c.Get("Id")
 	if !exists {
-		c.JSON(http.StatusNotFound, model.BaseResponse{
-			StatusCode: -1,
-			StatusMsg:  config.TokenIsNotExist,
-		})
+		c.JSON(http.StatusNotFound, model.BaseResponseInstance.FailMsg(config.TokenIsNotExist))
 		return
 	}
 	userId := int64(user_id.(float64))
+	// 点赞Type为1 取消为2
 	flag, err := service.LikeVideoByUserIDService(userId, id, Type)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, model.BaseResponse{
-			StatusCode: -1,
-			StatusMsg:  err.Error(),
-		})
+		c.JSON(http.StatusBadRequest, model.BaseResponseInstance.FailMsg(err.Error()))
 		return
 	}
 	if flag {
-		c.JSON(http.StatusOK, model.BaseResponse{
-			StatusCode: 0,
-			StatusMsg:  "成功" + action_type,
-		})
+		c.JSON(http.StatusOK, model.BaseResponseInstance.Success())
+		return
 	}
-	fmt.Println(video_id, action_type)
-
 }
 
 // 用户点赞列表
+
 func UserFavoriteList(c *gin.Context) {
 	user_id := c.Query("user_id")
 	userId, err := strconv.ParseInt(user_id, 10, 64)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, userFavoriteListResponse{
-			StatusCode: -1,
-			StatusMsg:  "请求失败",
-			VideoList:  nil,
+			BaseResponse: model.BaseResponseInstance.FailMsg(err.Error()),
+			VideoList:    nil,
 		})
+		return
 	}
 	userFavoriteList, err := service.UserFavoriteListService(userId)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, userFavoriteListResponse{
-			StatusCode: -1,
-			StatusMsg:  err.Error(),
-			VideoList:  nil,
+			BaseResponse: model.BaseResponseInstance.FailMsg(err.Error()),
+			VideoList:    nil,
 		})
+		return
 	} else {
 		c.JSON(http.StatusOK, userFavoriteListResponse{
-			StatusCode: 0,
-			StatusMsg:  "成功",
-			VideoList:  userFavoriteList,
+			BaseResponse: model.BaseResponseInstance.Success(),
+			VideoList:    userFavoriteList,
 		})
+		return
 	}
 }

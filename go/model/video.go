@@ -72,7 +72,8 @@ func GetVideoNextTime(lastTime time.Time) (time.Time, error) {
 // 获取
 func QueryNextTimeByVideoId(videoId int64) (time.Time, error) {
 	tableVideo := TableVideo{}
-	result := db.Debug().Where("id = ? ", videoId).Limit(1).Select("publish_time").Find(&tableVideo)
+	// SELECT `publish_time` FROM `videos` WHERE id = 6  LIMIT 1
+	result := db.Where("id = ? ", videoId).Limit(1).Select("publish_time").Find(&tableVideo)
 	if result.Error != nil {
 		return time.Time{}, result.Error
 	}

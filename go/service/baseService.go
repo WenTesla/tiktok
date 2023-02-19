@@ -6,8 +6,14 @@ import "tiktok/go/config"
 
 var redisDb, _ = config.InitRedisClient()
 
-var likeRedisDb, _ = config.RedisClient(3)
+var userRedisDb, _ = config.RedisClient(1)
 
-var commentRedisDb, _ = config.RedisClient(4)
+var videoRedisDb, _ = config.RedisClient(2)
 
-var messageRedisDb, _ = config.RedisClient(5)
+var followRedisDb, _ = config.RedisClient(3)
+
+var likeRedisDb, _ = config.RedisClient(4)
+
+var commentRedisDb, _ = config.RedisClient(5)
+
+var messageRedisDb, _ = config.RedisClient(6)

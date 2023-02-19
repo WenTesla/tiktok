@@ -4,25 +4,26 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c573e332-cd3a-41d6-891d-281450698c04" name="变更" comment="添加日志">
-      <change afterPath="$PROJECT_DIR$/go/service/baseService.go" afterDir="false" />
+    <list default="true" id="c573e332-cd3a-41d6-891d-281450698c04" name="变更" comment="基本完成接口">
+      <change afterPath="$PROJECT_DIR$/go/middle/base.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/config/parameter.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/config/parameter.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/config/redis.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/controller/messageController.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/controller/messageController.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/model/base.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/base.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/model/follow.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/follow.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/model/follow_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/follow_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/controller/likeController.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/controller/likeController.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/controller/userController.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/controller/userController.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/controller/videoController.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/controller/videoController.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/middle/jwt/Verify.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/middle/jwt/Verify.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/middle/jwt/jwt_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/middle/jwt/jwt_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/middle/jwt/token.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/middle/jwt/token.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/model/comment.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/comment.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/model/like.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/like.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/model/message.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/message.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/model/like_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/like_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/model/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/user.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/model/video.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/video.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/service/followService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/followService.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/route/load.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/route/load.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/service/baseService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/baseService.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/service/likeService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/likeService.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/service/messageService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/messageService.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/service/userService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/userService.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/service/videoService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/videoService.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
@@ -116,7 +117,7 @@
       <filePath value="$PROJECT_DIR$/go/main.go" />
       <method v="2" />
     </configuration>
-    <configuration name="tiktok/go/config 中的 TestAddRedis (1)" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="tiktok/go/config 中的 TestIs" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="tiktok" />
       <working_directory value="$PROJECT_DIR$/go/config" />
       <root_directory value="$PROJECT_DIR$" />
@@ -125,10 +126,10 @@
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
       <framework value="gotest" />
-      <pattern value="^\QTestAddRedis\E$" />
+      <pattern value="^\QTestIs\E$" />
       <method v="2" />
     </configuration>
-    <configuration name="tiktok/go/config 中的 TestAddRedis" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="tiktok/go/config 中的 TestTimeRedis" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="tiktok" />
       <working_directory value="$PROJECT_DIR$/go/config" />
       <root_directory value="$PROJECT_DIR$" />
@@ -137,47 +138,47 @@
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
       <framework value="gotest" />
-      <pattern value="^\QTestAddRedis\E$" />
+      <pattern value="^\QTestTimeRedis\E$" />
       <method v="2" />
     </configuration>
-    <configuration name="tiktok/go/config 中的 TestQueryRedis" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="tiktok/go/middle/jwt 中的 Benchmark_Main" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="tiktok" />
-      <working_directory value="$PROJECT_DIR$/go/config" />
+      <working_directory value="$PROJECT_DIR$/go/middle/jwt" />
       <root_directory value="$PROJECT_DIR$" />
       <kind value="PACKAGE" />
-      <package value="tiktok/go/config" />
+      <package value="tiktok/go/middle/jwt" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gobench" />
+      <pattern value="^\QBenchmark_Main\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="tiktok/go/middle/jwt 中的 TestLimit" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="tiktok" />
+      <working_directory value="$PROJECT_DIR$/go/middle/jwt" />
+      <root_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="tiktok/go/middle/jwt" />
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
       <framework value="gotest" />
-      <pattern value="^\QTestQueryRedis\E$" />
-      <method v="2" />
-    </configuration>
-    <configuration name="tiktok/go/model 中的 TestQueryMutualFollowListByUserId" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
-      <module name="tiktok" />
-      <working_directory value="$PROJECT_DIR$/go/model" />
-      <root_directory value="$PROJECT_DIR$" />
-      <kind value="PACKAGE" />
-      <package value="tiktok/go/model" />
-      <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$" />
-      <framework value="gotest" />
-      <pattern value="^\QTestQueryMutualFollowListByUserId\E$" />
+      <pattern value="^\QTestLimit\E$" />
       <method v="2" />
     </configuration>
     <list>
       <item itemvalue="Go 构建.go build tiktok/go" />
-      <item itemvalue="Go 测试.tiktok/go/config 中的 TestAddRedis (1)" />
-      <item itemvalue="Go 测试.tiktok/go/config 中的 TestQueryRedis" />
-      <item itemvalue="Go 测试.tiktok/go/model 中的 TestQueryMutualFollowListByUserId" />
-      <item itemvalue="Go 测试.tiktok/go/config 中的 TestAddRedis" />
+      <item itemvalue="Go 测试.tiktok/go/config 中的 TestIs" />
+      <item itemvalue="Go 测试.tiktok/go/config 中的 TestTimeRedis" />
+      <item itemvalue="Go 测试.tiktok/go/middle/jwt 中的 Benchmark_Main" />
+      <item itemvalue="Go 测试.tiktok/go/middle/jwt 中的 TestLimit" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Go 构建.go build tiktok/go" />
-        <item itemvalue="Go 测试.tiktok/go/config 中的 TestQueryRedis" />
-        <item itemvalue="Go 测试.tiktok/go/config 中的 TestAddRedis (1)" />
-        <item itemvalue="Go 测试.tiktok/go/model 中的 TestQueryMutualFollowListByUserId" />
-        <item itemvalue="Go 测试.tiktok/go/config 中的 TestAddRedis" />
+        <item itemvalue="Go 测试.tiktok/go/config 中的 TestIs" />
+        <item itemvalue="Go 测试.tiktok/go/config 中的 TestTimeRedis" />
+        <item itemvalue="Go 测试.tiktok/go/middle/jwt 中的 Benchmark_Main" />
+        <item itemvalue="Go 测试.tiktok/go/middle/jwt 中的 TestLimit" />
       </list>
     </recent_temporary>
   </component>
@@ -226,7 +227,8 @@
     <MESSAGE value="完成消息记录接口" />
     <MESSAGE value="基本完成所有接口-消息记录接口未完善" />
     <MESSAGE value="添加日志" />
-    <option name="LAST_COMMIT_MESSAGE" value="添加日志" />
+    <MESSAGE value="基本完成接口" />
+    <option name="LAST_COMMIT_MESSAGE" value="基本完成接口" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
@@ -258,6 +260,16 @@
           <url>file://$PROJECT_DIR$/go/config/redis_test.go</url>
           <line>97</line>
           <option name="timeStamp" value="120" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/go/service/messageService.go</url>
+          <line>87</line>
+          <option name="timeStamp" value="121" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/go/middle/jwt/jwt_test.go</url>
+          <line>33</line>
+          <option name="timeStamp" value="123" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
