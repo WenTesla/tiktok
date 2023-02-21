@@ -21,6 +21,7 @@ var nowTime string
 var newFileName string
 
 // 通过传入时间戳，当前用户的id，返回对应的视频数组，以及视频数组中最早的发布时间
+
 func VideoStreamService(lastTime time.Time, userId int64) ([]model.Video, error) {
 	tableVideos, err := model.GetVideoByLastTime(lastTime)
 	if err != nil {
@@ -127,11 +128,16 @@ func packageVideo(tableVideo *model.TableVideo) (model.Video, error) {
 	video.CoverURL = tableVideo.CoverUrl
 	video.Title = tableVideo.Title
 	// 获取 favorite_count
-	count, err := model.QueryLikeByVideoId(tableVideo.Id)
+	// 先查询redis
+	favoriteCount, err := likeRedisDb.SCard(strconv.FormatInt(video.ID, 10)).Result()
 	if err != nil {
-		return video, err
+		//// 出错查询数据库
+		favoriteCount, err = model.QueryLikeByVideoId(tableVideo.Id)
+		if err != nil {
+			return video, err
+		}
 	}
-	video.FavoriteCount = count
+	video.FavoriteCount = favoriteCount
 	// 获取"commentCount"
 	commentCount, err := model.QueryCommentCountByVideoId(tableVideo.Id)
 	if err != nil {
@@ -161,21 +167,30 @@ func packageVideoWithUserId(tableVideo *model.TableVideo, id int64) (model.Video
 	video.CoverURL = tableVideo.CoverUrl
 	video.Title = tableVideo.Title
 	// 获取 favorite_count
-	count, err := model.QueryLikeByVideoId(tableVideo.Id)
+	// 先查询redis
+	favoriteCount, err := likeRedisDb.SCard(strconv.FormatInt(video.ID, 10)).Result()
 	if err != nil {
-		return video, err
+		//// 出错查询数据库
+		favoriteCount, err = model.QueryLikeByVideoId(tableVideo.Id)
+		if err != nil {
+			return video, dataSourceErr
+		}
 	}
-	video.FavoriteCount = count
+	video.FavoriteCount = favoriteCount
 	// 获取"commentCount"
 	commentCount, err := model.QueryCommentCountByVideoId(tableVideo.Id)
 	if err != nil {
 		return video, err
 	}
 	video.CommentCount = commentCount
-	// 获取是否点赞
-	is_favorite, err := model.QueryIsLike(id, tableVideo.Id)
+	// 获取是否点赞 先查询redis
+	is_favorite, err := likeRedisDb.SIsMember(strconv.FormatInt(video.ID, 10), id).Result()
+	// redis查询失败查询数据库
 	if err != nil {
-		return video, err
+		is_favorite, err = model.QueryIsLike(id, tableVideo.Id)
+		if err != nil {
+			return video, err
+		}
 	}
 	video.IsFavorite = is_favorite
 	return video, nil
@@ -250,9 +265,8 @@ func publishVideoByTencentCos(file multipart.File, fileName string) error {
 	// 例如，在对象的访问域名 `examplebucket-1250000000.cos.COS_REGION.myqcloud.com/test/objectPut.go` 中，对象键为 test/objectPut.go
 	_, err := c.Object.Put(context.Background(), fileName, file, nil)
 	if err != nil {
-		return err
+		return errors.New("文件上传失败")
 	}
-
 	//os.Open()
 	return nil
 }

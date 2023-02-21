@@ -1,6 +1,7 @@
 package model
 
 import (
+	"tiktok/go/util"
 	"time"
 )
 
@@ -19,6 +20,7 @@ func GetFollowingById(id int64) (int64, error) {
 	// SELECT count(1) FROM users WHERE name = 'jinzhu'; (count)
 	result := db.Model(&Follow{}).Where("user_id = ? AND cancel = ?", id, 0).Count(&count)
 	if result.Error != nil {
+		util.LogError(result.Error.Error())
 		return 0, result.Error
 	}
 	return count, nil
@@ -30,6 +32,7 @@ func GetFansById(id int64) (int64, error) {
 	// SELECT count(1) FROM users WHERE name = 'jinzhu'; (count)
 	result := db.Model(&Follow{}).Where("follower_id = ? AND cancel = ?", id, 0).Count(&count)
 	if result.Error != nil {
+		util.LogError(result.Error.Error())
 		return 0, result.Error
 	}
 	return count, nil
@@ -48,8 +51,10 @@ func InsertFollow(userId int64, toUserID int64) (bool, error) {
 		UserId:     userId,
 		FollowerId: toUserID,
 	}
-	result := db.Debug().Create(&follow)
+	// INSERT INTO `follows` (`user_id`,`follower_id`,`cancel`) VALUES (7,9,0)
+	result := db.Create(&follow)
 	if result.Error != nil {
+		util.LogError(result.Error.Error())
 		return false, result.Error
 	}
 	return true, nil
@@ -60,6 +65,7 @@ func QueryFollowByUserIdAndToUserID(userId int64, toUserID int64) (bool, error) 
 	//SELECT * FROM `follows` WHERE user_id = 1 AND follower_id = 5
 	result := db.Where("user_id = ? AND follower_id = ?", userId, toUserID).Find(&Follow{})
 	if result.Error != nil {
+		util.LogError(result.Error.Error())
 		return false, result.Error
 	}
 	if result.RowsAffected == 0 {
@@ -74,6 +80,7 @@ func CancelFollow(userId int64, toUserID int64) error {
 	//UPDATE `follows` SET `cancel`=1 WHERE user_id = 1 AND follower_id = 5
 	result := db.Debug().Model(&Follow{}).Where("user_id = ? AND follower_id = ?", userId, toUserID).Update("cancel", 1)
 	if result.Error != nil {
+		util.LogError(result.Error.Error())
 		return result.Error
 	}
 	return nil
@@ -85,6 +92,7 @@ func RefocusUser(userId int64, toUserID int64) error {
 	// UPDATE `follows` SET `cancel`=0 WHERE user_id = 1 AND follower_id = 5
 	result := db.Model(&Follow{}).Where("user_id = ? AND follower_id = ?", userId, toUserID).Update("cancel", 0)
 	if result.Error != nil {
+		util.LogError(result.Error.Error())
 		return result.Error
 	}
 	return nil
@@ -96,6 +104,7 @@ func QueryFollowUsersByUserId(userId int64) ([]User, error) {
 	//SELECT * FROM `users` WHERE id IN (SELECT `follower_id` FROM `follows` WHERE user_id = 1 AND cancel = 0)
 	result := db.Where("id IN (?)", db.Where("user_id = ? AND cancel = ?", userId, 0).Select("follower_id").Find(&Follow{})).Find(&users)
 	if result.Error != nil {
+		util.LogError(result.Error.Error())
 		return nil, result.Error
 	}
 	return users, nil
@@ -107,6 +116,7 @@ func QueryFansUsersByUserId(userId int64) ([]User, error) {
 	//SELECT * FROM `users` WHERE id IN (SELECT `user_id` FROM `follows` WHERE follower_id = 1 AND cancel = 0)
 	result := db.Where("id IN (?)", db.Where("follower_id = ? AND cancel = ?", userId, 0).Select("user_id").Find(&Follow{})).Find(&users)
 	if result.Error != nil {
+		util.LogError(result.Error.Error())
 		return nil, result.Error
 	}
 	return users, nil
@@ -128,6 +138,7 @@ func QueryMutualFollowListByUserId(userId int64) ([]User, error) {
 	// SELECT `id` `name` FROM `users` WHERE id in (SELECT a.follower_id FROM follows a join follows b on a.user_id=b.follower_id AND a.follower_id = b.user_id WHERE a.cancel = 0 AND b.cancel = 0 AND a.user_id = 1 AND b.follower_id = 1)
 	result := db.Where("id in (?)", db.Table("follows a").Select("a.follower_id").Joins("join follows b on a.user_id=b.follower_id AND a.follower_id = b.user_id").Where("a.cancel = ? AND b.cancel = ? AND a.user_id = ? AND b.follower_id = ?", 0, 0, userId, userId).Find(&Follow{})).Select("id", "name").Find(&MutualFollowList)
 	if result.Error != nil {
+		util.LogError(result.Error.Error())
 		return nil, result.Error
 	}
 	return MutualFollowList, nil
@@ -143,6 +154,7 @@ func QueryIsFollow(userId int64, toUserId int64) (bool, error) {
 	//SELECT count(*) FROM `follows` WHERE user_id = ? AND follower_id = ? AND cancel = 0
 	result := db.Model(&Follow{}).Where("user_id = ? AND follower_id = ? AND cancel = ?", userId, toUserId, 0).Count(&count)
 	if result.Error != nil {
+		util.LogError(result.Error.Error())
 		return false, result.Error
 	}
 	if count != 0 {

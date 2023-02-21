@@ -16,8 +16,6 @@ import (
 // SALT 盐值
 const SALT = "TikTok"
 
-var dataSourceErr = errors.New(config.DatabaseError)
-
 // email verify
 func VerifyEmailFormat(email string) bool {
 	//pattern := `\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*` //匹配电子邮箱

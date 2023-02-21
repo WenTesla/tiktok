@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"tiktok/go/model"
 	"tiktok/go/util"
 )
@@ -8,10 +9,9 @@ import (
 func CommentListService(videoId int64) ([]model.CommentInfo, error) {
 	comments, err := model.QueryCommentByVideoId(videoId)
 	if err != nil {
-		return nil, err
+		return nil, dataSourceErr
 	}
 	commentInfos, err := PackageComments(comments)
-
 	return commentInfos, nil
 }
 
@@ -38,11 +38,11 @@ func PackageComment(comment model.Comment) (model.CommentInfo, error) {
 	// 填入评论内容
 	commentInfo.Content = comment.Text
 	// 填入创建时间 "2006-01-02 15:04:05.999999999 -0700 MST"
-	commentInfo.CreateDate = comment.CreateTime.Format("2006-01-02 15:04:05")
+	commentInfo.CreateDate = comment.CreateTime.Format("01-02")
 	// 根据用户id查询
 	user, err := model.GetUserById(comment.UserId)
 	if err != nil {
-		return commentInfo, err
+		return commentInfo, dataSourceErr
 	}
 	userInfo, err := model.PackageUserToUserInfo(user)
 	if err != nil {
@@ -57,14 +57,18 @@ func CreateCommentService(userId int64, videoId int64, content string) (model.Co
 	// 敏感词处理
 	content, err := replaceSensitive(content)
 	commentInfo := model.CommentInfo{}
+	isExistVideoId, err := model.QueryIsExistVideoId(videoId)
+	if isExistVideoId != true {
+		return commentInfo, errors.New("视频不存在")
+	}
 	// 插入评论
 	comment, err := model.InsertComment(userId, videoId, content)
 	if err != nil {
-		return commentInfo, err
+		return commentInfo, dataSourceErr
 	}
 	commentInfo, err = PackageComment(comment)
 	if err != nil {
-		return commentInfo, err
+		return commentInfo, dataSourceErr
 	}
 	return commentInfo, nil
 }
@@ -73,7 +77,7 @@ func CreateCommentService(userId int64, videoId int64, content string) (model.Co
 func DeleteCommentService(id int64) (bool, error) {
 	isDelete, err := model.CancelComment(id)
 	if err != nil {
-		return false, err
+		return false, dataSourceErr
 	}
 	return isDelete, nil
 }

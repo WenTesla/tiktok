@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"log"
 	"testing"
 	"time"
@@ -17,4 +18,10 @@ func TestGetVideoNextTime(t *testing.T) {
 	lastTime, err := GetVideoNextTime(now)
 	log.Printf("%v", lastTime)
 	log.Printf("%v", err)
+}
+
+func TestQueryIsExitsVideoId(t *testing.T) {
+	id, _ := QueryIsExistVideoId(11)
+	fmt.Println(id)
+
 }

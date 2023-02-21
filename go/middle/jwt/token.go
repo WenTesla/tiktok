@@ -8,23 +8,6 @@ import (
 	"time"
 )
 
-// mySigningKey := []byte("asfasfdafasdfdasfa.")
-// 这里传入的是手机号，因为我项目登陆用的是手机号和密码
-//
-//	func MakeToken(Id string) (tokenString string, err error) {
-//		////claim := MyClaims{
-//		////	Phone: phone,
-//		////	RegisteredClaims: jwt.RegisteredClaims{
-//		////		ExpiresAt: jwt.NewNumericDate(time.Now().Add(3 * time.Hour * time.Duration(1))), // 过期时间3小时
-//		////		IssuedAt:  jwt.NewNumericDate(time.Now()),                                       // 签发时间
-//		////		NotBefore: jwt.NewNumericDate(time.Now()),                                       // 生效时间
-//		////	}}
-//		//
-//		//token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim) // 使用HS256算法
-//		//tokenString, err = token.SignedString(MySecret)
-//		//return tokenString, err
-//	}
-//
 // 提取密钥
 var jwtSecret = []byte(config.Secret)
 

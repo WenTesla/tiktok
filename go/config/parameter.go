@@ -30,6 +30,8 @@ const RequestFail = "请求参数错误"
 
 const RequestTooFast = "请求过于频繁"
 
+const RequestParameterIsNull = "请求参数为空"
+
 const DatabaseError = "内部数据库错误"
 
 const SuccessWithEnglish = "Success"

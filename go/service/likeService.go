@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"strconv"
 	"tiktok/go/model"
 )
@@ -68,6 +69,11 @@ func LikeVideoByUserIDService(userId int64, videoId int64, actionType int64) (bo
 	} else {
 		if actionType == 0 {
 			// 插入数据
+			// 先检查视频的id是否存在
+			IsExist, err := model.QueryIsExistVideoId(videoId)
+			if IsExist != true {
+				return false, errors.New("视频不存在")
+			}
 			_, err = model.InsertLikeData(userId, videoId)
 			if err != nil {
 				return false, err

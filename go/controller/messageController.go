@@ -24,6 +24,10 @@ type MessageListResponse struct {
 func FriendList(c *gin.Context) {
 	user_id := c.Query("user_id")
 	//userId, _ := strconv.ParseInt(user_id, 10, 64)
+	if user_id == "" {
+		c.JSON(http.StatusBadRequest, model.BaseResponseInstance.FailMsg(config.RequestParameterIsNull))
+		return
+	}
 	log.Println(user_id)
 	// 提取用户Id
 	userid, exists := c.Get("Id")
@@ -49,6 +53,10 @@ func FriendList(c *gin.Context) {
 // MessageChat 聊天记录 点进去才能看到
 func MessageChat(c *gin.Context) {
 	to_user_id := c.Query("to_user_id")
+	if to_user_id == "" {
+		c.JSON(http.StatusBadRequest, model.BaseResponseInstance.FailMsg(config.RequestParameterIsNull))
+		return
+	}
 	toUserId, _ := strconv.ParseInt(to_user_id, 10, 64)
 	log.Println(to_user_id)
 	// 提取用户Id
@@ -72,11 +80,8 @@ func MessageChat(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, MessageListResponse{
-		BaseResponse: model.BaseResponse{
-			StatusCode: 0,
-			StatusMsg:  config.Success,
-		},
-		MessageList: messages,
+		BaseResponse: model.BaseResponseInstance.Success(),
+		MessageList:  messages,
 	})
 	return
 }

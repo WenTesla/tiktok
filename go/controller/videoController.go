@@ -13,10 +13,9 @@ import (
 )
 
 type VideoStreamModel struct {
-	NextTime   int64         `json:"next_time,omitempty"` // 本次返回的视频中，发布最早的时间，作为下次请求时的latest_time
-	StatusCode int64         `json:"status_code"`         // 状态码，0-成功，其他值-失败
-	StatusMsg  string        `json:"status_msg"`          // 返回状态描述
-	VideoList  []model.Video `json:"video_list"`          // 视频列表
+	model.BaseResponse
+	NextTime  int64         `json:"next_time,omitempty"` // 本次返回的视频中，发布最早的时间，作为下次请求时的latest_time
+	VideoList []model.Video `json:"video_list"`          // 视频列表
 }
 
 type VideoPublishListResponse struct {
@@ -30,7 +29,8 @@ type Stream struct {
 
 // 定义变量
 
-// VideoStream 视频流接口
+//  视频流接口
+
 func VideoStream(c *gin.Context) {
 	// 传入的参数
 	input_time := c.Query("latest_time")
@@ -56,25 +56,24 @@ func VideoStream(c *gin.Context) {
 		videos, err = service.VideoStreamService(last_time, -1)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, VideoStreamModel{
-				StatusCode: -1,
-				StatusMsg:  err.Error(),
+				BaseResponse: model.BaseResponseInstance.FailMsg(err.Error()),
+				VideoList:    []model.Video{},
 			})
 		}
-		// 获取发布最早的时间 作为下一条next参数 这里有问题
+		// 获取发布最早的时间 作为下一条next参数
 		nextTime, err := model.QueryNextTimeByVideoId(videos[len(videos)-1].ID)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, VideoStreamModel{
-				StatusCode: -1,
-				StatusMsg:  err.Error(),
+				BaseResponse: model.BaseResponseInstance.FailMsg(err.Error()),
+				VideoList:    []model.Video{},
 			})
 			return
 		}
 		log.Printf("%v", videos)
 		c.JSON(http.StatusOK, VideoStreamModel{
-			NextTime:   nextTime.UnixNano() / 1e6,
-			StatusCode: 0,
-			StatusMsg:  "成功",
-			VideoList:  videos,
+			BaseResponse: model.BaseResponseInstance.Success(),
+			NextTime:     nextTime.UnixNano() / 1e6,
+			VideoList:    videos,
 		})
 		return
 	}
@@ -84,8 +83,8 @@ func VideoStream(c *gin.Context) {
 	videos, err = service.VideoStreamService(last_time, userId)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, VideoStreamModel{
-			StatusCode: -1,
-			StatusMsg:  err.Error(),
+			BaseResponse: model.BaseResponseInstance.FailMsg(err.Error()),
+			VideoList:    []model.Video{},
 		})
 		return
 	}
@@ -93,29 +92,29 @@ func VideoStream(c *gin.Context) {
 	nextTime, err := model.QueryNextTimeByVideoId(videos[len(videos)-1].ID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, VideoStreamModel{
-			StatusCode: -1,
-			StatusMsg:  err.Error(),
+			BaseResponse: model.BaseResponseInstance.FailMsg(err.Error()),
+			VideoList:    []model.Video{},
 		})
 		return
 	}
 	c.JSON(http.StatusOK, VideoStreamModel{
-		NextTime:   nextTime.UnixNano() / 1e6,
-		StatusCode: 0,
-		StatusMsg:  "成功",
-		VideoList:  videos,
+		NextTime:     nextTime.UnixNano() / 1e6,
+		BaseResponse: model.BaseResponseInstance.Success(),
+		VideoList:    videos,
 	})
 }
 
-// VideoPublish 登录用户选择视频上传
+//  登录用户选择视频上传
+
 func VideoPublish(c *gin.Context) {
 	file, err := c.FormFile("data")
-	// 参数判断空
-	if file.Size == 0 {
+	if err != nil {
 		c.JSON(http.StatusBadRequest, model.BaseResponseInstance.FailMsg(config.RequestFail))
 		return
 	}
-	if err != nil {
-		c.JSON(http.StatusBadRequest, model.BaseResponseInstance.FailMsg(err.Error()))
+	// 参数判断空
+	if file.Size == 0 {
+		c.JSON(http.StatusBadRequest, model.BaseResponseInstance.FailMsg(config.RequestParameterIsNull))
 		return
 	}
 	// 获取登录用户的id
@@ -131,10 +130,7 @@ func VideoPublish(c *gin.Context) {
 	// 上传视频
 	err = service.PublishVideoService(file, int64(user_id.(float64)), title)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, model.BaseResponse{
-			StatusCode: -1,
-			StatusMsg:  err.Error(),
-		})
+		c.JSON(http.StatusBadRequest, model.BaseResponseInstance.FailMsg(err.Error()))
 		return
 	} else {
 		c.JSON(http.StatusOK, model.BaseResponseInstance.Success())

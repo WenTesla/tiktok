@@ -1,8 +1,8 @@
 package model
 
 import (
-	"log"
 	"tiktok/go/config"
+	"tiktok/go/util"
 )
 
 // User 对应数据库User表结构的结构体
@@ -54,7 +54,6 @@ func GetUserById(id int64) (User, error) {
 	user := User{}
 	// SELECT * FROM `users` WHERE Id = 9 ORDER BY `users`.`id` LIMIT 1
 	if err := db.Where("Id = ?", id).First(&user).Error; err != nil {
-		log.Println(err.Error())
 		return user, err
 	}
 	//Db.Close()
@@ -69,6 +68,7 @@ func GetUserByName(name string) (User, error) {
 	//  SELECT * FROM `users` WHERE name = '周子豪' LIMIT 1
 	if err := db.Where("name = ?", name).Limit(1).Find(&user).Error; err != nil {
 		//log.Println(err.Error())
+		util.LogError(err.Error())
 		return user, err
 	}
 	return user, nil
@@ -85,11 +85,14 @@ func PackageUserToUserInfo(user User) (UserInfo, error) {
 	// 查询关注总数
 	followingsCount, err := GetFollowingById(user.Id)
 	if err != nil {
+		util.LogError(err.Error())
+
 		return userInfo, err
 	}
 	// 查询粉丝总数
 	fansCount, err := GetFansById(user.Id)
 	if err != nil {
+		util.LogError(err.Error())
 		return userInfo, err
 	}
 	// to-do 查询是否关注
@@ -113,6 +116,7 @@ func PackageUserToSimpleUserInfo(user User, userId int64) (UserInfo, error) {
 	//  查询是否关注
 	isFollow, err := QueryIsFollow(userId, user.Id)
 	if err != nil {
+		util.LogError(err.Error())
 		return userInfo, err
 	}
 	// 合并

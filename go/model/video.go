@@ -41,6 +41,7 @@ func (TableVideo) TableName() string {
 //var db = config.InitDataSource()
 
 // 获取时间戳之前的视频
+
 func GetVideoByLastTime(lastTime time.Time) ([]TableVideo, error) {
 	tableVideos := make([]TableVideo, config.VideoCount)
 	// SELECT * FROM `videos` WHERE publish_time <= '2023-02-11 18:37:18.326' ORDER BY publish_time desc LIMIT 10
@@ -52,6 +53,7 @@ func GetVideoByLastTime(lastTime time.Time) ([]TableVideo, error) {
 }
 
 // 通过用户id获取视频
+
 func GetVideoByUserId(userId int) ([]TableVideo, error) {
 	tableVideos := make([]TableVideo, config.VideoMaxCount)
 	// SELECT * FROM `videos` WHERE author_id = 13 ORDER BY publish_time desc LIMIT 30
@@ -60,6 +62,7 @@ func GetVideoByUserId(userId int) ([]TableVideo, error) {
 }
 
 // 获取发布最早的视频的时间戳，作为下次请求的时间戳 废弃
+
 func GetVideoNextTime(lastTime time.Time) (time.Time, error) {
 	tableVideo := TableVideo{}
 	result := db.Debug().Where("publish_time <= ?", lastTime).Order("publish_time asc").Limit(1).Select("publish_time").Find(&tableVideo)
@@ -70,6 +73,7 @@ func GetVideoNextTime(lastTime time.Time) (time.Time, error) {
 }
 
 // 获取
+
 func QueryNextTimeByVideoId(videoId int64) (time.Time, error) {
 	tableVideo := TableVideo{}
 	// SELECT `publish_time` FROM `videos` WHERE id = 6  LIMIT 1
@@ -81,6 +85,7 @@ func QueryNextTimeByVideoId(videoId int64) (time.Time, error) {
 }
 
 // 插入数据库
+
 func InsertVideo(userId int64, play_url string, cover_url string, title string) error {
 	tableVideo := TableVideo{
 		AuthorId:    userId,
@@ -107,4 +112,17 @@ func QueryWorkCountByUserId(userId int64) (int64, error) {
 		return -1, result.Error
 	}
 	return count, nil
+}
+
+// 查询视频的Id是否存在
+
+func QueryIsExistVideoId(Id int64) (bool, error) {
+	result := db.Find(&TableVideo{}, Id)
+	if result.Error != nil {
+		return false, result.Error
+	}
+	if result.RowsAffected == 0 {
+		return false, nil
+	}
+	return true, nil
 }

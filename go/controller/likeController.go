@@ -15,9 +15,15 @@ type userFavoriteListResponse struct {
 }
 
 // 点赞行为:  1-点赞，2-取消点赞
+
 func LikeVideoByUserID(c *gin.Context) {
 	video_id := c.Query("video_id")
 	action_type := c.Query("action_type")
+	// 判断是否为空
+	if video_id == "" || action_type == "" {
+		c.JSON(http.StatusBadRequest, model.BaseResponseInstance.FailMsg(config.RequestParameterIsNull))
+		return
+	}
 	// 转类型
 	id, _ := strconv.ParseInt(video_id, 10, 64)
 	Type, _ := strconv.ParseInt(action_type, 10, 64)
@@ -55,11 +61,19 @@ func LikeVideoByUserID(c *gin.Context) {
 
 func UserFavoriteList(c *gin.Context) {
 	user_id := c.Query("user_id")
+	// 判空
+	if user_id == "" {
+		c.JSON(http.StatusBadRequest, userFavoriteListResponse{
+			BaseResponse: model.BaseResponseInstance.FailMsg(config.RequestParameterIsNull),
+			VideoList:    []model.Video{},
+		})
+		return
+	}
 	userId, err := strconv.ParseInt(user_id, 10, 64)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, userFavoriteListResponse{
 			BaseResponse: model.BaseResponseInstance.FailMsg(err.Error()),
-			VideoList:    nil,
+			VideoList:    []model.Video{},
 		})
 		return
 	}
@@ -67,7 +81,7 @@ func UserFavoriteList(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusBadRequest, userFavoriteListResponse{
 			BaseResponse: model.BaseResponseInstance.FailMsg(err.Error()),
-			VideoList:    nil,
+			VideoList:    []model.Video{},
 		})
 		return
 	} else {

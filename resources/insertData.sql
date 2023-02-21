@@ -1,27 +1,35 @@
-#
-
-INSERT INTO `tiktok`.`users` (`id`, `name`, `password`)
-VALUES (1, 'zhangbowen', '77a90868207689664f244ad398a871fc');
-INSERT INTO `tiktok`.`users` (`id`, `name`, `password`)
-VALUES (2, 'zhangbowen1', '9e45c2b95fd89642f4219b28537c652c');
 INSERT INTO `tiktok`.`users` (`id`, `name`, `password`)
 VALUES (3, 'bowenzhang', '77a90868207689664f244ad398a871fc');
 INSERT INTO `tiktok`.`users` (`id`, `name`, `password`)
 VALUES (4, 'lichangyuan', '77a90868207689664f244ad398a871fc');
 INSERT INTO `tiktok`.`users` (`id`, `name`, `password`)
+VALUES (11, 'rantong', '77a90868207689664f244ad398a871fc');
+INSERT INTO `tiktok`.`users` (`id`, `name`, `password`)
 VALUES (5, 'sunshixin', 'de9ae573b41776f624526219666336d2');
 INSERT INTO `tiktok`.`users` (`id`, `name`, `password`)
 VALUES (6, 'tandonghang', '77a90868207689664f244ad398a871fc');
 INSERT INTO `tiktok`.`users` (`id`, `name`, `password`)
+VALUES (14, 'test', '77a90868207689664f244ad398a871fc');
+INSERT INTO `tiktok`.`users` (`id`, `name`, `password`)
+VALUES (15, 'test2', '77a90868207689664f244ad398a871fc');
+INSERT INTO `tiktok`.`users` (`id`, `name`, `password`)
 VALUES (7, 'tuzhuangzhuang', '77a90868207689664f244ad398a871fc');
+INSERT INTO `tiktok`.`users` (`id`, `name`, `password`)
+VALUES (1, 'zhangbowen', '77a90868207689664f244ad398a871fc');
+INSERT INTO `tiktok`.`users` (`id`, `name`, `password`)
+VALUES (2, 'zhangbowen1', '77a90868207689664f244ad398a871fc');
 INSERT INTO `tiktok`.`users` (`id`, `name`, `password`)
 VALUES (8, 'zhangchangyueyan', '77a90868207689664f244ad398a871fc');
 INSERT INTO `tiktok`.`users` (`id`, `name`, `password`)
-VALUES (9, '李常远', '77a90868207689664f244ad398a871fc');
+VALUES (12, '周子豪', '77a90868207689664f244ad398a871fc');
 INSERT INTO `tiktok`.`users` (`id`, `name`, `password`)
 VALUES (10, '张博文', '77a90868207689664f244ad398a871fc');
-
-#
+INSERT INTO `tiktok`.`users` (`id`, `name`, `password`)
+VALUES (17, '张常越岩', '77a90868207689664f244ad398a871fc');
+INSERT INTO `tiktok`.`users` (`id`, `name`, `password`)
+VALUES (9, '李常远', '77a90868207689664f244ad398a871fc');
+INSERT INTO `tiktok`.`users` (`id`, `name`, `password`)
+VALUES (13, '邢政', '77a90868207689664f244ad398a871fc');
 
 INSERT INTO `tiktok`.`videos` (`id`, `author_id`, `play_url`, `cover_url`, `title`, `publish_time`)
 VALUES (1, 1, 'https://tiktok-video-1313520634.cos.ap-beijing.myqcloud.com/36924f94fdf64cb3e3cfca3956fa6d9c.mp4',
@@ -48,9 +56,8 @@ VALUES (6, 2, 'https://tiktok-video-1313520634.cos.ap-beijing.myqcloud.com/dad18
         'https://tiktok-video-1313520634.cos.ap-beijing.myqcloud.com/dad18708c59804da1f3abb996cb56770.jpg', 'test',
         '2023-02-02 19:52:00');
 INSERT INTO `tiktok`.`videos` (`id`, `author_id`, `play_url`, `cover_url`, `title`, `publish_time`)
-VALUES (7, 1, 'https://tiktok-video-1313520634.cos.ap-beijing.myqcloud.com/36924f94fdf64cb3e3cfca3956fa6d9c.mp4',
-        'https://tiktok-video-1313520634.cos.ap-beijing.myqcloud.com/36924f94fdf64cb3e3cfca3956fa6d9c.jpg', 'test',
-        '2023-02-02 19:52:04');
+VALUES (7, 1, 'https://tiktok-video-1313520634.cos.ap-beijing.myqcloud.com/1675682358.mp4',
+        'https://tiktok-video-1313520634.cos.ap-beijing.myqcloud.com/1675682358.jpg', 'test', '2023-02-02 19:52:04');
 INSERT INTO `tiktok`.`videos` (`id`, `author_id`, `play_url`, `cover_url`, `title`, `publish_time`)
 VALUES (8, 2, 'https://tiktok-video-1313520634.cos.ap-beijing.myqcloud.com/bea309f6840bee5d95c233616b3f1f34.mp4',
         'https://tiktok-video-1313520634.cos.ap-beijing.myqcloud.com/bea309f6840bee5d95c233616b3f1f34.jpg', 'test',
@@ -67,85 +74,76 @@ INSERT INTO `tiktok`.`videos` (`id`, `author_id`, `play_url`, `cover_url`, `titl
 VALUES (11, 1, 'https://tiktok-video-1313520634.cos.ap-beijing.myqcloud.com/1671fadf2ac23fed56996c3dc935ce92.mp4',
         'https://tiktok-video-1313520634.cos.ap-beijing.myqcloud.com/1671fadf2ac23fed56996c3dc935ce92.jpg', 'test',
         '2023-02-02 19:52:47');
-#
+INSERT INTO `tiktok`.`videos` (`id`, `author_id`, `play_url`, `cover_url`, `title`, `publish_time`)
+VALUES (12, 11, 'https://tiktok-video-1313520634.cos.ap-beijing.myqcloud.com/V30203-123620.mp4',
+        'https://tiktok-video-1313520634.cos.ap-beijing.myqcloud.com/V30203-123620.jpg', '124578',
+        '2023-02-03 12:45:58');
+INSERT INTO `tiktok`.`videos` (`id`, `author_id`, `play_url`, `cover_url`, `title`, `publish_time`)
+VALUES (13, 4, 'https://tiktok-video-1313520634.cos.ap-beijing.myqcloud.com/安欣霸凌高启强-哔哩哔哩_302651035.mp4',
+        'https://tiktok-video-1313520634.cos.ap-beijing.myqcloud.com/安欣霸凌高启强-哔哩哔哩_302651035.jpg', '高启强',
+        '2023-02-04 18:36:05');
+INSERT INTO `tiktok`.`videos` (`id`, `author_id`, `play_url`, `cover_url`, `title`, `publish_time`)
+VALUES (14, 9, 'https://tiktok-video-1313520634.cos.ap-beijing.myqcloud.com/1675658873.mp4',
+        'https://tiktok-video-1313520634.cos.ap-beijing.myqcloud.com/1675658873.jpg', '维利维亚',
+        '2023-02-06 12:47:55');
+INSERT INTO `tiktok`.`videos` (`id`, `author_id`, `play_url`, `cover_url`, `title`, `publish_time`)
+VALUES (15, 9, 'https://tiktok-video-1313520634.cos.ap-beijing.myqcloud.com/1675685888.mp4',
+        'https://tiktok-video-1313520634.cos.ap-beijing.myqcloud.com/1675685888.jpg', 'girl', '2023-02-06 20:18:09');
 
 INSERT INTO `tiktok`.`likes` (`id`, `user_id`, `video_id`, `is_cancel`, `createTime`, `updateTime`)
-VALUES (1, 1, 2, 1, '2023-01-26 18:01:28', '2023-01-29 21:52:03');
+VALUES (44, 1, 15, 0, '2023-02-21 17:17:51', '2023-02-21 17:44:49');
 INSERT INTO `tiktok`.`likes` (`id`, `user_id`, `video_id`, `is_cancel`, `createTime`, `updateTime`)
-VALUES (3, 2, 3, 0, '2023-01-29 17:39:47', '2023-01-29 19:52:09');
+VALUES (45, 1, 14, 0, '2023-02-21 17:19:04', '2023-02-21 17:19:04');
 INSERT INTO `tiktok`.`likes` (`id`, `user_id`, `video_id`, `is_cancel`, `createTime`, `updateTime`)
-VALUES (4, 3, 4, 0, '2023-01-29 17:39:51', '2023-01-29 19:52:09');
+VALUES (46, 9, 15, 0, '2023-02-21 17:47:53', '2023-02-21 17:47:53');
 INSERT INTO `tiktok`.`likes` (`id`, `user_id`, `video_id`, `is_cancel`, `createTime`, `updateTime`)
-VALUES (5, 1, 3, 1, '2023-01-29 17:39:58', '2023-01-29 21:52:08');
+VALUES (47, 9, 14, 0, '2023-02-21 17:49:31', '2023-02-21 17:49:31');
 INSERT INTO `tiktok`.`likes` (`id`, `user_id`, `video_id`, `is_cancel`, `createTime`, `updateTime`)
-VALUES (6, 2, 2, 0, '2023-01-29 17:40:06', '2023-01-29 19:52:11');
+VALUES (48, 9, 9, 0, '2023-02-21 17:49:39', '2023-02-21 17:49:39');
 INSERT INTO `tiktok`.`likes` (`id`, `user_id`, `video_id`, `is_cancel`, `createTime`, `updateTime`)
-VALUES (7, 1, 5, 0, '2023-01-29 17:40:10', '2023-01-29 19:52:11');
+VALUES (49, 9, 5, 0, '2023-02-21 17:50:00', '2023-02-21 17:50:00');
 INSERT INTO `tiktok`.`likes` (`id`, `user_id`, `video_id`, `is_cancel`, `createTime`, `updateTime`)
-VALUES (8, 3, 5, 0, '2023-01-29 17:40:20', '2023-01-29 19:52:15');
+VALUES (50, 9, 4, 0, '2023-02-21 17:50:19', '2023-02-21 17:50:19');
 INSERT INTO `tiktok`.`likes` (`id`, `user_id`, `video_id`, `is_cancel`, `createTime`, `updateTime`)
-VALUES (13, 2, 1, 0, '2023-01-29 20:35:08', '2023-01-29 21:47:59');
+VALUES (51, 11, 12, 0, '2023-02-21 17:51:29', '2023-02-21 17:51:29');
 INSERT INTO `tiktok`.`likes` (`id`, `user_id`, `video_id`, `is_cancel`, `createTime`, `updateTime`)
-VALUES (15, 1, 1, 0, '2023-01-29 21:40:42', '2023-01-29 21:42:11');
+VALUES (52, 11, 15, 0, '2023-02-21 17:52:00', '2023-02-21 17:52:00');
 INSERT INTO `tiktok`.`likes` (`id`, `user_id`, `video_id`, `is_cancel`, `createTime`, `updateTime`)
-VALUES (17, 1, 3, 1, '2023-01-29 21:49:55', '2023-01-29 21:52:08');
+VALUES (53, 14, 15, 0, '2023-02-21 17:52:56', '2023-02-21 17:52:56');
 INSERT INTO `tiktok`.`likes` (`id`, `user_id`, `video_id`, `is_cancel`, `createTime`, `updateTime`)
-VALUES (18, 1, 4, 1, '2023-01-29 21:50:01', '2023-01-29 21:52:14');
+VALUES (54, 14, 14, 0, '2023-02-21 17:52:59', '2023-02-21 17:52:59');
 INSERT INTO `tiktok`.`likes` (`id`, `user_id`, `video_id`, `is_cancel`, `createTime`, `updateTime`)
-VALUES (19, 1, 1, 0, '2023-01-29 21:55:57', '2023-02-02 20:03:50');
-INSERT INTO `tiktok`.`likes` (`id`, `user_id`, `video_id`, `is_cancel`, `createTime`, `updateTime`)
-VALUES (20, 1, 10, 0, '2023-01-31 17:35:24', '2023-02-02 20:03:54');
-INSERT INTO `tiktok`.`likes` (`id`, `user_id`, `video_id`, `is_cancel`, `createTime`, `updateTime`)
-VALUES (21, 3, 9, 0, '2023-02-02 20:05:02', '2023-02-02 20:05:02');
-INSERT INTO `tiktok`.`likes` (`id`, `user_id`, `video_id`, `is_cancel`, `createTime`, `updateTime`)
-VALUES (22, 3, 11, 0, '2023-02-02 20:06:06', '2023-02-02 20:06:06');
-#
+VALUES (55, 10, 15, 0, '2023-02-21 18:42:50', '2023-02-21 18:42:50');
+
 INSERT INTO `tiktok`.`follows` (`id`, `user_id`, `follower_id`, `cancel`, `createTime`)
-VALUES (1, 1, 2, 0, '2023-01-26 18:56:28');
+VALUES (34, 1, 9, 0, '2023-02-21 17:16:26');
 INSERT INTO `tiktok`.`follows` (`id`, `user_id`, `follower_id`, `cancel`, `createTime`)
-VALUES (2, 1, 3, 0, '2023-01-26 18:56:47');
+VALUES (35, 1, 2, 0, '2023-02-21 17:44:27');
 INSERT INTO `tiktok`.`follows` (`id`, `user_id`, `follower_id`, `cancel`, `createTime`)
-VALUES (3, 1, 4, 0, '2023-01-26 18:57:02');
+VALUES (36, 9, 1, 0, '2023-02-21 17:45:20');
 INSERT INTO `tiktok`.`follows` (`id`, `user_id`, `follower_id`, `cancel`, `createTime`)
-VALUES (4, 1, 5, 0, '2023-01-26 18:57:27');
+VALUES (37, 9, 5, 0, '2023-02-21 17:50:01');
 INSERT INTO `tiktok`.`follows` (`id`, `user_id`, `follower_id`, `cancel`, `createTime`)
-VALUES (5, 2, 1, 0, '2023-01-26 18:57:51');
+VALUES (38, 9, 4, 0, '2023-02-21 17:50:21');
 INSERT INTO `tiktok`.`follows` (`id`, `user_id`, `follower_id`, `cancel`, `createTime`)
-VALUES (6, 2, 3, 0, '2023-01-26 18:58:01');
+VALUES (39, 11, 9, 0, '2023-02-21 17:52:01');
 INSERT INTO `tiktok`.`follows` (`id`, `user_id`, `follower_id`, `cancel`, `createTime`)
-VALUES (7, 4, 2, 0, '2023-02-02 21:22:45');
-#
+VALUES (40, 11, 5, 0, '2023-02-21 17:52:13');
+INSERT INTO `tiktok`.`follows` (`id`, `user_id`, `follower_id`, `cancel`, `createTime`)
+VALUES (41, 11, 4, 0, '2023-02-21 17:52:13');
+INSERT INTO `tiktok`.`follows` (`id`, `user_id`, `follower_id`, `cancel`, `createTime`)
+VALUES (42, 14, 2, 0, '2023-02-21 17:53:19');
+INSERT INTO `tiktok`.`follows` (`id`, `user_id`, `follower_id`, `cancel`, `createTime`)
+VALUES (43, 14, 1, 0, '2023-02-21 17:53:32');
+INSERT INTO `tiktok`.`follows` (`id`, `user_id`, `follower_id`, `cancel`, `createTime`)
+VALUES (44, 14, 3, 0, '2023-02-21 17:53:38');
+INSERT INTO `tiktok`.`follows` (`id`, `user_id`, `follower_id`, `cancel`, `createTime`)
+VALUES (45, 10, 9, 0, '2023-02-21 18:42:49');
+
 INSERT INTO `tiktok`.`comments` (`id`, `user_id`, `video_id`, `text`, `is_cancel`, `createTime`)
-VALUES (1, 1, 1, 'test1', 0, '2023-01-30 19:57:06');
+VALUES (48, 1, 15, '太美了哈哈', 0, '2023-02-21 17:19:31');
 INSERT INTO `tiktok`.`comments` (`id`, `user_id`, `video_id`, `text`, `is_cancel`, `createTime`)
-VALUES (2, 1, 2, '2', 0, '2023-01-30 19:57:15');
-INSERT INTO `tiktok`.`comments` (`id`, `user_id`, `video_id`, `text`, `is_cancel`, `createTime`)
-VALUES (3, 2, 1, '2', 0, '2023-01-30 19:57:20');
-INSERT INTO `tiktok`.`comments` (`id`, `user_id`, `video_id`, `text`, `is_cancel`, `createTime`)
-VALUES (4, 1, 4, '3', 0, '2023-01-30 19:57:26');
-INSERT INTO `tiktok`.`comments` (`id`, `user_id`, `video_id`, `text`, `is_cancel`, `createTime`)
-VALUES (5, 3, 2, '1', 0, '2023-01-30 19:57:30');
-INSERT INTO `tiktok`.`comments` (`id`, `user_id`, `video_id`, `text`, `is_cancel`, `createTime`)
-VALUES (6, 1, 3, '3', 0, '2023-01-30 19:57:37');
-INSERT INTO `tiktok`.`comments` (`id`, `user_id`, `video_id`, `text`, `is_cancel`, `createTime`)
-VALUES (7, 1, 5, '2', 0, '2023-01-30 19:57:43');
-INSERT INTO `tiktok`.`comments` (`id`, `user_id`, `video_id`, `text`, `is_cancel`, `createTime`)
-VALUES (8, 3, 1, '3', 0, '2023-01-30 19:57:49');
-INSERT INTO `tiktok`.`comments` (`id`, `user_id`, `video_id`, `text`, `is_cancel`, `createTime`)
-VALUES (9, 2, 3, '2', 0, '2023-01-30 20:22:01');
-INSERT INTO `tiktok`.`comments` (`id`, `user_id`, `video_id`, `text`, `is_cancel`, `createTime`)
-VALUES (10, 4, 1, '1', 0, '2023-01-30 20:22:10');
-INSERT INTO `tiktok`.`comments` (`id`, `user_id`, `video_id`, `text`, `is_cancel`, `createTime`)
-VALUES (11, 1, 10, 'test1', 0, '2023-01-31 17:28:22');
-INSERT INTO `tiktok`.`comments` (`id`, `user_id`, `video_id`, `text`, `is_cancel`, `createTime`)
-VALUES (12, 2, 10, 'test2', 0, '2023-01-31 17:28:39');
-INSERT INTO `tiktok`.`comments` (`id`, `user_id`, `video_id`, `text`, `is_cancel`, `createTime`)
-VALUES (13, 3, 10, '发布评论', 0, '2023-01-31 18:20:44');
-INSERT INTO `tiktok`.`comments` (`id`, `user_id`, `video_id`, `text`, `is_cancel`, `createTime`)
-VALUES (14, 3, 2, '发布评论2', 0, '2023-01-31 18:21:07');
-INSERT INTO `tiktok`.`comments` (`id`, `user_id`, `video_id`, `text`, `is_cancel`, `createTime`)
-VALUES (18, 3, 3, '发布评论3', 0, '2023-01-31 18:49:50');
-INSERT INTO `tiktok`.`comments` (`id`, `user_id`, `video_id`, `text`, `is_cancel`, `createTime`)
-VALUES (23, 3, 4, 'test', 0, '2023-01-31 19:34:47');
-INSERT INTO `tiktok`.`comments` (`id`, `user_id`, `video_id`, `text`, `is_cancel`, `createTime`)
-VALUES (24, 3, 5, '测试', 0, '2023-02-01 15:25:17');
+VALUES (49, 9, 15, '自己发的*哈哈', 0, '2023-02-21 17:48:08');
+
+INSERT INTO `tiktok`.`messages` (`id`, `user_id`, `to_user_id`, `content`, `is_withdraw`, `createTime`)
+VALUES (22, 1, 9, '测试', 0, 1676976129);

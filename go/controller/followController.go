@@ -34,6 +34,11 @@ func FollowUser(c *gin.Context) {
 	}
 	// 取类型
 	action_type := c.Query("action_type")
+	// 判断为空
+	if to_user_id == "" || user_id == "" || action_type == "" {
+		c.JSON(http.StatusBadRequest, model.BaseResponseInstance.FailMsg(config.RequestParameterIsNull))
+		return
+	}
 	// 转换
 	toUserId, _ := strconv.ParseInt(to_user_id, 10, 64)
 	userId := int64(user_id.(float64))
@@ -51,67 +56,61 @@ func FollowUser(c *gin.Context) {
 	} else if action_type == "2" {
 		actionType = false
 	} else {
-		c.JSON(http.StatusNotFound, model.BaseResponse{
-			StatusCode: -1,
-			StatusMsg:  config.RequestFail,
-		})
+		c.JSON(http.StatusNotFound, model.BaseResponseInstance.FailMsg(config.RequestFail))
 		return
 	}
 	pass, err := service.FollowUserService(userId, toUserId, actionType)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, model.BaseResponse{
-			StatusCode: -1,
-			StatusMsg:  err.Error(),
-		})
+		c.JSON(http.StatusBadRequest, model.BaseResponseInstance.FailMsg(err.Error()))
 		return
 	}
 	if !pass {
-		c.JSON(http.StatusBadRequest, model.BaseResponse{
-			StatusCode: -1,
-			StatusMsg:  config.Fail,
-		})
+		c.JSON(http.StatusBadRequest, model.BaseResponseInstance.Fail())
 		return
 	} else {
-		c.JSON(http.StatusOK, model.BaseResponse{
-			StatusCode: 0,
-			StatusMsg:  config.Success,
-		})
+		c.JSON(http.StatusOK, model.BaseResponseInstance.Success())
 		return
 	}
 }
 
-// FollowList 关注列表
+//  关注列表
+
 func FollowList(c *gin.Context) {
 	user_id := c.Query("user_id")
 	userId, _ := strconv.ParseInt(user_id, 10, 64)
 	// 取token
 	loginUserId, exists := c.Get("Id")
+	// 判空
+	if user_id == "" || loginUserId == "" {
+		c.JSON(http.StatusBadRequest, FollowListResponse{
+			BaseResponse: model.BaseResponseInstance.FailMsg(config.RequestParameterIsNull),
+			UserList:     nil,
+		})
+		return
+	}
 	if !exists {
 		// 不存在即未登录
 		userInfos, err := service.FollowListService(userId)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, FollowListResponse{
-				BaseResponse: model.BaseResponse{
-					StatusCode: -1,
-					StatusMsg:  config.Fail,
-				},
-				UserList: nil,
+				BaseResponse: model.BaseResponseInstance.FailMsg(err.Error()),
+				UserList:     nil,
 			})
 			return
 		}
 		c.JSON(http.StatusOK, FollowListResponse{
-			BaseResponse: model.BaseResponse{
-				StatusCode: 0,
-				StatusMsg:  config.Success,
-			},
-			UserList: userInfos,
+			BaseResponse: model.BaseResponseInstance.Success(),
+			UserList:     userInfos,
 		})
 		return
 	} else {
 		loginUserId := int64(loginUserId.(float64))
 		userInfos, err := service.FollowListServiceWithUserId(userId, loginUserId)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, model.BaseResponseInstance.FailMsg(err.Error()))
+			c.JSON(http.StatusBadRequest, FollowListResponse{
+				BaseResponse: model.BaseResponseInstance.FailMsg(err.Error()),
+				UserList:     nil,
+			})
 			return
 		}
 		c.JSON(http.StatusOK, FollowListResponse{
@@ -123,34 +122,42 @@ func FollowList(c *gin.Context) {
 
 }
 
-// FollowerList 粉丝列表
+//  粉丝列表
+
 func FollowerList(c *gin.Context) {
 	user_id := c.Query("user_id")
 	userId, _ := strconv.ParseInt(user_id, 10, 64)
+	if user_id == "" {
+		c.JSON(http.StatusBadRequest, FollowerListResponse{
+			BaseResponse: model.BaseResponseInstance.FailMsg(config.RequestParameterIsNull),
+			UserList:     nil,
+		})
+		return
+	}
 	// 取token
 	loginUserId, exists := c.Get("Id")
 	if !exists {
 		userInfos, err := service.FollowerListService(userId)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, model.BaseResponse{
-				StatusCode: -1,
-				StatusMsg:  config.Fail,
+			c.JSON(http.StatusBadRequest, FollowerListResponse{
+				BaseResponse: model.BaseResponseInstance.FailMsg(err.Error()),
+				UserList:     nil,
 			})
 			return
 		}
 		c.JSON(http.StatusOK, FollowerListResponse{
-			BaseResponse: model.BaseResponse{
-				StatusCode: 0,
-				StatusMsg:  config.Success,
-			},
-			UserList: userInfos,
+			BaseResponse: model.BaseResponseInstance.Success(),
+			UserList:     userInfos,
 		})
 		return
 	} else {
 		loginUserId := int64(loginUserId.(float64))
 		userInfos, err := service.FollowerListServiceWithUserId(userId, loginUserId)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, model.BaseResponseInstance.Fail())
+			c.JSON(http.StatusBadRequest, FollowerListResponse{
+				BaseResponse: model.BaseResponseInstance.FailMsg(err.Error()),
+				UserList:     nil,
+			})
 			return
 		}
 		c.JSON(http.StatusOK, FollowerListResponse{

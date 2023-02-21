@@ -46,6 +46,7 @@ func QueryDuplicateLikeData(userId int64, videoId int64) (bool, error) {
 	// SELECT * FROM `likes` WHERE `user_id` = 9 AND `video_id` = 39
 	result := db.Where(map[string]interface{}{"user_id": userId, "video_id": videoId}).Find(&like)
 	if result.Error != nil {
+		util.LogError(result.Error.Error())
 		// 查询错误
 		return false, result.Error
 	}
@@ -67,6 +68,7 @@ func QueryVideoByUserId(userId int64) ([]TableVideo, error) {
 	result := db.Where("id IN (?)", db.Where("user_id = ? AND is_cancel = ?", userId, 0).Select("video_id").Find(&Like{})).Find(&tableVideos)
 	//log.Printf("%v", tableVideos)
 	if result.Error != nil {
+		util.LogError(result.Error.Error())
 		return nil, result.Error
 	}
 	return tableVideos, nil
@@ -78,17 +80,20 @@ func QueryLikeByVideoId(videoId int64) (int64, error) {
 	//  SELECT count(*) FROM `likes` WHERE video_id = ? AND is_cancel = 0
 	result := db.Model(&Like{}).Where("video_id = ? AND is_cancel = ?", videoId, 0).Count(&count)
 	if result.Error != nil {
+		util.LogError(result.Error.Error())
 		return -1, result.Error
 	}
 	return count, nil
 }
 
-// QueryIsLike 查询是否有点赞
+//  查询是否有点赞
+
 func QueryIsLike(userId int64, videoId int64) (bool, error) {
 	like := Like{}
 	// SELECT * FROM `likes` WHERE `user_id` = 9 AND `video_id` = 39 AND is_cancel = 0
 	result := db.Where(map[string]interface{}{"user_id": userId, "video_id": videoId, "is_cancel": 0}).Find(&like)
 	if result.Error != nil {
+		util.LogError(result.Error.Error())
 		// 查询错误
 		return false, result.Error
 	}
@@ -105,6 +110,7 @@ func QueryFavoriteCountByUserId(userId int64) (int64, error) {
 	// SELECT count(*) FROM `likes` WHERE user_id = 1 AND is_cancel = 0
 	result := db.Model(&Like{}).Where("user_id = ? AND is_cancel = ?", userId, 0).Count(&count)
 	if result.Error != nil {
+		util.LogError(result.Error.Error())
 		return -1, result.Error
 	}
 	return count, nil

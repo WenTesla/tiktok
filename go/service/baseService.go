@@ -1,6 +1,12 @@
 package service
 
-import "tiktok/go/config"
+import (
+	"errors"
+	"tiktok/go/config"
+)
+
+// 自定义数据库错误 用于返回上层
+var dataSourceErr = errors.New(config.DatabaseError)
 
 // 提供基本服务
 
