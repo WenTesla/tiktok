@@ -15,7 +15,8 @@ func CommentListService(videoId int64) ([]model.CommentInfo, error) {
 	return commentInfos, nil
 }
 
-// PackageComments 包装切片
+//  包装切片
+
 func PackageComments(comments []model.Comment) ([]model.CommentInfo, error) {
 	// 提前定义切片
 	var commentInfos []model.CommentInfo
@@ -29,7 +30,8 @@ func PackageComments(comments []model.Comment) ([]model.CommentInfo, error) {
 	return commentInfos, nil
 }
 
-// PackageComment 包装一个结构体 传入userInfo值
+//  包装一个结构体 传入userInfo值
+
 func PackageComment(comment model.Comment) (model.CommentInfo, error) {
 	// 定义
 	commentInfo := model.CommentInfo{}
@@ -52,7 +54,8 @@ func PackageComment(comment model.Comment) (model.CommentInfo, error) {
 	return commentInfo, nil
 }
 
-// CreateCommentService 创建评论
+// 创建评论
+
 func CreateCommentService(userId int64, videoId int64, content string) (model.CommentInfo, error) {
 	// 敏感词处理
 	content, err := replaceSensitive(content)
@@ -73,19 +76,15 @@ func CreateCommentService(userId int64, videoId int64, content string) (model.Co
 	return commentInfo, nil
 }
 
-// DeleteCommentService 删除评论
-func DeleteCommentService(id int64) (bool, error) {
-	isDelete, err := model.CancelComment(id)
+//  删除评论
+
+func CancelCommentService(id int64, userId int64, videoId int64) (bool, error) {
+
+	isDelete, err := model.CancelComment(id, userId, videoId)
 	if err != nil {
 		return false, dataSourceErr
 	}
 	return isDelete, nil
-}
-
-// CancelCommentService 根据主键取消评论
-func CancelCommentService(id int64) (bool, error) {
-
-	return true, nil
 }
 
 // checkSensitive 检验敏感词
@@ -94,7 +93,8 @@ func checkSensitive(content string) bool {
 	return false
 }
 
-// replaceSensitive 替换敏感词 优化-》传递指针
+//  替换敏感词 优化-》传递指针
+
 func replaceSensitive(content string) (string, error) {
 	content, err := util.SensitiveWordsFilter(content)
 	return content, err

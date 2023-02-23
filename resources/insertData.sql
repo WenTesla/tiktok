@@ -90,30 +90,7 @@ INSERT INTO `tiktok`.`videos` (`id`, `author_id`, `play_url`, `cover_url`, `titl
 VALUES (15, 9, 'https://tiktok-video-1313520634.cos.ap-beijing.myqcloud.com/1675685888.mp4',
         'https://tiktok-video-1313520634.cos.ap-beijing.myqcloud.com/1675685888.jpg', 'girl', '2023-02-06 20:18:09');
 
-INSERT INTO `tiktok`.`likes` (`id`, `user_id`, `video_id`, `is_cancel`, `createTime`, `updateTime`)
-VALUES (44, 1, 15, 0, '2023-02-21 17:17:51', '2023-02-21 17:44:49');
-INSERT INTO `tiktok`.`likes` (`id`, `user_id`, `video_id`, `is_cancel`, `createTime`, `updateTime`)
-VALUES (45, 1, 14, 0, '2023-02-21 17:19:04', '2023-02-21 17:19:04');
-INSERT INTO `tiktok`.`likes` (`id`, `user_id`, `video_id`, `is_cancel`, `createTime`, `updateTime`)
-VALUES (46, 9, 15, 0, '2023-02-21 17:47:53', '2023-02-21 17:47:53');
-INSERT INTO `tiktok`.`likes` (`id`, `user_id`, `video_id`, `is_cancel`, `createTime`, `updateTime`)
-VALUES (47, 9, 14, 0, '2023-02-21 17:49:31', '2023-02-21 17:49:31');
-INSERT INTO `tiktok`.`likes` (`id`, `user_id`, `video_id`, `is_cancel`, `createTime`, `updateTime`)
-VALUES (48, 9, 9, 0, '2023-02-21 17:49:39', '2023-02-21 17:49:39');
-INSERT INTO `tiktok`.`likes` (`id`, `user_id`, `video_id`, `is_cancel`, `createTime`, `updateTime`)
-VALUES (49, 9, 5, 0, '2023-02-21 17:50:00', '2023-02-21 17:50:00');
-INSERT INTO `tiktok`.`likes` (`id`, `user_id`, `video_id`, `is_cancel`, `createTime`, `updateTime`)
-VALUES (50, 9, 4, 0, '2023-02-21 17:50:19', '2023-02-21 17:50:19');
-INSERT INTO `tiktok`.`likes` (`id`, `user_id`, `video_id`, `is_cancel`, `createTime`, `updateTime`)
-VALUES (51, 11, 12, 0, '2023-02-21 17:51:29', '2023-02-21 17:51:29');
-INSERT INTO `tiktok`.`likes` (`id`, `user_id`, `video_id`, `is_cancel`, `createTime`, `updateTime`)
-VALUES (52, 11, 15, 0, '2023-02-21 17:52:00', '2023-02-21 17:52:00');
-INSERT INTO `tiktok`.`likes` (`id`, `user_id`, `video_id`, `is_cancel`, `createTime`, `updateTime`)
-VALUES (53, 14, 15, 0, '2023-02-21 17:52:56', '2023-02-21 17:52:56');
-INSERT INTO `tiktok`.`likes` (`id`, `user_id`, `video_id`, `is_cancel`, `createTime`, `updateTime`)
-VALUES (54, 14, 14, 0, '2023-02-21 17:52:59', '2023-02-21 17:52:59');
-INSERT INTO `tiktok`.`likes` (`id`, `user_id`, `video_id`, `is_cancel`, `createTime`, `updateTime`)
-VALUES (55, 10, 15, 0, '2023-02-21 18:42:50', '2023-02-21 18:42:50');
+-- like 表与 redis 缓存交互 这里不插入数据
 
 INSERT INTO `tiktok`.`follows` (`id`, `user_id`, `follower_id`, `cancel`, `createTime`)
 VALUES (34, 1, 9, 0, '2023-02-21 17:16:26');

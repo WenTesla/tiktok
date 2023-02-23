@@ -19,7 +19,8 @@ type FollowerListResponse struct {
 	UserList []model.UserInfo `json:"user_list"` // 用户信息列表
 }
 
-// FollowUser 关注操作
+//  关注操作
+
 func FollowUser(c *gin.Context) {
 	// 对方用户的id
 	to_user_id := c.Query("to_user_id")
@@ -43,10 +44,7 @@ func FollowUser(c *gin.Context) {
 	toUserId, _ := strconv.ParseInt(to_user_id, 10, 64)
 	userId := int64(user_id.(float64))
 	if userId == toUserId {
-		c.JSON(http.StatusBadRequest, model.BaseResponse{
-			StatusCode: -1,
-			StatusMsg:  "不能自己关注自己",
-		})
+		c.JSON(http.StatusBadRequest, model.BaseResponseInstance.FailMsg("不能自己关注自己"))
 		return
 	}
 	var actionType bool

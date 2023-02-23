@@ -12,20 +12,20 @@ func FollowUserService(userId int64, toUserId int64, actionType bool) (bool, err
 		// 先查询数据
 		isExist, err := model.QueryFollowByUserIdAndToUserID(userId, toUserId)
 		if err != nil {
-			return false, err
+			return false, dataSourceErr
 		}
 		if isExist {
 			// 修改数据
-			err := model.RefocusUser(userId, toUserId)
+			err = model.RefocusUser(userId, toUserId)
 			if err != nil {
-				return false, err
+				return false, dataSourceErr
 			}
 			return true, nil
 		} else {
 			// 插入数据
 			pass, err := model.InsertFollow(userId, toUserId)
 			if err != nil {
-				return false, err
+				return false, dataSourceErr
 			}
 			if !pass {
 				return false, errors.New("关注失败")
@@ -36,7 +36,7 @@ func FollowUserService(userId int64, toUserId int64, actionType bool) (bool, err
 		// 取消关注
 		err := model.CancelFollow(userId, toUserId)
 		if err != nil {
-			return false, err
+			return false, dataSourceErr
 		}
 		return true, nil
 	}
@@ -49,7 +49,7 @@ func FollowListService(userId int64) ([]model.UserInfo, error) {
 	// 先根据用户Id取用户关注
 	users, err := model.QueryFollowUsersByUserId(userId)
 	if err != nil {
-		return nil, err
+		return nil, dataSourceErr
 	}
 	// 定义userInfos 切片
 	var userInfos []model.UserInfo
@@ -71,7 +71,7 @@ func FollowerListService(userId int64) ([]model.UserInfo, error) {
 	// 先根据用户Id取用户关注
 	users, err := model.QueryFansUsersByUserId(userId)
 	if err != nil {
-		return nil, err
+		return nil, dataSourceErr
 	}
 	// 定义userInfos 切片
 	var userInfos []model.UserInfo
@@ -94,7 +94,7 @@ func FollowListServiceWithUserId(userId int64, loginUserId int64) ([]model.UserI
 	// 先根据用户Id取用户关注
 	users, err := model.QueryFollowUsersByUserId(userId)
 	if err != nil {
-		return nil, err
+		return nil, dataSourceErr
 	}
 	// 定义userInfos 切片
 	var userInfos []model.UserInfo
@@ -118,7 +118,7 @@ func FollowerListServiceWithUserId(userId int64, loginUserId int64) ([]model.Use
 	// 先根据用户Id取用户关注
 	users, err := model.QueryFansUsersByUserId(userId)
 	if err != nil {
-		return nil, err
+		return nil, dataSourceErr
 	}
 	// 定义userInfos 切片
 	var userInfos []model.UserInfo
@@ -140,7 +140,7 @@ func MutualFollowListService(userId int64) ([]model.UserInfo, error) {
 	// 先根据用户Id取用户关注
 	users, err := model.QueryMutualFollowListByUserId(userId)
 	if err != nil {
-		return nil, err
+		return nil, dataSourceErr
 	}
 	// 定义userInfos 切片
 	var userInfos []model.UserInfo

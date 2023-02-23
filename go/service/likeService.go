@@ -50,14 +50,14 @@ func LikeVideoByUserIDService(userId int64, videoId int64, actionType int64) (bo
 	isDuplicate, err = model.QueryDuplicateLikeData(userId, videoId)
 	// 为查询相关数据或者数据查询错误
 	if err != nil {
-		return false, err
+		return false, dataSourceErr
 	}
 	// 包含相关数据
 	if isDuplicate {
 		// 包含相关数据-更新数据
 		err = model.UpdateLikeVideoByUserId(userId, videoId, actionType)
 		if err != nil {
-			return false, err
+			return false, dataSourceErr
 		}
 		if actionType == 0 {
 			// 添加redis
@@ -76,7 +76,7 @@ func LikeVideoByUserIDService(userId int64, videoId int64, actionType int64) (bo
 			}
 			_, err = model.InsertLikeData(userId, videoId)
 			if err != nil {
-				return false, err
+				return false, dataSourceErr
 			}
 			// 添加到redis
 			likeRedisDb.SAdd(videoIdString, userId)
@@ -91,7 +91,7 @@ func UserFavoriteListService(userId int64) ([]model.Video, error) {
 	// 根据用户查询点赞的视频
 	tableVideos, err := model.QueryVideoByUserId(userId)
 	if err != nil {
-		return nil, err
+		return nil, dataSourceErr
 	}
 	videos, err := packageVideos(tableVideos, -1)
 	if err != nil {

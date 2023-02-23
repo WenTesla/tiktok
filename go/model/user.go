@@ -1,7 +1,6 @@
 package model
 
 import (
-	"tiktok/go/config"
 	"tiktok/go/util"
 )
 
@@ -10,12 +9,6 @@ type User struct {
 	Id       int64  //主键
 	Name     string //昵称
 	Password string //密码
-}
-
-func CreateUserTable() {
-	user := User{}
-	Db := config.InitDataSource()
-	Db.AutoMigrate(&user)
 }
 
 // UserInfo  最详细的信息 不与数据库模型对应

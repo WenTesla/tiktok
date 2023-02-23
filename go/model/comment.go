@@ -89,18 +89,28 @@ func DeleteComment(id int64) (bool, error) {
 	return true, nil
 }
 
-// CancelComment 取消评论 gorm有bug还是设计问题，不能通过主键直接更新,必须先查询数据
-func CancelComment(id int64) (bool, error) {
-	comment := Comment{}
-	db.First(&comment, id)
-	comment.IsCancel = 1
-	result := db.Debug().Save(&comment)
+//  取消评论 gorm有bug还是设计问题，不能通过主键直接更新,必须先查询数据
+
+func CancelComment(id int64, userId int64, videoId int64) (bool, error) {
+	comment := Comment{
+		ID: id,
+	}
+	//UPDATE `comments` SET `is_cancel`=1 WHERE (user_id = 1 AND video_id = 15) AND `id` = 48
+	result := db.Debug().Model(&comment).Where("user_id = ? AND video_id = ?", userId, videoId).Update("is_cancel", 1)
+	//// SELECT * FROM `comments` WHERE `comments`.`id` = 10 ORDER BY `comments`.`id` LIMIT 1
+	//db.First(&comment, id)
+	//comment.IsCancel = 1
+	//result := db.Debug().Save(&comment)
+	//if result.Error != nil {
+	//	util.LogError(result.Error.Error())
+	//	return false, result.Error
+	//}
+	//if result.RowsAffected == 0 {
+	//	return false, errors.New("该评论不存在")
+	//}
 	if result.Error != nil {
 		util.LogError(result.Error.Error())
 		return false, result.Error
-	}
-	if result.RowsAffected == 0 {
-		return false, errors.New("该评论不存在")
 	}
 	return true, nil
 }

@@ -13,6 +13,7 @@ import (
 	"strings"
 	"tiktok/go/config"
 	"tiktok/go/model"
+	"tiktok/go/util"
 	"time"
 )
 
@@ -26,6 +27,8 @@ func VideoStreamService(lastTime time.Time, userId int64) ([]model.Video, error)
 	tableVideos, err := model.GetVideoByLastTime(lastTime)
 	if err != nil {
 		log.Printf("失败 %v", err)
+		util.LogError(err.Error())
+		return nil, dataSourceErr
 	}
 	log.Printf("获取成功")
 	videos, err := packageVideos(tableVideos, userId)
@@ -39,6 +42,8 @@ func VideoInfoByUserId(id int) ([]model.Video, error) {
 	tableVideos, err := model.GetVideoByUserId(id)
 	if err != nil {
 		log.Printf("失败%v", err)
+		util.LogError(err.Error())
+		return nil, dataSourceErr
 	}
 	videos, err := packageVideos(tableVideos, -1)
 	if err != nil {
@@ -134,14 +139,14 @@ func packageVideo(tableVideo *model.TableVideo) (model.Video, error) {
 		//// 出错查询数据库
 		favoriteCount, err = model.QueryLikeByVideoId(tableVideo.Id)
 		if err != nil {
-			return video, err
+			return video, dataSourceErr
 		}
 	}
 	video.FavoriteCount = favoriteCount
 	// 获取"commentCount"
 	commentCount, err := model.QueryCommentCountByVideoId(tableVideo.Id)
 	if err != nil {
-		return video, err
+		return video, dataSourceErr
 	}
 	video.CommentCount = commentCount
 	video.IsFavorite = false
@@ -180,7 +185,7 @@ func packageVideoWithUserId(tableVideo *model.TableVideo, id int64) (model.Video
 	// 获取"commentCount"
 	commentCount, err := model.QueryCommentCountByVideoId(tableVideo.Id)
 	if err != nil {
-		return video, err
+		return video, dataSourceErr
 	}
 	video.CommentCount = commentCount
 	// 获取是否点赞 先查询redis
@@ -223,7 +228,7 @@ func PackSimpleVideoService(tableVideo *model.TableVideo) (model.Video, error) {
 func PublishVideoService(file *multipart.FileHeader, userId int64, title string) error {
 	src, err := file.Open()
 	if err != nil {
-		return err
+		return errors.New("不能打开文件")
 	}
 	defer src.Close()
 	// 获取视频文件名称
@@ -243,7 +248,7 @@ func PublishVideoService(file *multipart.FileHeader, userId int64, title string)
 	// 添加数据库
 	err = model.InsertVideo(userId, config.CosUrl+"/"+newFileName, config.CosUrl+"/"+play_cover, title)
 	if err != nil {
-		return err
+		return dataSourceErr
 	}
 	return nil
 }

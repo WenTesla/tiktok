@@ -69,7 +69,7 @@ func LoginService(username string, password string) (int64, error) {
 
 	user, err := model.GetUserByName(username)
 	if err != nil {
-		return 0, errors.New(config.DatabaseError)
+		return 0, dataSourceErr
 	}
 	if username != user.Name {
 		return 0, errors.New("用户名不存在")
@@ -86,7 +86,7 @@ func LoginService(username string, password string) (int64, error) {
 func UserService(Id int64) (model.UserInfo, error) {
 	user, err := model.GetUserById(Id)
 	if err != nil {
-		return model.UserInfo{}, err
+		return model.UserInfo{}, dataSourceErr
 	}
 	// 脱密
 	user.Password = ""
@@ -97,17 +97,17 @@ func UserService(Id int64) (model.UserInfo, error) {
 	// 查询点赞数量
 	favoriteCount, err := model.QueryFavoriteCountByUserId(Id)
 	if err != nil {
-		return model.UserInfo{}, err
+		return model.UserInfo{}, dataSourceErr
 	}
 	// 查询作品的数量
 	workCount, err := model.QueryWorkCountByUserId(Id)
 	if err != nil {
-		return model.UserInfo{}, err
+		return model.UserInfo{}, dataSourceErr
 	}
 	// 查询获赞数量
 	totalFavorited, err := model.QueryTotalFavorited(Id)
 	if err != nil {
-		return model.UserInfo{}, err
+		return model.UserInfo{}, dataSourceErr
 	}
 	// 以下为假数据 -avator
 
@@ -139,27 +139,27 @@ func UserInfoService(Id int64, userId int64) (model.UserInfo, error) {
 	// 查询粉丝
 	fanCount, err := model.GetFansById(Id)
 	if err != nil {
-		return model.UserInfo{}, err
+		return model.UserInfo{}, dataSourceErr
 	}
 	// 查询是否关注
 	isFollow, err := model.QueryIsFollow(userId, Id)
 	if err != nil {
-		return model.UserInfo{}, err
+		return model.UserInfo{}, dataSourceErr
 	}
 	// 查询作品数量
 	favoriteCount, err := model.QueryFavoriteCountByUserId(Id)
 	if err != nil {
-		return model.UserInfo{}, err
+		return model.UserInfo{}, dataSourceErr
 	}
 	// 查询点赞数量
 	workCount, err := model.QueryWorkCountByUserId(Id)
 	if err != nil {
-		return model.UserInfo{}, err
+		return model.UserInfo{}, dataSourceErr
 	}
 	// 查询获赞数量
 	totalFavorited, err := model.QueryTotalFavorited(Id)
 	if err != nil {
-		return model.UserInfo{}, err
+		return model.UserInfo{}, dataSourceErr
 	}
 	userInfo := model.UserInfo{
 		Id:             user.Id,
@@ -180,7 +180,7 @@ func UserInfoService(Id int64, userId int64) (model.UserInfo, error) {
 func SimpleUserService(Id int64, userId int64) (model.UserInfo, error) {
 	user, err := model.GetUserById(Id)
 	if err != nil {
-		return model.UserInfo{}, err
+		return model.UserInfo{}, dataSourceErr
 	}
 	user.Password = ""
 	// 关注一定为true

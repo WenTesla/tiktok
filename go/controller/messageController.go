@@ -20,7 +20,8 @@ type MessageListResponse struct {
 	MessageList []model.Message `json:"message_list"`
 }
 
-// FriendList 好友列表
+//  好友列表
+
 func FriendList(c *gin.Context) {
 	user_id := c.Query("user_id")
 	//userId, _ := strconv.ParseInt(user_id, 10, 64)
@@ -50,7 +51,8 @@ func FriendList(c *gin.Context) {
 	return
 }
 
-// MessageChat 聊天记录 点进去才能看到
+//  聊天记录 点进去才能看到
+
 func MessageChat(c *gin.Context) {
 	to_user_id := c.Query("to_user_id")
 	if to_user_id == "" {

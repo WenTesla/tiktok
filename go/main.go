@@ -37,7 +37,7 @@ func initProject() {
 	// 过滤器
 	util.InitSensitiveFilter()
 
-	// 设置日志
+	// 设置日志 --取消注释即可创建日志文件
 	//f, _ := os.Create("resources/gin.log") // // 如果文件已存在，会将文件清空。
 	//gin.DefaultWriter = io.MultiWriter(f)
 	//gin.DebugPrintRouteFunc()

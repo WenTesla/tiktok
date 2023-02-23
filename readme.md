@@ -1,10 +1,14 @@
-# 简易版抖音项目  
-
-## 目前状态:    
-**开发中**  
-**接口基本开发完毕**
+# 简易版抖音项目
 
 ## 项目启动
+### 建表
+resources/initial.sql  
+resources/insertData.sql  
+
+### 替换redis地址
+config/redis.go  
+
+
 直接启动
 ```shell
 cd go 
@@ -67,4 +71,4 @@ https://juejin.cn/post/7152299022017888286
 ### 作者:  
 bowen https://www.github.com/WenTesla
 ### 最后修改时间
-2023/2/21
+2023/2/23

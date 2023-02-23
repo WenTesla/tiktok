@@ -62,7 +62,8 @@ func PackageFriendLists(userId int64) ([]model.FriendUser, error) {
 	return FriendLists, nil
 }
 
-// PackageFriendList 包装单个请求
+//  包装单个请求
+
 func PackageFriendList(userInfo model.FriendUser) (model.UserInfo, error) {
 	// test
 	userInfo.AvatarUrl = "https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/12640/20230206171653.png"
@@ -99,7 +100,7 @@ func MessageActionService(userId int64, toUserId int64, content string) (bool, e
 	// 添加数据库
 	pass, err := model.InsertMessage(userId, toUserId, content)
 	if err != nil {
-		return false, err
+		return false, dataSourceErr
 	}
 	if !pass {
 		return false, errors.New("发送消息失败")

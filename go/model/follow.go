@@ -98,7 +98,8 @@ func RefocusUser(userId int64, toUserID int64) error {
 	return nil
 }
 
-// QueryFollowUsersByUserId 根据用户id查询用户关注的用户id切片 比较绕
+//  根据用户id查询用户关注的用户id切片 比较绕
+
 func QueryFollowUsersByUserId(userId int64) ([]User, error) {
 	var users []User
 	//SELECT * FROM `users` WHERE id IN (SELECT `follower_id` FROM `follows` WHERE user_id = 1 AND cancel = 0)
@@ -110,7 +111,8 @@ func QueryFollowUsersByUserId(userId int64) ([]User, error) {
 	return users, nil
 }
 
-// QueryFansUsersByUserId 根据用户id查询当前用户的粉丝id切片 比较绕
+//  根据用户id查询当前用户的粉丝id切片 比较绕
+
 func QueryFansUsersByUserId(userId int64) ([]User, error) {
 	var users []User
 	//SELECT * FROM `users` WHERE id IN (SELECT `user_id` FROM `follows` WHERE follower_id = 1 AND cancel = 0)
@@ -144,7 +146,8 @@ func QueryMutualFollowListByUserId(userId int64) ([]User, error) {
 	return MutualFollowList, nil
 }
 
-// QueryIsFollow 查询是否关注 第一个参数为当前用户的id，第二个参数为要关注的用户Id
+//  查询是否关注 第一个参数为当前用户的id，第二个参数为要关注的用户Id
+
 func QueryIsFollow(userId int64, toUserId int64) (bool, error) {
 	// 自己不能关注自己
 	if userId == toUserId {
@@ -163,7 +166,8 @@ func QueryIsFollow(userId int64, toUserId int64) (bool, error) {
 	return false, nil
 }
 
-// QueryFansId 查询粉丝的Id
+//  查询粉丝的Id
+
 func QueryFansId(userId int64) ([]int64, error) {
 
 	return nil, nil

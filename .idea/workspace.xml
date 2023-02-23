@@ -4,32 +4,25 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c573e332-cd3a-41d6-891d-281450698c04" name="变更" comment="优化接口与限流">
+    <list default="true" id="c573e332-cd3a-41d6-891d-281450698c04" name="变更" comment="基本完成">
+      <change afterPath="$PROJECT_DIR$/go/config/datasource_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/config/parameter.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/config/parameter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/config/DataSource.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/config/DataSource.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/controller/commentController.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/controller/commentController.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/controller/followController.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/controller/followController.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/controller/likeController.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/controller/likeController.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/controller/messageController.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/controller/messageController.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/controller/videoController.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/controller/videoController.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/middle/jwt/token.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/middle/jwt/token.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/model/comment.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/comment.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/model/comment_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/comment_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/model/follow.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/follow.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/model/like.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/like.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/model/message.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/message.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/model/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/model/video.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/video.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/model/video_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/video_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/route/load.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/route/load.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/service/baseService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/baseService.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/service/commentService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/commentService.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/service/followService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/followService.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/service/likeService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/likeService.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/service/messageService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/messageService.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/service/userService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/userService.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/service/videoService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/videoService.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/util/key.txt" beforeDir="false" afterPath="$PROJECT_DIR$/go/util/key.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/initial.sql" beforeDir="false" afterPath="$PROJECT_DIR$/resources/initial.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/insertData.sql" beforeDir="false" afterPath="$PROJECT_DIR$/resources/insertData.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -111,18 +104,6 @@
     </key>
   </component>
   <component name="RunManager" selected="Go 构建.go build tiktok/go">
-    <configuration name="go build scratch_1.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
-      <module name="tiktok" />
-      <working_directory value="$PROJECT_DIR$" />
-      <envs>
-        <env name="GO111MODULE" value="off" />
-      </envs>
-      <kind value="FILE" />
-      <package value="tiktok" />
-      <directory value="$PROJECT_DIR$" />
-      <filePath value="$APPLICATION_CONFIG_DIR$/scratches/scratch_1.go" />
-      <method v="2" />
-    </configuration>
     <configuration name="go build tiktok/go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="tiktok" />
       <working_directory value="$PROJECT_DIR$" />
@@ -144,7 +125,7 @@
       <pattern value="^\QTestCount\E$" />
       <method v="2" />
     </configuration>
-    <configuration name="tiktok/go/config 中的 TestIs" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="tiktok/go/config 中的 TestInitDataSource" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="tiktok" />
       <working_directory value="$PROJECT_DIR$/go/config" />
       <root_directory value="$PROJECT_DIR$" />
@@ -153,7 +134,19 @@
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
       <framework value="gotest" />
-      <pattern value="^\QTestIs\E$" />
+      <pattern value="^\QTestInitDataSource\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="tiktok/go/model 中的 TestCancelComment" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="tiktok" />
+      <working_directory value="$PROJECT_DIR$/go/model" />
+      <root_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="tiktok/go/model" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <pattern value="^\QTestCancelComment\E$" />
       <method v="2" />
     </configuration>
     <configuration name="tiktok/go/model 中的 TestQueryIsExitsVideoId" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
@@ -169,19 +162,19 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Go 构建.go build scratch_1.go" />
       <item itemvalue="Go 构建.go build tiktok/go" />
+      <item itemvalue="Go 测试.tiktok/go/config 中的 TestInitDataSource" />
+      <item itemvalue="Go 测试.tiktok/go/model 中的 TestCancelComment" />
       <item itemvalue="Go 测试.tiktok/go/model 中的 TestQueryIsExitsVideoId" />
       <item itemvalue="Go 测试.tiktok/go/config 中的 TestCount" />
-      <item itemvalue="Go 测试.tiktok/go/config 中的 TestIs" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Go 构建.go build tiktok/go" />
+        <item itemvalue="Go 测试.tiktok/go/config 中的 TestInitDataSource" />
+        <item itemvalue="Go 测试.tiktok/go/model 中的 TestCancelComment" />
         <item itemvalue="Go 测试.tiktok/go/model 中的 TestQueryIsExitsVideoId" />
         <item itemvalue="Go 测试.tiktok/go/config 中的 TestCount" />
-        <item itemvalue="Go 构建.go build scratch_1.go" />
-        <item itemvalue="Go 测试.tiktok/go/config 中的 TestIs" />
       </list>
     </recent_temporary>
   </component>
@@ -232,7 +225,8 @@
     <MESSAGE value="添加日志" />
     <MESSAGE value="基本完成接口" />
     <MESSAGE value="优化接口与限流" />
-    <option name="LAST_COMMIT_MESSAGE" value="优化接口与限流" />
+    <MESSAGE value="基本完成" />
+    <option name="LAST_COMMIT_MESSAGE" value="基本完成" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
@@ -259,11 +253,6 @@
           <url>file://$PROJECT_DIR$/go/util/checkFile.go</url>
           <line>95</line>
           <option name="timeStamp" value="109" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/go/service/messageService.go</url>
-          <line>87</line>
-          <option name="timeStamp" value="121" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/go/middle/jwt/jwt_test.go</url>

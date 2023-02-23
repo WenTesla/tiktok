@@ -56,7 +56,7 @@ func CommentVideo(c *gin.Context) {
 		log.Printf("在%d的视频上删除评论", video_id)
 		comment_id := c.Query("comment_id")
 		commentId, _ := strconv.ParseInt(comment_id, 10, 64)
-		isDelete, err := service.DeleteCommentService(commentId)
+		isDelete, err := service.CancelCommentService(commentId, userId, videoId)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, model.BaseResponseInstance.FailMsg(err.Error()))
 			return
@@ -85,6 +85,7 @@ func CommentList(c *gin.Context) {
 			BaseResponse: model.BaseResponseInstance.FailMsg(config.RequestParameterIsNull),
 			CommentList:  nil,
 		})
+		return
 	}
 	// 转换
 	videoId, err := strconv.ParseInt(video_id, 10, 64)

@@ -16,5 +16,5 @@ func TestQueryCommentByVideoId(t *testing.T) {
 	fmt.Printf("%v", err)
 }
 func TestCancelComment(t *testing.T) {
-	CancelComment(10)
+	CancelComment(48, 1, 15)
 }
