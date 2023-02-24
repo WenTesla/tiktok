@@ -8,6 +8,7 @@ import (
 	"sync"
 	"tiktok/go/config"
 	"tiktok/go/model"
+	"tiktok/go/util"
 	"time"
 )
 
@@ -95,6 +96,9 @@ func MessageChatService(userId int64, toUserId int64, preMsgTime int64) ([]model
 }
 
 func MessageActionService(userId int64, toUserId int64, content string) (bool, error) {
+	// 敏感词替换
+	content, _ = util.SensitiveWordsFilter(content)
+
 	// 添加数据进入redis
 	MessageActionRedis(userId, toUserId, content)
 	// 添加数据库

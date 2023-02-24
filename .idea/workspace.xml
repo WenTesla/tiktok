@@ -4,24 +4,11 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c573e332-cd3a-41d6-891d-281450698c04" name="变更" comment="基本完成">
-      <change afterPath="$PROJECT_DIR$/go/config/datasource_test.go" afterDir="false" />
+    <list default="true" id="c573e332-cd3a-41d6-891d-281450698c04" name="变更" comment="修缮">
+      <change afterPath="$PROJECT_DIR$/go/config/redis_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/config/DataSource.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/config/DataSource.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/controller/commentController.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/controller/commentController.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/controller/followController.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/controller/followController.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/controller/messageController.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/controller/messageController.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/model/comment.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/comment.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/model/comment_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/comment_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/model/follow.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/follow.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/model/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/model/user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/service/commentService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/commentService.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/service/followService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/followService.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/service/likeService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/likeService.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/middle/jwt/Verify.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/middle/jwt/Verify.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go/service/messageService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/messageService.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/service/userService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/userService.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/service/videoService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/videoService.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -226,7 +213,8 @@
     <MESSAGE value="基本完成接口" />
     <MESSAGE value="优化接口与限流" />
     <MESSAGE value="基本完成" />
-    <option name="LAST_COMMIT_MESSAGE" value="基本完成" />
+    <MESSAGE value="修缮" />
+    <option name="LAST_COMMIT_MESSAGE" value="修缮" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

@@ -80,7 +80,8 @@ func VerifyToken(c *gin.Context) {
 	}
 }
 
-// VerifyTokenByPost 通过post请求获取token
+//  通过post请求获取token
+
 func VerifyTokenByPost(c *gin.Context) {
 	token := c.PostForm("token")
 	fmt.Printf("%v \t \n", token)
