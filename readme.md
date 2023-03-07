@@ -13,6 +13,9 @@ resources/insertData.sql
 ### 替换redis地址
 config/redis.go  
 
+### 替换腾讯云oss服务密钥
+config/tencent_oss
+
 
 ### 直接启动
 ```shell
@@ -28,18 +31,14 @@ go run main.go
 1. 点击退出登录会自动重启
 2. 在高级设置中可以配置自己的服务端项目的前缀地址，如下配置的http://192.168.1.7:8080
    在app中访问上述某个接口时就会拼接该前缀地址，例如访问 http://192.168.1.7:8080/douyin/feed/ 拉取视频列表
-![](https://xingqiu-tuchuang-1256524210.cos.ap-shanghai.myqcloud.com/12640/20230224155544.png)
+![](https://image-bed-1313520634.cos.ap-beijing.myqcloud.com/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-03-07%20162902.png)
 
 ## 表数据
 
 ## 使用mvc分层结构
 参考文献  （不懂的可以参考这篇文章）
 https://juejin.cn/post/7152299022017888286
-## 项目层次 (-todo)
-### controller
-### model
-### service
-### controller
+
 
 
 ## 版本  
@@ -82,4 +81,4 @@ https://juejin.cn/post/7152299022017888286
 ### 作者:  
 bowen https://www.github.com/WenTesla
 ### 最后修改时间
-2023/2/24
+2023/3/27

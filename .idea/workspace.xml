@@ -5,10 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c573e332-cd3a-41d6-891d-281450698c04" name="变更" comment="修缮">
-      <change afterPath="$PROJECT_DIR$/go/config/redis_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/middle/jwt/Verify.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/middle/jwt/Verify.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/service/messageService.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/service/messageService.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/config/DataSource.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/config/DataSource.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/config/redis.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/config/redis.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/config/tencent_cos.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/config/tencent_cos.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

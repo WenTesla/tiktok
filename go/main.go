@@ -2,6 +2,8 @@ package main
 
 import (
 	"errors"
+	"io"
+	"os"
 	"tiktok/go/config"
 	"tiktok/go/util"
 
@@ -38,8 +40,8 @@ func initProject() {
 	util.InitSensitiveFilter()
 
 	// 设置日志 --取消注释即可创建日志文件
-	//f, _ := os.Create("resources/gin.log") // // 如果文件已存在，会将文件清空。
-	//gin.DefaultWriter = io.MultiWriter(f)
+	f, _ := os.Create("resources/gin.log") // // 如果文件已存在，会将文件清空。
+	gin.DefaultWriter = io.MultiWriter(f)
 	//gin.DebugPrintRouteFunc()
 
 	// 如果需要同时将日志写入文件和控制台，请使用以下代码。

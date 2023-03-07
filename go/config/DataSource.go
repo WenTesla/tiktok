@@ -11,7 +11,7 @@ import (
 // 初始化并返回数据链接
 func InitDataSource() *gorm.DB {
 	// 参考 https://github.com/go-sql-driver/mysql#dsn-data-source-name 获取详情
-	// 本地数据库-推荐-自己建表
+	// 本地数据库-推荐-自己建表 -自己替换
 	dsn := "root:zhang134679@tcp(127.0.0.1:3306)/tiktok?charset=utf8mb4&parseTime=True&loc=Local"
 	// 阿里云数据库 非常慢
 	//dsn := "tiktok:tiktok@tcp(rm-2ze62585lf96k7285mo.mysql.rds.aliyuncs.com)/tiktok?charset=utf8mb4&parseTime=True&loc=Local"

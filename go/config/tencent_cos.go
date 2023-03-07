@@ -1,8 +1,14 @@
 package config
 
-const SecretId = "AKIDUmrgEWYM8mCQsIk11vlV0HI6fz4tRSHt"
+// 替换Id
 
-const SecretKey = "Umwtc8QUO8j7ZqvocJ2f7Phq00lZLvIR"
+const SecretId = "xxxxxxxxxxxxxxxxxxx"
+
+// 替换Key
+
+const SecretKey = "xxxxxxxxxxxxxxxxxxx"
+
+// 替换你的oss的域名
 
 const CosUrl = "https://tiktok-video-1313520634.cos.ap-beijing.myqcloud.com"
 

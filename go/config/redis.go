@@ -11,6 +11,7 @@ import (
 // 根据redis配置初始化一个客户端
 
 func InitRedisClient() (redisDb *redis.Client, err error) {
+	// 替换你的账号密码
 	redisDb = redis.NewClient(&redis.Options{
 		Addr:     "43.138.126.75:6388", // redis地址
 		Password: "redis",              // redis密码，没有则留空
