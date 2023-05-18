@@ -78,7 +78,12 @@ https://juejin.cn/post/7152299022017888286
 * 使用docker部署
 * 自动执行sql语句
 
+### 获奖证书
+![Vfit13.jpeg](https://i.328888.xyz/2023/05/18/Vfit13.jpeg)
+
+一个人完成，只拿到了结营证书，拿到优秀学员证书都是使用微服务
+
 ### 作者:  
 bowen https://www.github.com/WenTesla
 ### 最后修改时间
-2023/3/27
+2023/5/18

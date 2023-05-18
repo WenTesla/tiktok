@@ -4,13 +4,8 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c573e332-cd3a-41d6-891d-281450698c04" name="变更" comment="修缮">
+    <list default="true" id="c573e332-cd3a-41d6-891d-281450698c04" name="变更" comment="完善文档">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/config/DataSource.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/config/DataSource.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/config/redis.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/config/redis.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/config/tencent_cos.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/config/tencent_cos.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/go/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -202,7 +197,6 @@
     <MESSAGE value="基本完成视频流和点赞接口" />
     <MESSAGE value="基本完成点赞列表" />
     <MESSAGE value="基本完成评论列表接口和评论操作接口" />
-    <MESSAGE value="完善文档" />
     <MESSAGE value="完成视频发布接口-改用腾讯云的oss储存" />
     <MESSAGE value="完成评论接口" />
     <MESSAGE value="完成关注列表和粉丝列表接口" />
@@ -215,7 +209,8 @@
     <MESSAGE value="优化接口与限流" />
     <MESSAGE value="基本完成" />
     <MESSAGE value="修缮" />
-    <option name="LAST_COMMIT_MESSAGE" value="修缮" />
+    <MESSAGE value="完善文档" />
+    <option name="LAST_COMMIT_MESSAGE" value="完善文档" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
