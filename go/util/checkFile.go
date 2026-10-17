@@ -92,6 +92,11 @@ func bytesToHexString(src []byte) string {
 func GetFileType(fSrc []byte) string {
 	var fileType string
 	fileCode := bytesToHexString(fSrc)
+	// 空输入直接返回空类型，否则下方 HasPrefix(k, "") 会命中 map 中的任意条目，
+	// 返回一个随机的非空类型（曾在 nil/[]byte{} 时返回 "mxp"）。
+	if fileCode == "" {
+		return ""
+	}
 	// 0000001c667479706d70
 	fileTypeMap.Range(func(key, value interface{}) bool {
 		k := key.(string)

@@ -36,7 +36,7 @@ func CommentVideo(c *gin.Context) {
 
 	switch action_type {
 	case "1":
-		log.Printf("在%d的视频上发布评论", video_id)
+		log.Printf("在%d的视频上发布评论", videoId)
 		content := c.Query("comment_text")
 		commentInfo, err := service.CreateCommentService(userId, videoId, content)
 		if err != nil {
@@ -53,7 +53,7 @@ func CommentVideo(c *gin.Context) {
 			return
 		}
 	case "2":
-		log.Printf("在%d的视频上删除评论", video_id)
+		log.Printf("在%d的视频上删除评论", videoId)
 		comment_id := c.Query("comment_id")
 		commentId, _ := strconv.ParseInt(comment_id, 10, 64)
 		isDelete, err := service.CancelCommentService(commentId, userId, videoId)

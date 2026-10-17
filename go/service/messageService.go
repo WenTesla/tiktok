@@ -1,15 +1,17 @@
 package service
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
-	"github.com/go-redis/redis"
 	"strconv"
 	"sync"
 	"tiktok/go/config"
 	"tiktok/go/model"
 	"tiktok/go/util"
 	"time"
+
+	"github.com/redis/go-redis/v9"
 )
 
 // 定义键值对维护消息记录 用户的Id->用户目前的消息记录索引
@@ -19,8 +21,6 @@ var userCommentIndex sync.Map
 // 定义键值对维护消息记录 用户的Id->用户目前的消息记录最大值
 // var userMessageMaxIndex = make(map[int64]int64)
 var userMessageMaxIndex sync.Map
-
-var NowTime string
 
 func FriendListService(userId int64) ([]model.FriendUser, error) {
 	var FriendUsers []model.FriendUser
@@ -113,6 +113,7 @@ func MessageActionService(userId int64, toUserId int64, content string) (bool, e
 }
 
 func MessageActionRedis(userId int64, toUserId int64, content string) error {
+	ctx := context.Background()
 	timeUnix := time.Now().Unix()
 	message := model.Message{
 		UserId:     userId,
@@ -128,16 +129,17 @@ func MessageActionRedis(userId int64, toUserId int64, content string) error {
 	}
 	var messageRedisName = strconv.FormatInt(userId, 10) + "-" + strconv.FormatInt(toUserId, 10)
 	// 添加到redis中hash
-	messageRedisDb.RPush(messageRedisName, bytes)
+	config.RedisClient(6).RPush(ctx, messageRedisName, bytes)
 	return nil
 }
 
 func AllMessageListAddRedis(userId int64, toUserId int64, messages []model.Message) {
+	ctx := context.Background()
 	var messageRedisName = strconv.FormatInt(userId, 10) + "-" + strconv.FormatInt(toUserId, 10)
 	// 添加到redis中hash
 	for _, message := range messages {
 		bytes, _ := json.Marshal(message)
-		messageRedisDb.ZAdd(messageRedisName, redis.Z{
+		config.RedisClient(6).ZAdd(ctx, messageRedisName, redis.Z{
 			Score:  float64(message.CreateTime),
 			Member: bytes,
 		})
@@ -147,15 +149,19 @@ func AllMessageListAddRedis(userId int64, toUserId int64, messages []model.Messa
 // 查询时间戳之前的记录 并删除
 
 func ParseAllMessageListFromRedis(userId int64, toUserId int64, msgTime int64) ([]model.Message, error) {
+	ctx := context.Background()
 	var messages []model.Message
 	var messageRedisName = strconv.FormatInt(userId, 10) + "-" + strconv.FormatInt(toUserId, 10)
-	for {
-		bytes, _ := messageRedisDb.LPop(messageRedisName).Result()
-		if bytes == "" {
-			break
-		}
+	// 用 LRange 读取而非 LPop：LPop 会逐条删除列表元素，导致聊天记录被读一次后丢失
+	bytesList, err := config.RedisClient(6).LRange(ctx, messageRedisName, 0, -1).Result()
+	if err != nil {
+		return nil, err
+	}
+	for _, b := range bytesList {
 		message := model.Message{}
-		json.Unmarshal([]byte(bytes), &message)
+		if err := json.Unmarshal([]byte(b), &message); err != nil {
+			continue
+		}
 		if message.IsWithdraw != 0 || message.CreateTime >= msgTime {
 			continue
 		}

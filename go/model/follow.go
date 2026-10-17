@@ -7,9 +7,9 @@ import (
 
 // Follow 用户关系结构，对应用户关系表。
 type Follow struct {
-	Id         int64
-	UserId     int64
-	FollowerId int64
+	Id         int64 `gorm:"primaryKey;column:id"`
+	UserId     int64 `gorm:"index"`
+	FollowerId int64 `gorm:"index"`
 	Cancel     int8
 	CreatedAt  time.Time `gorm:"-"`
 }
@@ -164,6 +164,56 @@ func QueryIsFollow(userId int64, toUserId int64) (bool, error) {
 		return true, nil
 	}
 	return false, nil
+}
+
+// GetFollowCountsByUserIds 批量取用户的关注数/粉丝数
+func GetFollowCountsByUserIds(ids []int64) (following, fans map[int64]int64, err error) {
+	following = map[int64]int64{}
+	fans = map[int64]int64{}
+	if len(ids) == 0 {
+		return following, fans, nil
+	}
+	type row struct {
+		Uid int64 `gorm:"column:uid"`
+		Cnt int64 `gorm:"column:cnt"`
+	}
+	var frows []row
+	if err := db.Model(&Follow{}).Select("user_id as uid, count(*) as cnt").Where("user_id IN (?) AND cancel = ?", ids, 0).Group("user_id").Scan(&frows).Error; err != nil {
+		util.LogError(err.Error())
+		return following, fans, err
+	}
+	for _, r := range frows {
+		following[r.Uid] = r.Cnt
+	}
+	var arows []row
+	if err := db.Model(&Follow{}).Select("follower_id as uid, count(*) as cnt").Where("follower_id IN (?) AND cancel = ?", ids, 0).Group("follower_id").Scan(&arows).Error; err != nil {
+		util.LogError(err.Error())
+		return following, fans, err
+	}
+	for _, r := range arows {
+		fans[r.Uid] = r.Cnt
+	}
+	return following, fans, nil
+}
+
+// QueryIsFollowBatch 批量查询 viewer 是否关注给定作者列表，返回 authorId->true
+func QueryIsFollowBatch(viewerId int64, authorIds []int64) (map[int64]bool, error) {
+	m := map[int64]bool{}
+	if len(authorIds) == 0 {
+		return m, nil
+	}
+	type fid struct {
+		FollowerId int64 `gorm:"column:follower_id"`
+	}
+	var rows []fid
+	if err := db.Model(&Follow{}).Select("follower_id").Where("user_id = ? AND follower_id IN (?) AND cancel = ?", viewerId, authorIds, 0).Find(&rows).Error; err != nil {
+		util.LogError(err.Error())
+		return m, err
+	}
+	for _, r := range rows {
+		m[r.FollowerId] = true
+	}
+	return m, nil
 }
 
 //  查询粉丝的Id

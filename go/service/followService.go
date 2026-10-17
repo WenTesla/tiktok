@@ -40,7 +40,6 @@ func FollowUserService(userId int64, toUserId int64, actionType bool) (bool, err
 		}
 		return true, nil
 	}
-	return false, nil
 }
 
 //  未登录状态下的关注列表服务

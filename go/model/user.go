@@ -6,7 +6,7 @@ import (
 
 // User 对应数据库User表结构的结构体
 type User struct {
-	Id       int64  //主键
+	Id       int64  `gorm:"primaryKey;column:id"` //主键
 	Name     string //昵称
 	Password string //密码
 }
@@ -65,6 +65,19 @@ func GetUserByName(name string) (User, error) {
 		return user, err
 	}
 	return user, nil
+}
+
+// GetUserByIds 批量按主键查询用户（用于消除 N+1）
+func GetUserByIds(ids []int64) ([]User, error) {
+	users := make([]User, 0, len(ids))
+	if len(ids) == 0 {
+		return users, nil
+	}
+	if err := db.Where("id IN (?)", ids).Find(&users).Error; err != nil {
+		util.LogError(err.Error())
+		return nil, err
+	}
+	return users, nil
 }
 
 // PackageUserToUserInfo

@@ -1,9 +1,18 @@
 package model
 
-import "tiktok/go/config"
+import (
+	"gorm.io/gorm"
 
-// 数据库连接池
-var db = config.InitDataSource()
+	"tiktok/go/config"
+)
+
+// 数据库连接池，由 main 启动时通过 InitDB 注入；单测可注入 go-sqlmock。
+var db *gorm.DB
+
+// InitDB 注入数据库实例（启动时调用；单测中可注入 mock）
+func InitDB(g *gorm.DB) {
+	db = g
+}
 
 type BaseResponse struct {
 	StatusCode int32  `json:"status_code"`

@@ -1,20 +1,26 @@
 package service
 
 import (
-	"crypto/md5"
-	"encoding/hex"
 	"errors"
 	"log"
+	"regexp"
+
 	"tiktok/go/config"
 	"tiktok/go/middle/jwt"
-
-	// "log"
-	"regexp"
 	"tiktok/go/model"
+	"golang.org/x/crypto/bcrypt"
 )
 
-// SALT 盐值
-const SALT = "TikTok"
+// HashPassword 使用 bcrypt 对密码加盐哈希（替代原先的 MD5+静态盐）
+func HashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	return string(bytes), err
+}
+
+// CheckPassword 比对明文密码与 bcrypt 哈希
+func CheckPassword(hash, password string) bool {
+	return bcrypt.CompareHashAndPassword([]byte(hash), []byte(password)) == nil
+}
 
 // email verify
 func VerifyEmailFormat(email string) bool {
@@ -38,15 +44,6 @@ func GenerateTokenByName(username string) (string, error) {
 	return token, nil
 }
 
-// Encryption md5加盐加密
-func Encryption(password string) string {
-	password += SALT
-	hash := md5.New()
-	hash.Write([]byte(password))
-	hash_password := hex.EncodeToString(hash.Sum(nil))
-	return hash_password
-}
-
 // RegisterService 注册服务
 func RegisterService(username string, password string) (int64, error) {
 	log.Println(username, "---", password)
@@ -59,8 +56,12 @@ func RegisterService(username string, password string) (int64, error) {
 	if username == user.Name {
 		return 0, errors.New("用户名已经存在")
 	}
-	// 插入
-	user, _ = model.InsertUser(username, password)
+	// 插入（密码经 bcrypt 哈希后入库）
+	hashed, err := HashPassword(password)
+	if err != nil {
+		return 0, errors.New("密码加密失败")
+	}
+	user, _ = model.InsertUser(username, hashed)
 	return user.Id, nil
 }
 
@@ -74,7 +75,7 @@ func LoginService(username string, password string) (int64, error) {
 	if username != user.Name {
 		return 0, errors.New("用户名不存在")
 	}
-	if password != user.Password {
+	if !CheckPassword(user.Password, password) {
 		return 0, errors.New("用户或密码不正确")
 	}
 
@@ -124,6 +125,51 @@ func UserService(Id int64) (model.UserInfo, error) {
 		FavoriteCount:  favoriteCount,
 	}
 	return userInfo, nil
+}
+
+// UserServiceBatch 批量封装作者信息（消除 N+1），返回 authorId->UserInfo
+func UserServiceBatch(authorIds []int64, viewerId int64) (map[int64]model.UserInfo, error) {
+	result := make(map[int64]model.UserInfo, len(authorIds))
+	if len(authorIds) == 0 {
+		return result, nil
+	}
+	users, err := model.GetUserByIds(authorIds)
+	if err != nil {
+		return nil, err
+	}
+	following, fans, err := model.GetFollowCountsByUserIds(authorIds)
+	if err != nil {
+		return nil, err
+	}
+	favorite, totalFavorited, err := model.GetLikeCountsByUserIds(authorIds)
+	if err != nil {
+		return nil, err
+	}
+	workCounts, err := model.GetWorkCountsByUserIds(authorIds)
+	if err != nil {
+		return nil, err
+	}
+	var isFollow map[int64]bool
+	if viewerId != -1 {
+		isFollow, err = model.QueryIsFollowBatch(viewerId, authorIds)
+		if err != nil {
+			return nil, err
+		}
+	}
+	for _, u := range users {
+		result[u.Id] = model.UserInfo{
+			Id:             u.Id,
+			Name:           u.Name,
+			FollowCount:    following[u.Id],
+			FollowerCount:  fans[u.Id],
+			IsFollow:       viewerId != -1 && isFollow[u.Id],
+			AvatarUrl:      config.MockAvatarUrl,
+			TotalFavorited: totalFavorited[u.Id],
+			WorkCount:      workCounts[u.Id],
+			FavoriteCount:  favorite[u.Id],
+		}
+	}
+	return result, nil
 }
 
 //  用户服务 先封装小的，再封装大的 此时为登录状态，需要查询是否登录

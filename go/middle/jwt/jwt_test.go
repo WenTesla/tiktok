@@ -1,73 +1,57 @@
 package jwt
 
 import (
-	"fmt"
-	"golang.org/x/time/rate"
-	"log"
-	"net/http"
 	"testing"
 	"time"
+
+	"github.com/golang-jwt/jwt/v4"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"tiktok/go/config"
+	"tiktok/go/model"
 )
 
-// 测试token的生成
-func TestSignToken(t *testing.T) {
-	token := TestSignTokenFunction("1111")
-	log.Println(token)
+// 确保签名有效期足够长，避免测试时 token 立即过期（config 在测试中可能为默认值 0）。
+func init() {
+	config.AppConfig.JWT.Expire = 24
 }
 
-//func TestParseToken(t *testing.T) {
-//
-//}
+// 签名 -> 解析 往返测试
+func TestSignTokenAndParse(t *testing.T) {
+	token := SignToken(model.User{Id: 42})
+	require.NotEmpty(t, token)
 
-func TestToken(t *testing.T) {
-	token := TestSignTokenFunction("1111")
-	log.Println(token)
-	parseToken, err := TestParseToken(token)
-	fmt.Println(parseToken, err)
+	id, err := ParseToken(token)
+	require.NoError(t, err)
+	// JSON 数字解码为 float64
+	assert.Equal(t, float64(42), id)
 }
 
+// 过期 token 应被自动拒绝（验证 exp 声明生效）
+func TestParseTokenExpired(t *testing.T) {
+	claims := jwt.MapClaims{
+		"id": 7,
+		"exp": time.Now().Add(-time.Hour).Unix(),
+	}
+	tok := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	signed, err := tok.SignedString(jwtSecret)
+	require.NoError(t, err)
+
+	_, err = ParseToken(signed)
+	assert.Error(t, err)
+}
+
+// ParseTokenTime 应能从合法 token 中取出 nbf
 func TestParseTokenTime(t *testing.T) {
-	time, err := ParseTokenTime("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaXNzIjoidGlrdG9rIiwibmJmIjoxNjc1MTU5ODM4LCJzdWIiOiLnlKjmiLdJZCJ9.sPKBddA3foAeVVH19QFNoDNIckUIIipfZOrGvKLHxQk")
-	if err != nil {
-		t.Fail()
-	}
-	fmt.Println(time)
+	token := SignToken(model.User{Id: 1})
+	nbf, err := ParseTokenTime(token)
+	require.NoError(t, err)
+	assert.NotNil(t, nbf)
 }
 
+// GetDays 天数差计算
 func TestGetDays(t *testing.T) {
-	days := GetDays(1676775698, 1675998098)
-	fmt.Println(days)
-}
-
-func TestLimit(t *testing.T) {
-	r := rate.Every(1 * time.Millisecond)
-	limit := rate.NewLimiter(r, 10)
-	http.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request) {
-		if limit.Allow() {
-			fmt.Printf("请求成功，当前时间：%s\n", time.Now().Format("2006-01-02 15:04:05"))
-		} else {
-			fmt.Printf("请求成功，但是被限流了。。。\n")
-		}
-	})
-
-	_ = http.ListenAndServe(":8081", nil)
-}
-
-func GetApi() {
-	api := "http://localhost:8081/"
-	res, err := http.Get(api)
-	if err != nil {
-		panic(err)
-	}
-	defer res.Body.Close()
-
-	if res.StatusCode == http.StatusOK {
-		fmt.Printf("get api success\n")
-	}
-}
-
-func Benchmark_Main(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		GetApi()
-	}
+	// 相差约 9 天
+	d := GetDays(1675998098, 1676775698)
+	assert.Equal(t, 9, d)
 }

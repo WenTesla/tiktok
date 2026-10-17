@@ -2,7 +2,6 @@ package service
 
 import (
 	"errors"
-	"strconv"
 	"tiktok/go/model"
 )
 
@@ -11,7 +10,6 @@ import (
 func LikeVideoByUserIDService(userId int64, videoId int64, actionType int64) (bool, error) {
 	var err error = nil
 	var isDuplicate bool
-	videoIdString := strconv.FormatInt(videoId, 10)
 	//// 点赞 -- 没有数据的话创建数据，存在数据的话插入数据
 
 	//// 从redis判断是否点过赞
@@ -59,13 +57,6 @@ func LikeVideoByUserIDService(userId int64, videoId int64, actionType int64) (bo
 		if err != nil {
 			return false, dataSourceErr
 		}
-		if actionType == 0 {
-			// 添加redis
-			likeRedisDb.SAdd(videoIdString, userId)
-		} else if actionType == 1 {
-			// 移除redis
-			likeRedisDb.SRem(videoIdString, userId)
-		}
 	} else {
 		if actionType == 0 {
 			// 插入数据
@@ -78,8 +69,6 @@ func LikeVideoByUserIDService(userId int64, videoId int64, actionType int64) (bo
 			if err != nil {
 				return false, dataSourceErr
 			}
-			// 添加到redis
-			likeRedisDb.SAdd(videoIdString, userId)
 		}
 	}
 	return true, err

@@ -1,0 +1,17 @@
+# 预置二进制运行镜像（legacy 路径：Windows 侧交叉编译 + wslc 部署）。
+# 适用于本机 Docker 不可用、仅有 wslc 的场景；宿主需先编译出 douyin-app-bin：
+#   CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o douyin-app-bin ./go
+#   wslc build -t douyin-app -f go/Dockerfile.prebuilt .
+#
+# Linux 容器化编排（docker compose）请使用 go/Dockerfile（多阶段构建，容器内编译，无需宿主机 Go）。
+FROM scratch
+WORKDIR /src
+COPY douyin-app-bin /src/app
+# 运行时资源：gin 日志目录、初始建表 SQL（resources/ 在仓库根目录）
+COPY resources ./resources
+# 敏感词字典（InitSensitiveFilter 以相对路径 go/util/key.txt 读取，依赖 CWD=/src）
+COPY go/util/key.txt ./go/util/key.txt
+# 静态 ffmpeg（服务端抽帧用）：构建上下文内的 ffmpeg-bin/ffmpeg-linux-amd64，需可执行权限
+COPY ffmpeg-bin/ffmpeg-linux-amd64 /src/ffmpeg
+EXPOSE 8000
+ENTRYPOINT ["/src/app"]

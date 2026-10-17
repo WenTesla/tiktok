@@ -1,0 +1,7 @@
+.git
+*.env
+scripts
+docs
+README.md
+go/resources/gin.log
+go/.dockerignore

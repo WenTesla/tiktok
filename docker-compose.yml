@@ -1,0 +1,93 @@
+# 容器化编排（docker compose）——Linux 一键启动全套（MySQL + Redis + app）。
+#
+# 用法：
+#   bash scripts/up-linux.sh      # 前置检查 + 引导 .env + 准备 ffmpeg + 起栈 + 健康检查
+#   bash scripts/down-linux.sh    # 关停（保留数据）；加 --purge 连 MySQL 卷一起清
+#   docker compose up -d --build  # 等价裸命令（.env 已存在时）
+#
+# app 镜像为多阶段构建（go/Dockerfile）：容器内编译静态二进制，宿主机无需安装 Go。
+#
+# 变量可用同目录 .env（首次由 up-linux.sh 从 .env.example 生成）或 shell 环境变量覆盖：
+#   MYSQL_PWD        MySQL root 口令（默认 zhang134679，务必修改）
+#   JWT_SECRET       JWT 签名密钥（.env 引导时随机生成；手动创建请用强随机值）
+#   PUBLIC_BASE_URL  静态资源对外基址（默认 http://localhost:8000/static）
+#
+# 国内网络拉取 golang 镜像困难时：
+#   docker compose build --build-arg GO_IMAGE=docker.m.daocloud.io/library/golang:1.26-alpine
+
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: douyin-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: "${MYSQL_PWD:-zhang134679}"
+      MYSQL_DATABASE: tiktok
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${MYSQL_PWD:-zhang134679}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - douyin-net
+    restart: unless-stopped
+
+  redis:
+    image: redis:7
+    container_name: douyin-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - douyin-net
+    restart: unless-stopped
+
+  app:
+    build:
+      context: .
+      dockerfile: go/Dockerfile
+      # 国内网络可取消下面注释（或命令行 --build-arg）覆盖 golang 基础镜像：
+      # args:
+      #   GO_IMAGE: docker.m.daocloud.io/library/golang:1.26-alpine
+    container_name: douyin-app
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/data            # 视频/封面持久化（宿盘真实目录，可备份）
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_PORT: "3306"
+      MYSQL_USER: root
+      MYSQL_PASSWORD: "${MYSQL_PWD:-zhang134679}"
+      MYSQL_DB: tiktok
+      REDIS_ADDR: redis:6379
+      SERVER_PORT: "8000"
+      STORAGE_TYPE: local
+      LOCAL_STORAGE_DIR: /data
+      PUBLIC_BASE_URL: "${PUBLIC_BASE_URL:-http://localhost:8000/static}"
+      JWT_SECRET: "${JWT_SECRET:-this_is_a_secret_key}"
+      JWT_EXPIRE_HOURS: "168"
+    networks:
+      - douyin-net
+    restart: unless-stopped
+
+networks:
+  douyin-net:
+    driver: bridge
+
+volumes:
+  mysql-data:

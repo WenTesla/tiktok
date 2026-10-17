@@ -1,0 +1,17 @@
+# 交叉编译产物（Windows 侧 CGO_ENABLED=0 GOOS=linux 生成）
+/douyin-app-bin
+
+# 部署调试日志
+scripts/*.log
+
+# 本地配置（含密钥，勿入库；保留 .env.example）
+.env
+
+# Go 构建缓存/临时
+*.test
+
+# 静态 ffmpeg 二进制（构建时由 up.sh 下载缓存，体积大，勿入库）
+/ffmpeg-bin/
+
+# 本地存储卷（视频/封面落盘目录，运行期生成）
+/data/

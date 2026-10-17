@@ -7,9 +7,9 @@ import (
 )
 
 type Comment struct {
-	ID         int64     // 评论id
-	UserId     int64     // 用户Id
-	VideoId    int64     //视频Id
+	ID         int64 `gorm:"primaryKey;column:id"` // 评论id
+	UserId     int64 `gorm:"index"`
+	VideoId    int64 `gorm:"index"`
 	Text       string    // 评论内容
 	IsCancel   int64     // 是否取消
 	CreateTime time.Time `gorm:"column:createTime"` // 创建时间
@@ -58,6 +58,27 @@ func QueryCommentCountByVideoId(videoId int64) (int64, error) {
 		return -1, result.Error
 	}
 	return count, nil
+}
+
+// QueryCommentCountsByVideoIds 批量取视频评论数
+func QueryCommentCountsByVideoIds(ids []int64) (map[int64]int64, error) {
+	m := map[int64]int64{}
+	if len(ids) == 0 {
+		return m, nil
+	}
+	type row struct {
+		VideoId int64 `gorm:"column:video_id"`
+		Cnt     int64 `gorm:"column:cnt"`
+	}
+	var rows []row
+	if err := db.Model(&Comment{}).Select("video_id, count(*) as cnt").Where("video_id IN (?) AND is_cancel = ?", ids, 0).Group("video_id").Scan(&rows).Error; err != nil {
+		util.LogError(err.Error())
+		return m, err
+	}
+	for _, r := range rows {
+		m[r.VideoId] = r.Cnt
+	}
+	return m, nil
 }
 
 // InsertComment 插入评论 这有问题 传入的参数

@@ -7,9 +7,9 @@ import (
 
 // Like 表的结构,不需要json化
 type Like struct {
-	Id       int64 //自增主键
-	UserId   int64 //点赞用户的id
-	VideoId  int64 //视频的id
+	Id       int64 `gorm:"primaryKey;column:id"` //自增主键
+	UserId   int64 `gorm:"index"`
+	VideoId  int64 `gorm:"index"`
 	IsCancel int8  //是否点赞，0为点赞，1为取消赞
 }
 
@@ -123,4 +123,78 @@ func QueryTotalFavorited(userId int64) (int64, error) {
 	// SELECT count(*) FROM `likes` WHERE video_id in (SELECT `id` FROM `videos` WHERE author_id = 1) AND is_cancel = 0
 	db.Model(&Like{}).Where("video_id in (?) AND is_cancel = ?", db.Model(&TableVideo{}).Where("author_id = ?", userId).Select("id"), 0).Count(&count)
 	return count, nil
+}
+
+// QueryLikeCountsByVideoIds 批量取视频点赞数
+func QueryLikeCountsByVideoIds(ids []int64) (map[int64]int64, error) {
+	m := map[int64]int64{}
+	if len(ids) == 0 {
+		return m, nil
+	}
+	type row struct {
+		VideoId int64 `gorm:"column:video_id"`
+		Cnt     int64 `gorm:"column:cnt"`
+	}
+	var rows []row
+	if err := db.Model(&Like{}).Select("video_id, count(*) as cnt").Where("video_id IN (?) AND is_cancel = ?", ids, 0).Group("video_id").Scan(&rows).Error; err != nil {
+		util.LogError(err.Error())
+		return m, err
+	}
+	for _, r := range rows {
+		m[r.VideoId] = r.Cnt
+	}
+	return m, nil
+}
+
+// QueryIsLikeBatch 批量查询用户是否点赞给定视频列表，返回 videoId->true
+func QueryIsLikeBatch(userId int64, videoIds []int64) (map[int64]bool, error) {
+	m := map[int64]bool{}
+	if len(videoIds) == 0 {
+		return m, nil
+	}
+	type vid struct {
+		VideoId int64 `gorm:"column:video_id"`
+	}
+	var rows []vid
+	if err := db.Model(&Like{}).Select("video_id").Where("user_id = ? AND video_id IN (?) AND is_cancel = ?", userId, videoIds, 0).Find(&rows).Error; err != nil {
+		util.LogError(err.Error())
+		return m, err
+	}
+	for _, r := range rows {
+		m[r.VideoId] = true
+	}
+	return m, nil
+}
+
+// GetLikeCountsByUserIds 批量取用户的点赞数(点赞他人)与被赞总数(获赞)
+func GetLikeCountsByUserIds(ids []int64) (favorite, totalFavorited map[int64]int64, err error) {
+	favorite = map[int64]int64{}
+	totalFavorited = map[int64]int64{}
+	if len(ids) == 0 {
+		return favorite, totalFavorited, nil
+	}
+	type row struct {
+		Uid int64 `gorm:"column:uid"`
+		Cnt int64 `gorm:"column:cnt"`
+	}
+	var frows []row
+	if err := db.Model(&Like{}).Select("user_id as uid, count(*) as cnt").Where("user_id IN (?) AND is_cancel = ?", ids, 0).Group("user_id").Scan(&frows).Error; err != nil {
+		util.LogError(err.Error())
+		return favorite, totalFavorited, err
+	}
+	for _, r := range frows {
+		favorite[r.Uid] = r.Cnt
+	}
+	var trows []row
+	if err := db.Table("likes l").Select("v.author_id as uid, count(*) as cnt").
+		Joins("JOIN videos v ON l.video_id = v.id").
+		Where("l.is_cancel = ? AND v.author_id IN (?)", 0, ids).
+		Group("v.author_id").Scan(&trows).Error; err != nil {
+		util.LogError(err.Error())
+		return favorite, totalFavorited, err
+	}
+	for _, r := range trows {
+		totalFavorited[r.Uid] = r.Cnt
+	}
+	return favorite, totalFavorited, nil
 }

@@ -6,24 +6,24 @@
 [青训营演示视频](https://www.bilibili.com/video/BV1uT411S79U/?share_source=copy_web&vd_source=fe55b12bbf1a3c973a095834d9f2ba6d)
 
 ## 项目启动
-### 建表
-resources/initial.sql  
-resources/insertData.sql  
 
-### 替换redis地址
-config/redis.go  
-
-### 替换腾讯云oss服务密钥
-config/tencent_oss
-
-
-### 直接启动
+### 方式一：本地直接启动（开发）
 ```shell
-cd go 
+cd go
+cp .env.example .env   # 按需填写 MySQL / Redis / JWT / COS 配置
+go run main.go
 ```
+
+### 方式二：容器化部署（推荐，Linux 一键启动，见 docs/DEPLOY.md）
 ```shell
-go run main.go 
-```  
+# Linux 主机装好 Docker 即可（无需 Go，app 二进制在容器内多阶段编译）
+bash scripts/up-linux.sh     # docker compose 拉起 MySQL + Redis + app，自动引导 .env / 准备 ffmpeg / 健康检查
+bash scripts/down-linux.sh   # 关停清理（保留数据；--purge 连 MySQL 卷一起清）
+# 裸命令等价：docker compose up -d --build
+# Windows + WSL 且本机无 Docker 时的旧路径：bash scripts/up.sh（wslc）
+```
+- 启动自动 `AutoMigrate` 建表，无需手跑 `initial.sql`；健康检查 `/healthz`；app 等 MySQL/Redis 健康检查通过后启动。
+- 视频/封面走**本地文件系统存储**（`./data` bind mount 持久化，不再依赖腾讯云 COS）；封面由镜像内静态 ffmpeg 自动抽首帧生成，ffmpeg 缺失时仅封面留空、发布播放不受影响。
 
 ## APP 操作
 设置服务端地址
@@ -42,16 +42,32 @@ https://juejin.cn/post/7152299022017888286
 
 
 ## 版本  
-* go版本 1.19  
-* mysql 8.0+
-* redis驱动
+* go 版本 1.26（已升级，原 1.19）
+* mysql 8.4
+* redis 7
+* gin + gorm + golang-jwt/v4 + go-redis v9 + 腾讯云 COS
+
 ## 使用到的框架与依赖  
-+ gin框架
-+ gorm框架
-+ mysql驱动
-+ golang的jwt框架
-+ 腾讯云的oss存储（设置了工作流用于截取视频的第一帧(.jpg)并储存在相同的桶中）文献: https://juejin.cn/post/7195857732846567485
-+ redis驱动
++ gin 框架（路由 / HTTP）
++ gorm 框架（ORM，MySQL 驱动）
++ golang-jwt/v4（HS256 鉴权，带 `exp` 过期）
++ bcrypt（密码哈希，替代原 MD5+盐）
++ 腾讯云 COS（视频与封面存储，工作流截取首帧 .jpg）
++ redis（限速计数器、点赞集合缓存）
++ viper + godotenv（配置外部化）
++ go-sqlmock / testify（单元测试）
+
+## 工程化升级（相对原作业）
+- 配置外部化（viper + 环境变量），密钥/连接不再写死
+- JWT 带 `exp` 标准过期 + 可配置密钥，启动弱密钥告警
+- 密码 bcrypt 哈希
+- 上传按文件头魔数校验仅允许 mp4 且 ≤100MB
+- feed / 列表接口消除 N+1（批量查询 + map 回填）
+- MySQL 连接重试、AutoMigrate、/healthz、优雅关闭
+- `model.db` 可注入，单测用 go-sqlmock，无需真实 MySQL
+
+详见 `docs/ARCHITECTURE.md` / `docs/DEPLOY.md` / `docs/API.md`。
+
 ## 已知错误    
  
 
@@ -74,9 +90,11 @@ https://juejin.cn/post/7152299022017888286
 ## 注意
 * **目前上传文件接口只支持mp4格式**
 
-## to-do
-* 使用docker部署
-* 自动执行sql语句
+## to-do（原作业遗留，已部分完成）
+* ~~使用 docker 部署~~ → 已完成（Docker Compose 多阶段编排，FROM scratch 运行镜像，Linux 一键启动，见 docs/DEPLOY.md）
+* ~~自动执行 sql 语句~~ → 已完成（启动时 AutoMigrate）
+* 读写分离 / 水平扩展（未做）
+* 关注关系、消息分库分表（未做）
 
 ### 获奖证书
 ![Vfit13.jpeg](https://i.328888.xyz/2023/05/18/Vfit13.jpeg)

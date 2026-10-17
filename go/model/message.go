@@ -7,9 +7,9 @@ import (
 )
 
 type Message struct {
-	ID         int64  `json:"id"`
-	UserId     int64  `json:"from_user_id"`
-	ToUserId   int64  `json:"to_user_id"`
+	ID         int64 `json:"id" gorm:"primaryKey;column:id"`
+	UserId     int64 `json:"from_user_id" gorm:"index"`
+	ToUserId   int64 `json:"to_user_id" gorm:"index"`
 	Content    string `json:"content"`
 	IsWithdraw int8   `json:"is_withdraw,omitempty"`
 	CreateTime int64  `json:"create_time" gorm:"column:createTime"` // 创建时间

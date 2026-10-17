@@ -1,48 +1,55 @@
 package config
 
 import (
-	"github.com/go-redis/redis"
+	"context"
+	"fmt"
+	"sync"
+
+	"github.com/redis/go-redis/v9"
 	"tiktok/go/util"
 )
 
-// 声明一个全局的redisDb变量
-//var redisDb *redis.Client
+var (
+	redisMu      sync.Mutex
+	redisClients = map[int]*redis.Client{}
+)
 
-// 根据redis配置初始化一个客户端
-
-func InitRedisClient() (redisDb *redis.Client, err error) {
-	// 替换你的账号密码
-	redisDb = redis.NewClient(&redis.Options{
-		Addr:     "43.138.126.75:6388", // redis地址
-		Password: "redis",              // redis密码，没有则留空
-		DB:       0,                    // 默认数据库，默认是0
+// RedisClient 返回绑定到逻辑库 db 的 *redis.Client 单例（懒加载并缓存，不在创建时 Ping）。
+// 取代原先每个包各 new 一个 client 且导入期 Ping/panic 的写法（F4/F24）。
+func RedisClient(db int) *redis.Client {
+	redisMu.Lock()
+	defer redisMu.Unlock()
+	if c, ok := redisClients[db]; ok {
+		return c
+	}
+	c := redis.NewClient(&redis.Options{
+		Addr:     AppConfig.Redis.Addr,
+		Password: AppConfig.Redis.Password,
+		DB:       db,
 	})
+	redisClients[db] = c
+	return c
+}
 
-	//通过 *redis.Client.Ping() 来检查是否成功连接到了redis服务器
-	_, err = redisDb.Ping().Result()
-	if err != nil {
-		util.LogFatal(err.Error())
-		panic(err)
+// InitRedisClient 初始化默认库(db 0)并探活，保留以兼容 main.go。
+func InitRedisClient() (*redis.Client, error) {
+	c := RedisClient(0)
+	if err := c.Ping(context.Background()).Err(); err != nil {
+		util.LogFatal("redis init failed: " + err.Error())
 		return nil, err
 	}
 	util.Log("redis 初始化成功")
-	return redisDb, nil
+	return c, nil
 }
 
-//  选择redis的数据库 -> i
-
-func RedisClient(i int) (*redis.Client, error) {
-	redisDb := redis.NewClient(&redis.Options{
-		Addr:     "43.138.126.75:6388", // redis地址
-		Password: "redis",              // redis密码，没有则留空
-		DB:       i,                    // 默认数据库，默认是0
-	})
-	//通过 *redis.Client.Ping() 来检查是否成功连接到了redis服务器
-	_, err := redisDb.Ping().Result()
-	if err != nil {
-		util.LogFatal(err.Error())
-		panic(err)
-		return nil, err
+// PingAll 校验所有已创建的 client 连通性（供 main 启动时 fail-fast 使用）。
+func PingAll(ctx context.Context) error {
+	redisMu.Lock()
+	defer redisMu.Unlock()
+	for db, c := range redisClients {
+		if err := c.Ping(ctx).Err(); err != nil {
+			return fmt.Errorf("redis db %d ping failed: %w", db, err)
+		}
 	}
-	return redisDb, nil
+	return nil
 }

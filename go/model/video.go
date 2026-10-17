@@ -14,8 +14,8 @@ type ApifoxModel struct {
 
 // 对应sql表格的实体 更加简单的配置
 type TableVideo struct {
-	Id          int64 `json:"id"`
-	AuthorId    int64
+	Id          int64 `json:"id" gorm:"primaryKey;column:id"`
+	AuthorId    int64 `gorm:"index"`
 	PlayUrl     string `json:"play_url"`
 	CoverUrl    string `json:"cover_url"`
 	PublishTime time.Time
@@ -43,7 +43,7 @@ func (TableVideo) TableName() string {
 // 获取时间戳之前的视频
 
 func GetVideoByLastTime(lastTime time.Time) ([]TableVideo, error) {
-	tableVideos := make([]TableVideo, config.VideoCount)
+	tableVideos := make([]TableVideo, 0, config.VideoCount)
 	// SELECT * FROM `videos` WHERE publish_time <= '2023-02-11 18:37:18.326' ORDER BY publish_time desc LIMIT 10
 	result := db.Where("publish_time <= ?", lastTime).Order("publish_time desc").Limit(config.VideoCount).Find(&tableVideos)
 	if result.Error != nil {
@@ -55,10 +55,10 @@ func GetVideoByLastTime(lastTime time.Time) ([]TableVideo, error) {
 // 通过用户id获取视频
 
 func GetVideoByUserId(userId int) ([]TableVideo, error) {
-	tableVideos := make([]TableVideo, config.VideoMaxCount)
+	tableVideos := make([]TableVideo, 0, config.VideoMaxCount)
 	// SELECT * FROM `videos` WHERE author_id = 13 ORDER BY publish_time desc LIMIT 30
-	db.Where("author_id = ?", userId).Order("publish_time desc").Limit(config.VideoMaxCount).Find(&tableVideos)
-	return tableVideos, nil
+	result := db.Where("author_id = ?", userId).Order("publish_time desc").Limit(config.VideoMaxCount).Find(&tableVideos)
+	return tableVideos, result.Error
 }
 
 // 获取发布最早的视频的时间戳，作为下次请求的时间戳 废弃
@@ -112,6 +112,26 @@ func QueryWorkCountByUserId(userId int64) (int64, error) {
 		return -1, result.Error
 	}
 	return count, nil
+}
+
+// GetWorkCountsByUserIds 批量取用户作品数
+func GetWorkCountsByUserIds(ids []int64) (map[int64]int64, error) {
+	m := map[int64]int64{}
+	if len(ids) == 0 {
+		return m, nil
+	}
+	type row struct {
+		AuthorId int64 `gorm:"column:author_id"`
+		Cnt      int64 `gorm:"column:cnt"`
+	}
+	var rows []row
+	if err := db.Model(&TableVideo{}).Select("author_id, count(*) as cnt").Where("author_id IN (?)", ids).Group("author_id").Scan(&rows).Error; err != nil {
+		return m, err
+	}
+	for _, r := range rows {
+		m[r.AuthorId] = r.Cnt
+	}
+	return m, nil
 }
 
 // 查询视频的Id是否存在

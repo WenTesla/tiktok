@@ -1,28 +1,42 @@
 package config
 
 import (
+	"fmt"
+	"time"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"tiktok/go/util"
 )
 
-//var Db *gorm.DB
-
-// 初始化并返回数据链接
+// InitDataSource 使用外部化配置初始化并返回 *gorm.DB。
+// 连接具备重试能力，避免 MySQL 尚未就绪时直接 panic 导致容器崩溃。
 func InitDataSource() *gorm.DB {
-	// 参考 https://github.com/go-sql-driver/mysql#dsn-data-source-name 获取详情
-	// 本地数据库-推荐-自己建表 -自己替换
-	dsn := "root:zhang134679@tcp(127.0.0.1:3306)/tiktok?charset=utf8mb4&parseTime=True&loc=Local"
-	// 阿里云数据库 非常慢
-	//dsn := "tiktok:tiktok@tcp(rm-2ze62585lf96k7285mo.mysql.rds.aliyuncs.com)/tiktok?charset=utf8mb4&parseTime=True&loc=Local"
-	Db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
-		PrepareStmt: true, //缓存预编译语句
-	})
-	if err != nil {
-		util.LogFatal(err.Error())
-		panic(err)
-		return nil
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=True&loc=%s",
+		AppConfig.MySQL.User,
+		AppConfig.MySQL.Password,
+		AppConfig.MySQL.Host,
+		AppConfig.MySQL.Port,
+		AppConfig.MySQL.DBName,
+		AppConfig.MySQL.Charset,
+		AppConfig.MySQL.Loc,
+	)
+	const maxRetry = 10
+	var db *gorm.DB
+	var err error
+	for i := 1; i <= maxRetry; i++ {
+		db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
+			PrepareStmt: true, // 缓存预编译语句
+		})
+		if err == nil {
+			util.Log("连接成功")
+			return db
+		}
+		util.LogError(fmt.Sprintf("MySQL 连接失败(第 %d/%d 次): %s", i, maxRetry, err.Error()))
+		if i < maxRetry {
+			time.Sleep(2 * time.Second)
+		}
 	}
-	println("连接成功")
-	return Db
+	util.LogFatal("MySQL 连接重试耗尽: " + err.Error())
+	panic(err)
 }

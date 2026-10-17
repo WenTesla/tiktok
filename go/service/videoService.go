@@ -2,24 +2,16 @@ package service
 
 import (
 	"errors"
-	"github.com/tencentyun/cos-go-sdk-v5"
-	"golang.org/x/net/context"
 	"log"
 	"mime/multipart"
-	"net/http"
-	"net/url"
-	"os"
 	"strconv"
 	"strings"
+	"time"
+
 	"tiktok/go/config"
 	"tiktok/go/model"
 	"tiktok/go/util"
-	"time"
 )
-
-var nowTime string
-
-var newFileName string
 
 // 通过传入时间戳，当前用户的id，返回对应的视频数组，以及视频数组中最早的发布时间
 
@@ -52,258 +44,129 @@ func VideoInfoByUserId(id int) ([]model.Video, error) {
 	return videos, nil
 }
 
-// 包装视频流，填入内容如下
+// 包装视频流，批量填充作者信息/点赞数/评论数/是否点赞，消除 N+1
 //
-//		author
-//	"favorite_count": 0,
-//	 "comment_count": 0,
-//	 "is_favorite": true,
-//
-// user
+//	author
+//	"favorite_count"
+//	"comment_count"
+//	"is_favorite"
 func packageVideos(tableVideos []model.TableVideo, userId int64) ([]model.Video, error) {
-	// 创建video模型
-	videos := make([]model.Video, 0, config.VideoCount)
-	if userId == -1 {
-		// 填入author
-		for _, tableVideo := range tableVideos {
-			video, err := packageVideo(&tableVideo)
-			if err != nil {
-				return nil, err
-			}
-			videos = append(videos, video)
-		}
-	} else {
-		// 填入author
-		for _, tableVideo := range tableVideos {
-			video, err := packageVideoWithUserId(&tableVideo, userId)
-			if err != nil {
-				return nil, err
-			}
-			videos = append(videos, video)
+	videos := make([]model.Video, 0, len(tableVideos))
+	if len(tableVideos) == 0 {
+		return videos, nil
+	}
+
+	// 收集去重 authorIds 与 videoIds
+	authorIds := make([]int64, 0, len(tableVideos))
+	videoIds := make([]int64, 0, len(tableVideos))
+	seenAuthor := make(map[int64]struct{})
+	for i := range tableVideos {
+		videoIds = append(videoIds, tableVideos[i].Id)
+		if _, ok := seenAuthor[tableVideos[i].AuthorId]; !ok {
+			seenAuthor[tableVideos[i].AuthorId] = struct{}{}
+			authorIds = append(authorIds, tableVideos[i].AuthorId)
 		}
 	}
 
+	// 1) 批量取作者信息（含关注/粉丝/作品/获赞数、是否关注 viewer）
+	authors, err := UserServiceBatch(authorIds, userId)
+	if err != nil {
+		return nil, err
+	}
+	// 2) 批量取视频点赞数
+	likeCounts, err := model.QueryLikeCountsByVideoIds(videoIds)
+	if err != nil {
+		return nil, dataSourceErr
+	}
+	// 3) 批量取视频评论数
+	commentCounts, err := model.QueryCommentCountsByVideoIds(videoIds)
+	if err != nil {
+		return nil, dataSourceErr
+	}
+	// 4) 批量取是否点赞（仅登录态）
+	var isLikeMap map[int64]bool
+	if userId != -1 {
+		isLikeMap, err = model.QueryIsLikeBatch(userId, videoIds)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	// 循环内仅做 O(N) map 查找，不再有 DB/Redis 往返
+	// 注意：通过索引取址，修复 Go<1.22 循环变量取址错位 bug
+	for i := range tableVideos {
+		tv := &tableVideos[i]
+		videos = append(videos, model.Video{
+			Author:        authors[tv.AuthorId],
+			ID:            tv.Id,
+			PlayURL:       tv.PlayUrl,
+			CoverURL:      tv.CoverUrl,
+			Title:         tv.Title,
+			FavoriteCount: likeCounts[tv.Id],
+			CommentCount:  commentCounts[tv.Id],
+			IsFavorite:    userId != -1 && isLikeMap[tv.Id],
+		})
+	}
 	return videos, nil
 }
 
-// 包装简单的视频列表
-
-func packageSimpleVideos(tableVideos []model.TableVideo, userId int64) ([]model.Video, error) {
-	// 创建video模型
-	videos := make([]model.Video, 0, config.VideoCount)
-	if userId == -1 {
-		// 填入author
-		for _, tableVideo := range tableVideos {
-			video, err := PackSimpleVideoService(&tableVideo)
-			if err != nil {
-				return nil, err
-			}
-			videos = append(videos, video)
-		}
-	} else {
-		// 填入author
-		for _, tableVideo := range tableVideos {
-			video, err := packageVideoWithUserId(&tableVideo, userId)
-			if err != nil {
-				return nil, err
-			}
-			videos = append(videos, video)
-		}
-	}
-
-	return videos, nil
-}
-
-//  包装单个视频，不返回是否关注的信息-即未登录状态的信息
-
-func packageVideo(tableVideo *model.TableVideo) (model.Video, error) {
-	// 创建video单例
-	video := model.Video{}
-	// 获取作者信息
-	userInfo, err := UserService(tableVideo.AuthorId)
-	if err != nil {
-		return model.Video{}, err
-	}
-	log.Printf("%v", userInfo)
-	//video.Author=user
-	video.Author = userInfo
-	// 填充Videos的
-	video.ID = tableVideo.Id
-	video.PlayURL = tableVideo.PlayUrl
-	video.CoverURL = tableVideo.CoverUrl
-	video.Title = tableVideo.Title
-	// 获取 favorite_count
-	// 先查询redis
-	favoriteCount, err := likeRedisDb.SCard(strconv.FormatInt(video.ID, 10)).Result()
-	if err != nil {
-		//// 出错查询数据库
-		favoriteCount, err = model.QueryLikeByVideoId(tableVideo.Id)
-		if err != nil {
-			return video, dataSourceErr
-		}
-	}
-	video.FavoriteCount = favoriteCount
-	// 获取"commentCount"
-	commentCount, err := model.QueryCommentCountByVideoId(tableVideo.Id)
-	if err != nil {
-		return video, dataSourceErr
-	}
-	video.CommentCount = commentCount
-	video.IsFavorite = false
-	return video, nil
-}
-
-//  包装单个视频,返回是否关注的信息
-
-func packageVideoWithUserId(tableVideo *model.TableVideo, id int64) (model.Video, error) {
-	// 创建video单例
-	video := model.Video{}
-	// 获取作者信息
-	userInfo, err := UserInfoService(tableVideo.AuthorId, id)
-	if err != nil {
-		return model.Video{}, err
-	}
-	log.Printf("%v", userInfo)
-	//video.Author=user
-	video.Author = userInfo
-	// 填充Videos的
-	video.ID = tableVideo.Id
-	video.PlayURL = tableVideo.PlayUrl
-	video.CoverURL = tableVideo.CoverUrl
-	video.Title = tableVideo.Title
-	// 获取 favorite_count
-	// 先查询redis
-	favoriteCount, err := likeRedisDb.SCard(strconv.FormatInt(video.ID, 10)).Result()
-	if err != nil {
-		//// 出错查询数据库
-		favoriteCount, err = model.QueryLikeByVideoId(tableVideo.Id)
-		if err != nil {
-			return video, dataSourceErr
-		}
-	}
-	video.FavoriteCount = favoriteCount
-	// 获取"commentCount"
-	commentCount, err := model.QueryCommentCountByVideoId(tableVideo.Id)
-	if err != nil {
-		return video, dataSourceErr
-	}
-	video.CommentCount = commentCount
-	// 获取是否点赞 先查询redis
-	is_favorite, err := likeRedisDb.SIsMember(strconv.FormatInt(video.ID, 10), id).Result()
-	// redis查询失败查询数据库
-	if err != nil {
-		is_favorite, err = model.QueryIsLike(id, tableVideo.Id)
-		if err != nil {
-			return video, err
-		}
-	}
-	video.IsFavorite = is_favorite
-	return video, nil
-}
-
-// 包装最简单的视频信息 作者只包含
-
-func PackSimpleVideoService(tableVideo *model.TableVideo) (model.Video, error) {
-	// 创建video单例
-	video := model.Video{}
-	// 获取作者信息
-	userInfo, err := SimpleUserService(tableVideo.AuthorId, -1)
-	if err != nil {
-		return model.Video{}, err
-	}
-	log.Printf("%v", userInfo)
-	//video.Author=user
-	video.Author = userInfo
-	// 填充Videos的
-	video.ID = tableVideo.Id
-	video.PlayURL = tableVideo.PlayUrl
-	video.CoverURL = tableVideo.CoverUrl
-	video.Title = tableVideo.Title
-	video.IsFavorite = false
-	return video, nil
-}
-
-//  PublishVideo 可以优化
-
+// PublishVideoService 发布视频：落盘到本地存储 + 服务端抽首帧生成封面 + 入库。
+// 不依赖腾讯云 COS（COS 鉴权有 bug 且 scratch 镜像缺 CA 证书，实际不可用）。
 func PublishVideoService(file *multipart.FileHeader, userId int64, title string) error {
+	// 上传前校验文件内容（仅允许 mp4，按文件头魔数判断）
+	if err := CheckFile(file); err != nil {
+		return err
+	}
+
+	key := genVideoKey(userId)
+	videoRel := "videos/" + key + ".mp4"
+	coverRel := "covers/" + key + ".jpg"
+
+	// 1) 视频落盘到本地存储（宿主卷挂载，对外通过 /static 静态路由可达）
 	src, err := file.Open()
 	if err != nil {
 		return errors.New("不能打开文件")
 	}
 	defer src.Close()
-	// 获取视频文件名称
-	nowTime = strconv.FormatInt(time.Now().Unix(), 10)
-	// 转换视频名称
-	newFileName, err = fileNameToTimeCurrentFileName(file.Filename, nowTime)
-	// 上传到cos
-	err = publishVideoByTencentCos(src, newFileName)
+	playURL, err := config.Storage.Put(videoRel, src)
 	if err != nil {
-		return err
+		return errors.New("视频存储失败")
 	}
-	// 提取封面url
-	play_cover, err := parseFileName(newFileName)
-	if err != nil {
-		return err
+
+	// 2) 抽首帧生成封面缩略图（服务端内嵌 ffmpeg，缩放至 480px 宽）
+	videoLocal := config.Storage.LocalPath(videoRel)
+	coverLocal := config.Storage.LocalPath(coverRel)
+	coverURL := ""
+	if err := util.ExtractFirstFrame(videoLocal, coverLocal, 480); err != nil {
+		// 抽帧失败不阻断视频发布：封面留空，前端可降级处理
+		util.LogError("封面抽帧失败，视频仍正常发布: " + err.Error())
+	} else {
+		coverURL = strings.TrimSuffix(config.Storage.PublicBaseURL, "/") + "/" + coverRel
 	}
-	// 添加数据库
-	err = model.InsertVideo(userId, config.CosUrl+"/"+newFileName, config.CosUrl+"/"+play_cover, title)
-	if err != nil {
+
+	// 3) 入库
+	if err := model.InsertVideo(userId, playURL, coverURL, title); err != nil {
 		return dataSourceErr
 	}
 	return nil
 }
 
-// publishVideoByTencentCos
-func publishVideoByTencentCos(file multipart.File, fileName string) error {
-	// 将 examplebucket-1250000000 和 COS_REGION 修改为真实的信息
-	// 存储桶名称，由 bucketname-appid 组成，appid 必须填入，可以在 COS 控制台查看存储桶名称。https://console.cloud.tencent.com/cos5/bucket
-	// COS_REGION 可以在控制台查看，https://console.cloud.tencent.com/cos5/bucket, 关于地域的详情见 https://cloud.tencent.com/document/product/436/6224
-	u, _ := url.Parse(config.CosUrl)
-	b := &cos.BaseURL{BucketURL: u}
-	c := cos.NewClient(b, &http.Client{
-		Transport: &cos.AuthorizationTransport{
-			SecretID:  os.Getenv(config.SecretId),  // 用户的 SecretId，建议使用子账号密钥，授权遵循最小权限指引，降低使用风险。子账号密钥获取可参考 https://cloud.tencent.com/document/product/598/37140
-			SecretKey: os.Getenv(config.SecretKey), // 用户的 SecretKey，建议使用子账号密钥，授权遵循最小权限指引，降低使用风险。子账号密钥获取可参考 https://cloud.tencent.com/document/product/598/37140
-		},
-	})
-	// 对象键（Key）是对象在存储桶中的唯一标识。
-	// 例如，在对象的访问域名 `examplebucket-1250000000.cos.COS_REGION.myqcloud.com/test/objectPut.go` 中，对象键为 test/objectPut.go
-	_, err := c.Object.Put(context.Background(), fileName, file, nil)
+// genVideoKey 生成唯一视频 key，避免文件名碰撞（用户ID + 纳秒时间戳）。
+func genVideoKey(userId int64) string {
+	return strconv.FormatInt(userId, 10) + "_" + strconv.FormatInt(time.Now().UnixNano(), 10)
+}
+
+// CheckFile 校验上传文件内容合法性：按文件头魔数判断，仅允许 mp4
+func CheckFile(fh *multipart.FileHeader) error {
+	src, err := fh.Open()
 	if err != nil {
-		return errors.New("文件上传失败")
+		return errors.New("不能打开文件")
 	}
-	//os.Open()
+	defer src.Close()
+	head := make([]byte, 512)
+	n, _ := src.Read(head)
+	if util.GetFileType(head[:n]) != "mp4" {
+		return errors.New("仅支持 mp4 格式视频")
+	}
 	return nil
-}
-
-// parseFileName parseFileName 解析文件名称，去除文件后缀并加上文件格式jpg
-func parseFileName(fileName string) (string, error) {
-	//
-	lastIndex := strings.LastIndex(fileName, ".")
-	if lastIndex == -1 {
-		return "", errors.New("解析错误")
-	}
-	replaced := fileName[lastIndex:]
-	// 判断文件后缀是否为要求的后缀
-	if replaced != ".mp4" {
-		return "", errors.New("文件格式不符合要求")
-	}
-	return strings.Replace(fileName, replaced, config.ReplaceSuffix, 1), nil
-}
-
-// fileNameToTimeCurrentFileName 将文件名称转化为时间戳并返回
-func fileNameToTimeCurrentFileName(oldFileName string, newFileName string) (string, error) {
-	// 提取文件后缀
-	lastIndex := strings.LastIndex(oldFileName, ".")
-	if lastIndex == -1 {
-		return "", errors.New("文件名称转换错误")
-	}
-	replaced := oldFileName[:lastIndex]
-	return strings.Replace(oldFileName, replaced, newFileName, 1), nil
-}
-
-// CheckFile -todo 检查文件内容的合法性
-func CheckFile() {
-	// 检查文件后缀
-	//path.Ext()
 }

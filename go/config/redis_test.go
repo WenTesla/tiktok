@@ -1,6 +1,7 @@
 package config
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"testing"
@@ -38,11 +39,12 @@ type UserInfo struct {
 }
 
 func TestRedis(t *testing.T) {
-
+	ctx := context.Background()
 	_, err := InitRedisClient()
 	if err != nil {
 		fmt.Println(err)
 	}
+	_ = ctx
 }
 
 type guo struct {
@@ -50,15 +52,8 @@ type guo struct {
 	Age  int
 }
 
-//func (g *guo) MarshalBinary() (data []byte, err error) {
-//	return json.Marshal(g)
-//}
-//
-//func (g *guo) UnmarshalBinary(data []byte) (err error) {
-//	return json.Unmarshal(data, g)
-//}
-
 func TestAddRedis(t *testing.T) {
+	ctx := context.Background()
 	db, _ := InitRedisClient()
 	comment := CommentInfo{
 		Content:    "111",
@@ -80,13 +75,13 @@ func TestAddRedis(t *testing.T) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	db.LPush("commentInfo", bytes)
-
+	db.LPush(ctx, "commentInfo", bytes)
 }
 
 func TestQueryRedis(t *testing.T) {
+	ctx := context.Background()
 	db, _ := InitRedisClient()
-	push := db.LRange("commentInfo", 0, -1)
+	push := db.LRange(ctx, "commentInfo", 0, -1)
 	result, err := push.Result()
 	if err != nil {
 		fmt.Println(err)
@@ -99,21 +94,22 @@ func TestQueryRedis(t *testing.T) {
 }
 
 func TestTimeRedis(t *testing.T) {
-	db, _ := RedisClient(10)
-	//i, _ := db.Get("111").Int()
-	db.Incr("111")
-	//fmt.Println(i)
+	ctx := context.Background()
+	db := RedisClient(10)
+	db.Incr(ctx, "111")
 }
 
 func TestIs(t *testing.T) {
-	client, _ := RedisClient(1)
-	client.SAdd("1", "2", "3", "4")
-	member, _ := client.SIsMember("1", "1").Result()
+	ctx := context.Background()
+	client := RedisClient(1)
+	client.SAdd(ctx, "1", "2", "3", "4")
+	member, _ := client.SIsMember(ctx, "1", "1").Result()
 	fmt.Println(member)
 }
 
 func TestCount(t *testing.T) {
-	client, _ := RedisClient(4)
-	card, _ := client.SCard("423").Result()
+	ctx := context.Background()
+	client := RedisClient(4)
+	card, _ := client.SCard(ctx, "423").Result()
 	fmt.Printf("%T", card)
 }

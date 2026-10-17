@@ -27,6 +27,9 @@ type Stream struct {
 	model.BaseResponse
 }
 
+// maxUploadBytes 上传视频大小上限（约 100MB）
+const maxUploadBytes = 100 << 20
+
 // 定义变量
 
 //  视频流接口
@@ -45,42 +48,22 @@ func VideoStream(c *gin.Context) {
 		last_time = time.Now()
 	}
 	log.Printf("获取的时间戳 %v", last_time)
-	// 定义变量
-	var err error
-	var videos []model.Video
-	//userId := 20053
-	// 获取token的数据
+
 	token := c.Query("token")
-	// 未登录的情况下
-	if len(token) == 0 {
-		videos, err = service.VideoStreamService(last_time, -1)
+	userId := int64(-1)
+	if len(token) != 0 {
+		parseToken, err := jwt.ParseToken(token)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, VideoStreamModel{
-				BaseResponse: model.BaseResponseInstance.FailMsg(err.Error()),
-				VideoList:    []model.Video{},
-			})
-		}
-		// 获取发布最早的时间 作为下一条next参数
-		nextTime, err := model.QueryNextTimeByVideoId(videos[len(videos)-1].ID)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, VideoStreamModel{
-				BaseResponse: model.BaseResponseInstance.FailMsg(err.Error()),
+				BaseResponse: model.BaseResponseInstance.FailMsg(config.TokenParseErr),
 				VideoList:    []model.Video{},
 			})
 			return
 		}
-		log.Printf("%v", videos)
-		c.JSON(http.StatusOK, VideoStreamModel{
-			BaseResponse: model.BaseResponseInstance.Success(),
-			NextTime:     nextTime.UnixNano() / 1e6,
-			VideoList:    videos,
-		})
-		return
+		userId = int64(parseToken.(float64))
 	}
-	// 解析token
-	parseToken, _ := jwt.ParseToken(token)
-	userId := int64(parseToken.(float64))
-	videos, err = service.VideoStreamService(last_time, userId)
+
+	videos, err := service.VideoStreamService(last_time, userId)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, VideoStreamModel{
 			BaseResponse: model.BaseResponseInstance.FailMsg(err.Error()),
@@ -88,7 +71,17 @@ func VideoStream(c *gin.Context) {
 		})
 		return
 	}
-	// 获取发布最早的时间 作为下一条next参数 这里有问题
+
+	// 空列表直接返回，避免 videos[len(videos)-1] 越界 panic（空库 / 没有更多视频）
+	if len(videos) == 0 {
+		c.JSON(http.StatusOK, VideoStreamModel{
+			BaseResponse: model.BaseResponseInstance.Success(),
+			NextTime:     0,
+			VideoList:    []model.Video{},
+		})
+		return
+	}
+
 	nextTime, err := model.QueryNextTimeByVideoId(videos[len(videos)-1].ID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, VideoStreamModel{
@@ -115,6 +108,11 @@ func VideoPublish(c *gin.Context) {
 	// 参数判断空
 	if file.Size == 0 {
 		c.JSON(http.StatusBadRequest, model.BaseResponseInstance.FailMsg(config.RequestParameterIsNull))
+		return
+	}
+	// 文件大小上限（约 100MB）
+	if file.Size > maxUploadBytes {
+		c.JSON(http.StatusBadRequest, model.BaseResponseInstance.FailMsg("文件过大，仅支持 100MB 以内的视频"))
 		return
 	}
 	// 获取登录用户的id

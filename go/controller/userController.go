@@ -51,8 +51,7 @@ func Register(c *gin.Context) {
 		})
 		return
 	}
-	password = service.Encryption(password)
-	//先校验合法性
+	//先校验合法性（密码哈希在 service 层用 bcrypt 完成）
 	Id, err := service.RegisterService(username, password)
 	if err != nil {
 		fmt.Println(err)
@@ -99,8 +98,6 @@ func Login(c *gin.Context) {
 		})
 		return
 	}
-	password = service.Encryption(password)
-	fmt.Println(username, password)
 	Id, err := service.LoginService(username, password)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, userLoginResponse{
