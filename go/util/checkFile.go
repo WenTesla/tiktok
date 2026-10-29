@@ -87,9 +87,30 @@ func bytesToHexString(src []byte) string {
 	return res.String()
 }
 
+// isMP4 判断是否为 MP4 / ISO Base Media 文件。
+// MP4 文件头必含 ftyp box：通常为 [4字节 box size][ftyp][major brand]...，
+// 但 box size 与 major brand（isom/mp42/dash/avc1 等）因编码工具不同而异，
+// 不能用固定魔数判定。这里只认 "ftyp" 签名，覆盖绝大多数真实 mp4/mov。
+func isMP4(b []byte) bool {
+	// 最常见：ftyp 位于偏移 4（前 4 字节为 box size）
+	if len(b) >= 12 && string(b[4:8]) == "ftyp" {
+		return true
+	}
+	// 极少数文件 ftyp 不在偏移 0，在头部 16 字节内查找 "ftyp"
+	end := 16
+	if len(b) < end {
+		end = len(b)
+	}
+	return bytes.Contains(b[:end], []byte("ftyp"))
+}
+
 // 用文件前面几个字节来判断
 // fSrc: 文件字节流（就用前面几个字节）
 func GetFileType(fSrc []byte) string {
+	// MP4 优先按 ftyp 签名判定（品牌/盒子大小各异，不能用固定魔数）
+	if isMP4(fSrc) {
+		return "mp4"
+	}
 	var fileType string
 	fileCode := bytesToHexString(fSrc)
 	// 空输入直接返回空类型，否则下方 HasPrefix(k, "") 会命中 map 中的任意条目，
