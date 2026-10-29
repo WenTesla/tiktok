@@ -104,6 +104,75 @@ func isMP4(b []byte) bool {
 	return bytes.Contains(b[:end], []byte("ftyp"))
 }
 
+// IsVideo 判断字节流是否为受支持的视频容器（按文件头签名识别，不依赖扩展名）。
+// 覆盖：MP4/MOV/3GP/M4V（ftyp）、WebM/Matroska（EBML）、FLV、AVI（RIFF）、
+// MPEG-PS/ES（01BA/01B3）、ASF/WMV、RM/RMVB。
+func IsVideo(b []byte) bool {
+	if len(b) < 4 {
+		return false
+	}
+	// MP4 / MOV / 3GP / M4V：ftyp box（major brand 各异，不能用固定魔数）
+	if len(b) >= 12 && string(b[4:8]) == "ftyp" {
+		return true
+	}
+	// WebM / Matroska：EBML 头 1A45DFA3
+	if bytes.HasPrefix(b, []byte{0x1A, 0x45, 0xDF, 0xA3}) {
+		return true
+	}
+	// FLV：46 4C 56 01（FLV\x01）
+	if bytes.HasPrefix(b, []byte{0x46, 0x4C, 0x56, 0x01}) {
+		return true
+	}
+	// AVI：RIFF....AVI （偏移 0 为 RIFF，偏移 8 为 "AVI "）
+	if bytes.HasPrefix(b, []byte("RIFF")) && len(b) >= 12 && string(b[8:12]) == "AVI " {
+		return true
+	}
+	// MPEG-PS / MPEG-ES：00 00 01 BA 或 00 00 01 B3
+	if bytes.HasPrefix(b, []byte{0x00, 0x00, 0x01, 0xBA}) ||
+		bytes.HasPrefix(b, []byte{0x00, 0x00, 0x01, 0xB3}) {
+		return true
+	}
+	// ASF / WMV：30 26 B2 75 8E 66 CF 11 A6 D9（ASF Header Object GUID）
+	if bytes.HasPrefix(b, []byte{0x30, 0x26, 0xB2, 0x75, 0x8E, 0x66, 0xCF, 0x11, 0xA6, 0xD9}) {
+		return true
+	}
+	// RM / RMVB：2E 52 4D 46（".RMF"）
+	if bytes.HasPrefix(b, []byte{0x2E, 0x52, 0x4D, 0x46}) {
+		return true
+	}
+	return false
+}
+
+// VideoExt 根据文件头返回推荐的存储扩展名（不含点），无法识别时回退 "mp4"。
+// 对 ftyp 类（mp4/mov/3gp/m4v）进一步按 major brand 区分 mov 与 mp4。
+func VideoExt(b []byte) string {
+	if len(b) >= 12 && string(b[4:8]) == "ftyp" {
+		if len(b) >= 12 && string(b[8:12]) == "qt  " { // QuickTime
+			return "mov"
+		}
+		return "mp4"
+	}
+	switch {
+	case bytes.HasPrefix(b, []byte{0x1A, 0x45, 0xDF, 0xA3}): // EBML: webm / mkv
+		if bytes.Contains(b, []byte("webm")) {
+			return "webm"
+		}
+		return "mkv"
+	case bytes.HasPrefix(b, []byte{0x46, 0x4C, 0x56, 0x01}): // FLV
+		return "flv"
+	case bytes.HasPrefix(b, []byte("RIFF")) && len(b) >= 12 && string(b[8:12]) == "AVI ": // AVI
+		return "avi"
+	case bytes.HasPrefix(b, []byte{0x00, 0x00, 0x01, 0xBA}) ||
+		bytes.HasPrefix(b, []byte{0x00, 0x00, 0x01, 0xB3}): // MPEG
+		return "mpg"
+	case bytes.HasPrefix(b, []byte{0x30, 0x26, 0xB2, 0x75, 0x8E, 0x66, 0xCF, 0x11, 0xA6, 0xD9}): // ASF/WMV
+		return "wmv"
+	case bytes.HasPrefix(b, []byte{0x2E, 0x52, 0x4D, 0x46}): // RM/RMVB
+		return "rmvb"
+	}
+	return "mp4"
+}
+
 // 用文件前面几个字节来判断
 // fSrc: 文件字节流（就用前面几个字节）
 func GetFileType(fSrc []byte) string {

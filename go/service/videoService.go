@@ -113,13 +113,14 @@ func packageVideos(tableVideos []model.TableVideo, userId int64) ([]model.Video,
 // PublishVideoService 发布视频：落盘到本地存储 + 服务端抽首帧生成封面 + 入库。
 // 不依赖腾讯云 COS（COS 鉴权有 bug 且 scratch 镜像缺 CA 证书，实际不可用）。
 func PublishVideoService(file *multipart.FileHeader, userId int64, title string) error {
-	// 上传前校验文件内容（仅允许 mp4，按文件头魔数判断）
-	if err := CheckFile(file); err != nil {
+	// 上传前校验文件内容（支持常见视频容器，按文件头识别并保留原格式扩展名）
+	ext, err := SniffVideo(file)
+	if err != nil {
 		return err
 	}
 
 	key := genVideoKey(userId)
-	videoRel := "videos/" + key + ".mp4"
+	videoRel := "videos/" + key + "." + ext
 	coverRel := "covers/" + key + ".jpg"
 
 	// 1) 视频落盘到本地存储（宿主卷挂载，对外通过 /static 静态路由可达）
@@ -156,17 +157,24 @@ func genVideoKey(userId int64) string {
 	return strconv.FormatInt(userId, 10) + "_" + strconv.FormatInt(time.Now().UnixNano(), 10)
 }
 
-// CheckFile 校验上传文件内容合法性：按文件头魔数判断，仅允许 mp4
-func CheckFile(fh *multipart.FileHeader) error {
+// SniffVideo 读取上传文件头部，校验是否为受支持的视频容器，并返回推荐的存储扩展名（不含点）。
+// 支持：mp4/mov/webm/flv/avi/mkv/mpg/wmv/rmvb（按文件头签名识别，不依赖扩展名）。
+func SniffVideo(fh *multipart.FileHeader) (ext string, err error) {
 	src, err := fh.Open()
 	if err != nil {
-		return errors.New("不能打开文件")
+		return "", errors.New("不能打开文件")
 	}
 	defer src.Close()
 	head := make([]byte, 512)
 	n, _ := src.Read(head)
-	if util.GetFileType(head[:n]) != "mp4" {
-		return errors.New("仅支持 mp4 格式视频")
+	if !util.IsVideo(head[:n]) {
+		return "", errors.New("仅支持常见视频格式：mp4/mov/webm/flv/avi/mkv/mpg/wmv/rmvb")
 	}
-	return nil
+	return util.VideoExt(head[:n]), nil
+}
+
+// CheckFile 校验上传文件内容合法性：按文件头魔数判断，仅允许常见视频容器（保留以兼容既有调用/测试）。
+func CheckFile(fh *multipart.FileHeader) error {
+	_, err := SniffVideo(fh)
+	return err
 }
